@@ -1,0 +1,38 @@
+.Calendario{    
+    border: solid 1px black;    
+}
+
+.Calendario .Title{
+    text-align: center;
+    background-color: lightgray;
+    color: white;
+}
+
+.Calendario .Row{
+    border-width: 0.1em;
+}
+
+.Calendario .Col{
+    text-align: center;
+    border: solid lightgray ;
+    border-width: 0.1em;
+    cursor: pointer;
+}
+
+.Calendario .Col .Error{
+    text-align: center;
+    border-bottom: solid 5px red ;
+}
+
+.Calendario .Col .Travel{
+    border-bottom: solid 5px blue ;
+}
+
+.Calendario .Col .GiornoOK{
+    border-bottom: solid 5px green ;
+}
+
+.Festivo{
+    text-align: center;
+}
+

@@ -1,0 +1,240 @@
+{
+"Cycles": [
+    {
+    "index": 1,
+    "Number": 1,
+    "Description" : "funzione 1",
+    "Cancel" : 3,
+    "Retry" : 0,
+    "Parameter" : 0
+  }, {
+    "index": 2,
+    "Number": 5,
+    "Description" : "funzione 2",
+    "Cancel" : 0,
+    "Retry" : 4,
+    "Parameter" : 0
+  }, {
+    "index": 3,
+    "Number": 10,
+    "Description" : "funzione 3",
+    "Cancel" : 0,
+    "Retry" : 0,
+    "Parameter" : 0
+  }, {
+    "index": 4,
+    "Number": 10,
+    "Description" : "funzione 4",
+    "Cancel" : 0,
+    "Retry" : 0,
+    "Parameter" : 0
+  },
+  {
+    "index": 5,
+    "Number": 15,
+    "Description" : "funzione 5",
+    "Cancel" : 2,
+    "Retry" : 2,
+    "Parameter" : 255
+  }],
+
+  "Functions":[
+    {
+      "Description" : "funzione 1",
+      "Index" :1
+    },
+    {
+      "Description" : "funzione 2",
+      "Index" :2
+    },
+    {
+      "Description" : "funzione 3",
+      "Index" :3
+    },
+    {
+      "Description" : "funzione alalalalalala 4",
+      "Index" :4
+    }
+  ],
+"Orario" : [{
+  "ID" : 1,
+  "Cliente" : "S.el.me.c",
+  "Tecnico" : "Lacanale",
+  "Data" : "01/01/2024",
+  "Commessa" : "AA100",
+  "Tipo" : "Lavoro",
+  "Ora_IN1" : "08:00",
+  "Ora_OUT1" : "12:30",
+  "Ora_IN2" : "13:30",
+  "Ora_OUT2" : "17:00",
+  "Km" : 100,
+  "Pranzo" : true,
+  "Cena" : false,
+  "Italia" : true,
+  "Estero" : false,
+  "OO" : 0,
+  "OS" : 0,
+  "OP" : 0,
+  "OF" : 0,
+  "OV" : 0,
+  "Note" :"nota1",
+  "Fatturato" : false
+},
+{
+  "ID" : 2,
+  "Cliente" : "S.el.me.c",
+  "Tecnico" : "Lacanale",
+  "Data" : "02/01/2024",
+  "Commessa" : "AA101",
+  "Tipo" : "Lavoro",
+  "Ora_IN1" : "08:00",
+  "Ora_OUT1" : "12:30",
+  "Ora_IN2" : "13:30",
+  "Ora_OUT2" : "17:00",
+  "Km" : 100,
+  "Pranzo" : false,
+  "Cena" : true,
+  "Italia" : false,
+  "Estero" : true,
+  "OO" : 1,
+  "OS" : 2,
+  "OP" : 3,
+  "OF" : 4,
+  "OV" : 5,
+  "Note" :"nota2",
+  "Fatturato" : false
+},
+{
+  "ID" : 3,
+  "Cliente" : "S.el.me.c",
+  "Tecnico" : "Lacanale",
+  "Data" : "03/01/2024",
+  "Commessa" : "AA100",
+  "Tipo" : "Lavoro",
+  "Ora_IN1" : "08:00",
+  "Ora_OUT1" : "12:30",
+  "Ora_IN2" : "13:30",
+  "Ora_OUT2" : "17:00",
+  "Km" : 100,
+  "Pranzo" : false,
+  "Cena" : true,
+  "Italia" : false,
+  "Estero" : true,
+  "OO" : 1,
+  "OS" : 2,
+  "OP" : 3,
+  "OF" : 4,
+  "OV" : 5,
+  "Note" :"nota2",
+  "Fatturato" : false
+},
+{
+  "ID" : 4,
+  "Cliente" : "S.el.me.c",
+  "Tecnico" : "Lacanale",
+  "Data" : "03/01/2024",
+  "Commessa" : "AA100",
+  "Tipo" : "Lavoro",
+  "Ora_IN1" : "08:00",
+  "Ora_OUT1" : "12:30",
+  "Ora_IN2" : "13:30",
+  "Ora_OUT2" : "17:00",
+  "Km" : 100,
+  "Pranzo" : false,
+  "Cena" : true,
+  "Italia" : false,
+  "Estero" : true,
+  "OO" : 1,
+  "OS" : 2,
+  "OP" : 3,
+  "OF" : 4,
+  "OV" : 5,
+  "Note" :"nota2",
+  "Fatturato" : false
+},
+{
+  "ID" : 5,
+  "Cliente" : "S.el.me.c",
+  "Tecnico" : "Lacanale",
+  "Data" : "03/01/2024",
+  "Commessa" : "AA101",
+  "Tipo" : "Lavoro",
+  "Ora_IN1" : "08:00",
+  "Ora_OUT1" : "12:30",
+  "Ora_IN2" : "13:30",
+  "Ora_OUT2" : "17:00",
+  "Km" : 100,
+  "Pranzo" : false,
+  "Cena" : true,
+  "Italia" : false,
+  "Estero" : true,
+  "OO" : 1,
+  "OS" : 2,
+  "OP" : 3,
+  "OF" : 4,
+  "OV" : 5,
+  "Note" :"nota2",
+  "Fatturato" : false
+}
+],
+"Clienti2" : [{
+  "ID" : 1,
+  "Cliente" : "S.el.me.c",
+  "Indirizzo" : "Via xxx"
+},
+{
+  "ID" : 2,
+  "Cliente" : "Ompa",
+  "Indirizzo" : "Via xxx"
+},
+{
+  "ID" : 3,
+  "Cliente" : "Wts",
+  "Indirizzo" : "Via xxx"
+}
+],
+"Commesse" : [{
+  "ID" : 1,
+  "Commessa" : "AA100",
+  "Descrizione" : "aaaaa",
+  "DataInizio" : "01/01/2024"
+},
+{
+  "ID" : 2,
+  "Commessa" : "AA101",
+  "Descrizione" : "aaaaa",
+  "DataInizio" : "01/01/2024"
+}
+],
+
+
+"Clienti" : [
+  {
+    "Cliente": "Au.Tec.",
+    "Indirizzo": null,
+    "Localita": null,
+    "Provincia": null,
+    "Tel": null,
+    "Cell": null,
+    "Fax": null,
+    "Email": null,
+    "Piva": null,
+    "CAP": "",
+    "Pricelist": ""
+},
+{
+    "Cliente": "CT Tecnology",
+    "Indirizzo": "Via ",
+    "Localita": "Cheiti Scalo",
+    "Provincia": "CH",
+    "Tel": "",
+    "Cell": "",
+    "Fax": "",
+    "Email": "",
+    "Piva": "",
+    "CAP": "",
+    "Pricelist": ""
+}
+]
+
+}
