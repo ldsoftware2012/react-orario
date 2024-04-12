@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { OrarioDataContext } from "../App";
-import { GetRemoteOrarioData, GetRemoteTecniciData } from "../data/Datasource";
-import { url_Orario, url_Tecnici } from "../data/config";
+import { GetRemoteData, ListaTecnici } from "../data/Datasource";
+import { url_Orario } from "../data/config";
 import { format, getDate } from "date-fns";
-import { ITecnico } from "../interface/interface";
 import AnalisiMese from "./AnalisiMese";
 import { Menu } from "./Menu";
 import { Footer } from "./Footer";
+import Select from "react-select"
 
 export default function OrarioAnalisi() {
   const GlobalData = useContext(OrarioDataContext);
@@ -14,22 +14,10 @@ export default function OrarioAnalisi() {
   const [Anno, setAnno] = useState(GlobalData?.data_ref.Anno()||2023);
   const [Mese, setMese] = useState(GlobalData?.data_ref.Mese()||11);
   const [isLoadData, setIsLoadData] = useState(false);
-  const [tecnici, setTecnici] = useState<ITecnico[]>([]);
+  const mesiOptions = [{value:1,label:"Gennaio"},{value:2,label:"Febbraio"},{value:3,label:"Marzo"},{value:4,label:"Aprile"}
+        ,{value:5,label:"Maggio"},{value:6,label:"Giugno"},{value:7,label:"Luglio"},{value:8,label:"Agosto"}
+        ,{value:9,label:"Settembre"},{value:10,label:"Ottobre"},{value:11,label:"Novembre"},{value:12,label:"Dicembre"}]
 
-  const mesi = [
-    { Mese: "Gennaio", Index: 1 },
-    { Mese: "Febbraio", Index: 2 },
-    { Mese: "Marzo", Index: 3 },
-    { Mese: "Aprile", Index: 4 },
-    { Mese: "Maggio", Index: 5 },
-    { Mese: "Giugno", Index: 6 },
-    { Mese: "Luglio", Index: 7 },
-    { Mese: "Agosto", Index: 8 },
-    { Mese: "Settembre", Index: 9 },
-    { Mese: "Ottobre", Index: 10 },
-    { Mese: "Novembre", Index: 11 },
-    { Mese: "Dicembre", Index: 12 },
-  ];
   let anni = [2000];
 
   for (let index = 2001; index < 2050; index++) {
@@ -48,7 +36,7 @@ export default function OrarioAnalisi() {
         const data_inizio = format(startDate, "yyyy/MM/dd");
         const data_fine = format(endDate, "yyyy/MM/dd");
 
-        const orario = await GetRemoteOrarioData(
+        const orario = await GetRemoteData(
           url_Orario +
             "?tecnico=" +
             GlobalData?.tecnico +
@@ -62,50 +50,30 @@ export default function OrarioAnalisi() {
             data_fine
         );
 
+
+        let giornilavorati=[0]
+        orario.map((o:any)=>{
+          const d = new Date(o.Data)
+          giornilavorati.push(d.Giorno())
+        })
+        
+
+        for (let i = 1; i <= NumGiorni; i++) {
+          if(!giornilavorati.includes(i)) {
+            let data = new Date(Anno, Mese - 1, i );
+            let festivo = data.isHoliday() || data.getDay() === 0 || data.getDay() === 6;
+            orario.push({Index : i+1 ,Festivo: festivo,Ore_Ord: "Assente",Giorno: data.getDay(),data:format(data, "dd/MM/yyyy")});
+          }
+        }        
+
+        orario.filter((o:any) => o.Ore_Ord != "Assente").map((o:any)=>o.Index = getDate(o.Data) )
+
         setOrari(orario);
         setIsLoadData(true);
 
-        const tec = await GetRemoteTecniciData(url_Tecnici);
-        setTecnici(tec);
       } catch (error) {}
     })();
   }, [Anno, Mese, GlobalData?.tecnico,GlobalData?.isdataUpdated]);
-
-  useEffect(() => {
-    try {
-      Orari.map((o: any) => {
-        {
-          o.Index = getDate(o.Data) - 1; //Aggiungo campo Giorno
-        }
-      });
-    } catch (error) {}
-
-    console.log("Orari dal server : ", Orari);
-  }, [Orari]);
-
-  function ListaTecnici() {
-    return (
-      <>
-        <div hidden={!GlobalData?.isAdmin}>
-          <label className="m-2">Tecnico</label>
-          <select
-            className="m-2"
-            onChange={(tecnico) =>
-              tecnico.target.value != null
-                ? GlobalData?.setTecnico &&
-                  GlobalData?.setTecnico(tecnico.target.value)
-                : ""
-            }
-            value={GlobalData?.tecnico}
-          >
-            {tecnici.map((c, index) => {
-              return <option key={index}>{c.Tecnico}</option>;
-            })}
-          </select>
-        </div>
-      </>
-    );
-  }
 
   function Filtro() {
     function MesePiu(e: any) {
@@ -150,42 +118,32 @@ export default function OrarioAnalisi() {
 
     return (
       <>
-        {<ListaTecnici />}
-        {<button onClick={(e) => MeseMeno(e)}>-</button>}
-        {
-          <select
-            value={Mese}
-            onChange={(e) =>
-              e.target.value != null ? setMese(parseInt(e.target.value)) : ""
-            }
-          >
-            {mesi.map((m, index) => {
-              return (
-                <option key={index} value={index + 1}>
-                  {m.Mese}
-                </option>
-              );
-            })}
-          </select>
-        }
+      <div className="bg-secondary-subtle text-center d-flex flex-wrap justify-content-center">
+        <div className="w-100">
+          {GlobalData?.isAdmin && <ListaTecnici />}
+        </div>
 
-        {<button onClick={(e) => MesePiu(e)}>+</button>}
+        <div className="Container d-flex bd-highlight bd-highlight">
+            <button className="btn border btn-primary" onClick={(e) => AnnoMeno(e)}>-</button>
+            <input 
+              className="text-center"              
+              type="number"
+              value={Anno}     
+              onChange={(e)=>setAnno(parseInt(e.target.value))}     
+            />
+            <button className="btn border btn-primary" onClick={(e) => AnnoPiu(e)}>+</button>
+        </div>
+        <div className="d-flex bd-highlight">
+            <button className="btn border btn-primary" onClick={(e) => MeseMeno(e)}>-</button>    
+            <Select
+              options={mesiOptions}
+              value={{value:Mese,label:mesiOptions.at(Mese-1)?.label}}
+              onChange={(e)=>setMese(e?.value || 0)}
+              />
+            <button className="btn border btn-primary" onClick={(e) => MesePiu(e)}>+</button>     
 
-        {<button onClick={(e) => AnnoMeno(e)}>-</button>}
-        {
-          <select
-            value={Anno}
-            onChange={(e) =>
-              e.target.value != null ? setAnno(parseInt(e.target.value)) : ""
-            }
-          >
-            {anni.map((a, index) => {
-              return <option key={index}>{a}</option>;
-            })}
-          </select>
-        }
-
-        {<button onClick={(e) => AnnoPiu(e)}>+</button>}
+          </div>
+      </div>
       </>
     );
   }
@@ -203,15 +161,15 @@ export default function OrarioAnalisi() {
   return (
     <>
       <Menu />
-      <Filtro />
+      <div style={{marginTop:"100px"}}>
+        <Filtro />
+      </div>
       <div>
         <p></p>
       </div>
       {isLoadData && <AnalisiMese Anno={Anno} Mese={Mese} Orari={Orari} />}
       {!isLoadData && <DataLoading />}
       <Footer />
-
-      
     </>
   );
 }

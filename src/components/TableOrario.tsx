@@ -2,74 +2,72 @@ import { useContext, useEffect, useState } from "react";
 import { IModelOrario } from "../interface/interface";
 import { format } from "date-fns";
 import { OrarioDataContext } from "../App";
-import { Accordion, Card } from "react-bootstrap";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClone, faTrashCan } from "@fortawesome/free-regular-svg-icons";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
-import { DeleteDay } from "../data/Datasource";
+import { Accordion, Card, Col, ProgressBar } from "react-bootstrap";
+import { Delete, Somma } from "../data/Datasource";
 import { url_DeleteDay } from "../data/config";
-import PopupConfirm from "./PopupConfirm";
 import { useNavigate } from "react-router-dom";
 import "../interface/interface";
 import "../css/TableOrario.css";
-
-const thClass = "text-center px-md-2 border ";
-const totalClass = "text-center px-md-2 border border-primary  ";
-
-function Somma(data: IModelOrario[] = []) {
-  let oo = 0.0,
-    os = 0.0,
-    ov = 0.0,
-    op = 0.0,
-    of = 0.0,
-    km = 0.0,
-    cena = 0,
-    pranzo = 0,
-    pernotto = 0,
-    estero = 0;
-
-  data.map((d) => {
-    oo = oo + parseFloat(d.Ore_Ord);
-    os = os + parseFloat(d.Ore_Stra);
-    ov = ov + parseFloat(d.Ore_Viaggio);
-    op = op + parseFloat(d.Ore_Pre);
-    of = of + parseFloat(d.Ore_Fest);
-    pranzo = pranzo + (d.Pranzo == "true" ? 1 : 0);
-    cena = cena + (d.Cena == "true" ? 1 : 0);
-    pernotto = pernotto + (d.Pernotto == "true" ? 1 : 0);
-    estero = estero + (d.Estero == "true" ? 1 : 0);
-    km = km + parseFloat(d.Km);
-  });
-
-  return { oo, os, ov, op, of, pranzo, cena, pernotto, estero, km };
-}
+import { faAutomobile, faBed, faNoteSticky, faPlane, faPlateWheat, faWineBottle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function FillTableCommessaTotal(data: IModelOrario[] = []) {
-  const { oo, os, ov, op, of, pranzo, cena, pernotto, estero, km } =
-    Somma(data);
+  const { oo, os, ov, op, of, KM ,pranzo, cena, estero } =  Somma(data);
   return (
     <>
-      <tr>
-        <td className="hidden"></td>
-        <td className="hidden"></td>
-        <td className="hidden"></td>
-        <td className="hidden"></td>
-        <td className="hidden"></td>
-        <td className="hidden"></td>
-        <td className="hidden"></td>
-        <td className="hidden"></td>
-        <td className={totalClass}>{km != 0 && !isNaN(km) ? km : ""}</td>
-        <td className={totalClass}>{pranzo != 0 ? pranzo : ""}</td>
-        <td className={totalClass}>{cena != 0 ? cena : ""}</td>
-        <td className={totalClass}>{pernotto != 0 ? pernotto : ""}</td>
-        <td className={totalClass}>{estero != 0 ? estero : ""}</td>
-        <td className={totalClass}>{oo != 0 ? oo : ""}</td>
-        <td className={totalClass}>{os != 0 ? os : ""}</td>
-        <td className={totalClass}>{op != 0 ? op : ""}</td>
-        <td className={totalClass}>{of != 0 ? of : ""}</td>
-        <td className={totalClass}>{ov != 0 ? ov : ""}</td>
-        <td className="hidden"></td>
-      </tr>
+
+    <div id="TotaleCommessa">
+
+    <ProgressBar className="TotaleProgress">
+      {oo > 0 && (
+        <ProgressBar
+          now={40}
+          label={oo}
+          variant="success"          
+          title={"Ore Ordinarie " + oo}
+        ></ProgressBar>
+      )}
+      {os > 0 && (
+        <ProgressBar
+          now={20}
+          label={os}
+          variant="text-light bg-dark"
+          title={"Ore Straordinarie " + os}
+        ></ProgressBar>
+      )}
+      {ov > 0 && (
+        <ProgressBar
+          now={88}
+          label= {<span><FontAwesomeIcon icon={faPlane}></FontAwesomeIcon> {ov}</span>}
+          variant="info"
+          title={"Ore Viaggio " + ov}
+        ></ProgressBar>
+      )}
+      {op > 0 && (
+        <ProgressBar
+          now={60}
+          label={op}
+          variant="warning"
+          title={"Ore Pre-Festive " + op}
+        ></ProgressBar>
+      )}
+      {of > 0 && (
+        <ProgressBar
+          now={60}
+          label={of}
+          variant="primary"
+          title={"Ore Festive " + of}
+        ></ProgressBar>)}
+    </ProgressBar>
+
+      <div className="TotaleIcone">
+        <p> {estero} <FontAwesomeIcon icon={faBed}></FontAwesomeIcon></p>
+        <p> {pranzo} <FontAwesomeIcon icon={faPlateWheat}></FontAwesomeIcon></p>
+        <p> {cena} <FontAwesomeIcon icon={faPlateWheat}></FontAwesomeIcon></p>
+        <p> Km {KM} <FontAwesomeIcon icon={faAutomobile}></FontAwesomeIcon></p>
+      </div>
+    </div>
+
     </>
   );
 }
@@ -89,18 +87,24 @@ function ShowBadge({ Descrizione = "", Valore = 0 }) {
 }
 
 function FillTableTotal(data: IModelOrario[] = []) {
-  const { oo, os, ov, op, of, pranzo, cena, pernotto, estero, km } =
-    Somma(data);
+  const { oo, os, ov, op, of, pranzo, cena, pernotto, estero, KM } =  Somma(data);
+  const [total0,SetTotal0]=useState(false)
+  const GlobalData = useContext(OrarioDataContext);
+  
+  useEffect(() => {
+    const { total0 } =  Somma(GlobalData?.orario);
+    SetTotal0(total0)
+  }, [GlobalData?.orario])
+  
+
   return (
     <>
-      <Accordion defaultActiveKey="0">
+      { !total0 &&  <Accordion defaultActiveKey="0" className="w-100">
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <h3>Totali</h3>
           </Accordion.Header>
-          <Accordion.Body className="bg-light bg-gradient">
-            <Card className="bg-info" style={{ width: "30rem" }}>
-              {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+          <Accordion.Body className="bg-secondary-subtle bg-gradient">
               <Card.Body>
                 <Card.Title>
                   <h1></h1>
@@ -121,7 +125,7 @@ function FillTableTotal(data: IModelOrario[] = []) {
                   {ov > 0 && (
                     <ShowBadge Descrizione="Ore Viaggio" Valore={ov} />
                   )}
-                  {km > 0 && <ShowBadge Descrizione="Km" Valore={km} />}
+                  {KM > 0 && <ShowBadge Descrizione="Km" Valore={KM} />}
                   {pranzo > 0 && (
                     <ShowBadge Descrizione="Pranzi" Valore={pranzo} />
                   )}
@@ -134,171 +138,133 @@ function FillTableTotal(data: IModelOrario[] = []) {
                   )}
                 </Card.Text>
               </Card.Body>
-            </Card>
+            {/* </Card> */}
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+      }
     </>
   );
 }
 
-function FillTableHeader() {
+const GiornoProgressBar = (props:any)=>{
+  const {Ore_Ord,Ore_Stra,Ore_Viaggio,Ore_Pre,Ore_Fest} = props.Orario
   return (
+  <>
+  {Ore_Ord + Ore_Stra + Ore_Viaggio + Ore_Pre + Ore_Fest > 0 && (
+    <ProgressBar className="w-75">
+      {Ore_Ord > 0 && (
+        <ProgressBar
+          now={40}
+          label={Ore_Ord}
+          variant="success"
+          title={"Ore Ordinarie " + Ore_Ord}
+        ></ProgressBar>
+      )}
+      {Ore_Stra > 0 && (
+        <ProgressBar
+          now={20}
+          label={Ore_Stra}
+          variant="text-light bg-dark"
+          title={"Ore Straordinarie " + Ore_Stra}
+        ></ProgressBar>
+      )}
+      {Ore_Viaggio > 0 && (
+        <ProgressBar
+          now={88}
+          label={Ore_Viaggio}
+          variant="info"
+          title={"Ore Viaggio " + Ore_Viaggio}
+        ></ProgressBar>
+      )}
+      {Ore_Pre > 0 && (
+        <ProgressBar
+          now={60}
+          label={Ore_Pre}
+          variant="warning"
+          title={"Ore Pre-Festive " + Ore_Pre}
+        ></ProgressBar>
+      )}
+      {Ore_Fest > 0 && (
+        <ProgressBar
+          now={60}
+          label={Ore_Fest}
+          variant="primary"
+          title={"Ore Festive " + Ore_Fest}
+        ></ProgressBar>
+      )}
+    </ProgressBar>              
+  )}
+  </>
+  )
+}
+
+const GiornoIcons = (props:any)=>{
+  const {Note,Ore_Viaggio,Estero,Pranzo,Cena,Km} = props.Orario  
+  return(
     <>
-      <tr>
-        <th className={thClass}>Data</th>
-        <th className={thClass}>Cliente</th>
-        <th className={thClass}>Commessa</th>
-        <th className={thClass}>Tipo</th>
-        <th className={thClass}>Ora in 1</th>
-        <th className={thClass}>Ora out 1</th>
-        <th className={thClass}>Ora in 2</th>
-        <th className={thClass}>Ora out 2</th>
-        <th className={thClass}>Km</th>
-        <th className={thClass}>Pranzo</th>
-        <th className={thClass}>Cena</th>
-        <th className={thClass}>Italia</th>
-        <th className={thClass}>Estero</th>
-        <th className={thClass}>Ord</th>
-        <th className={thClass}>Stra</th>
-        <th className={thClass}>PreFest</th>
-        <th className={thClass}>Fest</th>
-        <th className={thClass}>Viaggio</th>
-        <th className={thClass}>Note</th>
-      </tr>
+    <Col className="d-flex font-weight-bold">
+      {(Note != "" && Note != undefined) &&
+      <FontAwesomeIcon icon={faNoteSticky} title={Note} color="orange"/>
+      }
+    </Col>
+    <Col className="d-flex flex-row-reverse">
+      {(Cena == "true" || Pranzo=="true") && (
+        <span className="px-1">
+          <FontAwesomeIcon icon={faWineBottle} />
+        </span>
+      )}
+
+      {Ore_Viaggio > 0 && (
+        <span className="px-1">
+          <FontAwesomeIcon icon={faPlane} />
+        </span>
+      )}
+      {Estero == "true" && (
+        <span className="px-1">
+          <FontAwesomeIcon icon={faBed} />
+        </span>
+      )}
+
+      {(Km != 0 && Km != undefined) &&
+      <p><FontAwesomeIcon icon={faAutomobile} title={Km.toString()} /> {Km} Km </p>
+      }
+    </Col>
     </>
-  );
+  )
 }
 
 function FillTableData(o: IModelOrario, index: number) {
   const data = format(o.Data, "dd/MM/yyyy");
 
-  var json = JSON.stringify(o.Data);
 
-  const [showPanelDelete, setshowPanelDelete] = useState(false);
-  const [showPanelEdit, setshowPanelEdit] = useState(false);
   const GlobalData = useContext(OrarioDataContext);
   const navigate = useNavigate();
 
-  async function EliminaRow(index: number) {
-    try {
-      const url = url_DeleteDay + "?id=" + index;
-      const del = await DeleteDay(url);
-      console.log(" delete result = " + del);
-      setshowPanelDelete(false);
-      GlobalData?.setIsDataUpdated(true);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
-  function getClassDayOfWeek() {
-    const Sabato = "";
-    const d = new Date(o.Data);
-    const giorno = d.getDay();
-    if (o.Tipo == "Viaggio") {
-      return "text-center Viaggio";
-    }
-
-    try {
-      if (giorno == 0 || d.isHoliday()) {
-        return "text-center Domenica";
-      } else if (giorno == 6) {
-        return "text-center Sabato";
-      } else {
-        return "text-center";
-      }
-    } catch (error) {
-      console.log("errore", error);
-    }
-  }
   function ModificaRow(id: number) {
     navigate("/updateDataDay?Method=Update&ID=" + id );
   }
 
   return (
-    <tbody key={index}>
-      <tr key={index} className={getClassDayOfWeek()}>
-        <td>{data}</td>
-        <td>{o.Cliente}</td>
-        <td>{o.Commessa}</td>
-        <td>{o.Tipo}</td>
-        <td>{o.Ora_IN1}</td>
-        <td>{o.Ora_OUT1}</td>
-        <td>{o.Ora_IN2}</td>
-        <td>{o.Ora_OUT2}</td>
-        <td>{o.Km != "0" ? o.Km : ""}</td>
-        {/* k()}><input type="checkbox" checked={o.Pranzo == "true"}></input></td> */}
-        <td>
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={o.Pranzo == "true"}
-          ></input>
-        </td>
-        <td>
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={o.Cena == "true"}
-          ></input>
-        </td>
-        <td>
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={o.Pernotto == "true"}
-          ></input>
-        </td>
-        <td>
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={o.Estero == "true"}
-          ></input>
-        </td>
-        <td>{o.Ore_Ord != "0" ? o.Ore_Ord : ""}</td>
-        <td>{o.Ore_Stra != "0" ? o.Ore_Stra : ""}</td>
-        <td>{o.Ore_Pre != "0" ? o.Ore_Pre : ""}</td>
-        <td>{o.Ore_Fest != "0" ? o.Ore_Fest : ""}</td>
-        <td>{o.Ore_Viaggio != "0" ? o.Ore_Viaggio : ""}</td>
-        <td>{o.Note}</td>
-        <td>
-          <button onClick={(e) => setshowPanelEdit(true)} title="Modifica">
-            {" "}
-            <FontAwesomeIcon icon={faPen} />
-          </button>
-        </td>
-        <td>
-          <button onClick={(e) => setshowPanelDelete(true)} title="Elimina">
-            {" "}
-            <FontAwesomeIcon icon={faTrashCan} />
-          </button>
-        </td>
-        <td>
-          <button onClick={(e) => setshowPanelDelete(true)} title="Duplica">
-            {" "}
-            <FontAwesomeIcon icon={faClone} />
-          </button>
-        </td>
-        {showPanelDelete && (
-          <PopupConfirm
-            Titolo="Elimina"
-            Descrizione="Vuoi eliminare questo giorno?"
-            onConfirmation={() => EliminaRow(o.id || -1)}
-            setClose={() => setshowPanelDelete(false)}
-          ></PopupConfirm>
-        )}
-        {showPanelEdit && (
-          <PopupConfirm
-            Titolo="Modifica"
-            Descrizione="Vuoi modificare questo giorno?"
-            onConfirmation={() => ModificaRow(o.id || -1)}
-            setClose={() => setshowPanelEdit(false)}
-          ></PopupConfirm>
-        )}
-      </tr>
-    </tbody>
+    <>
+      <div id="ListaOre" onClick={()=>ModificaRow(o.id || 999999)}>
+
+        <div className="colonna-1">
+          <p >{data}</p>
+          <p >{o.Cliente}</p>
+          <p >{o.Commessa}</p>
+        </div>
+
+        <div className="colonna-2">
+          <p >{o.Ora_IN1} {o.Ora_OUT1} {o.Ora_IN2} {o.Ora_OUT2}</p>
+          <p><GiornoProgressBar Orario={o}/></p>
+          <GiornoIcons Orario={o}/>
+          <p>{o.Note}</p>
+        </div>
+
+      </div>
+    </>
   );
 }
 
@@ -307,21 +273,15 @@ function OrarioList() {
   return (
     <>
       {<>{FillTableTotal(GlobalData?.orario)}</>}
-
-      <table>
-        {FillTableHeader()}
-        {GlobalData?.orario.map((o, index) => {
+        {GlobalData?.orario.map((o) => {
           return FillTableData(o, o.id || 999);
         })}
-        {FillTableCommessaTotal(GlobalData?.orario)}
-      </table>
     </>
   );
 }
 
 function OrarioCommesse() {
   const GlobalData = useContext(OrarioDataContext);
-  const data: IModelOrario[] = [];
 
   const ListaCommesse = GlobalData?.orario.reduce((commesselista, current) => {
     if (!commesselista.includes(current.Commessa))
@@ -329,14 +289,12 @@ function OrarioCommesse() {
     return commesselista;
   }, [] as string[]); //Added as string[]
 
+
   return (
     <>
       {<>{FillTableTotal(GlobalData?.orario)}</>}
-
-      <table>
         {ListaCommesse?.map((commessa) => {
-          const Desc =
-            GlobalData?.commesse.filter((c) => c.Commessa == commessa) || [];
+          const Desc = GlobalData?.commesse.filter((c) => c.Commessa == commessa) || [];
           let Descrizione;
           if (Desc.length > 0) {
             Descrizione = Desc[0].Descrizione;
@@ -352,23 +310,19 @@ function OrarioCommesse() {
                     <h3>{commessa + "(" + Descrizione + ")"}</h3>
                   </Accordion.Header>
                   <Accordion.Body>
-                    {/* <legend className="font-weight-bold">{commessa + "(" + Desc[0].Descrizione + ")"}</legend> */}
-
-                    {FillTableHeader()}
-
-                    {GlobalData?.orario
-                      .filter((comm) => comm.Commessa == commessa)
-                      .map((o, index) => {
-                        return FillTableData(o, o.id || 999);
-                      })}
-                    {
-                      <>
+                    <div>
+                      {GlobalData?.orario.filter((comm) => comm.Commessa == commessa).map((o) => {
+                          return FillTableData(o, o.id || 99999);
+                        })}
+                    </div>
+                    {                      
+                    <div>
                         {FillTableCommessaTotal(
                           GlobalData?.orario.filter(
                             (o) => o.Commessa == commessa
                           )
                         )}
-                      </>
+                    </div>
                     }
                   </Accordion.Body>
                 </Accordion.Item>
@@ -377,7 +331,6 @@ function OrarioCommesse() {
             </>
           );
         })}
-      </table>
     </>
   );
 }
@@ -385,16 +338,17 @@ function OrarioCommesse() {
 export default function TableOrario(props: any) {
   const { Tipo } = props;
   const [tipoVisualizzazione, settipoVisualizzazione] = useState(Tipo);
-  const GlobalData = useContext(OrarioDataContext);
 
   useEffect(() => {
     settipoVisualizzazione(Tipo);
   }, [Tipo]);
-
+  
   return (
     <>
-      {tipoVisualizzazione == "Commesse" && OrarioCommesse()}
-      {tipoVisualizzazione == "Lista" && OrarioList()}
+      <div className="Container">
+        {tipoVisualizzazione == "Commesse" && OrarioCommesse()}
+        {tipoVisualizzazione == "Lista" && OrarioList()}
+      </div>
     </>
   );
 }

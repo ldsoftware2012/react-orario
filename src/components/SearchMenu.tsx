@@ -1,29 +1,13 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import {
-  GetRemoteClientiData,
-  GetRemoteCommesseData,
-  GetRemoteOrarioData,
-  GetRemoteTecniciData,
-} from "../data/Datasource";
-import {
-  ICliente,
-  ICommesse,
-  ISearchParameter,
-  ITecnico,
-} from "../interface/interface";
+import {  GetRemoteData, ListaClienti, ListaTecnici, MapToOptions,} from "../data/Datasource";
+import {  ISearchParameter} from "../interface/interface";
 import DatePicker from "react-datepicker";
-
 import "react-datepicker/dist/react-datepicker.css";
-import {
-  url_Clienti,
-  url_Commesse,
-  url_Orario,
-  url_Tecnici,
-} from "../data/config";
-import { format, setDate } from "date-fns";
+import {  url_Orario,} from "../data/config";
+import { format } from "date-fns";
 import { Accordion } from "react-bootstrap";
 import { OrarioDataContext } from "../App";
-import { start } from "repl";
+import Select from "react-select"
 
 export default function SearchMenu() {
   const [fatturato, setfatturato] = useState<string>("false");
@@ -34,7 +18,7 @@ export default function SearchMenu() {
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [isEnabledFiltro, setisEnabledFiltro] = useState(true);
   const [filter, setFilter] = useState(false);
-  const [searchParameter, setSearchParameter] = useState<ISearchParameter>({});
+  const [searchParameter] = useState<ISearchParameter>({});
 
   const GlobalData = useContext(OrarioDataContext);
   //load page
@@ -53,12 +37,6 @@ export default function SearchMenu() {
       } catch (error) {}
     }
     hasLoadedBefore.current = false;
-    console.log(
-      "cliente = ",
-      GlobalData?.searchParameter.Cliente,
-      "commessa = ",
-      GlobalData?.searchParameter
-    );
   }, []);
 
   useEffect(() => {
@@ -82,7 +60,7 @@ export default function SearchMenu() {
       if (GlobalData?.tecnico != "" && cliente != "") {
         (async () => {
           GlobalData?.setIsDataLoad(false);
-          const orario = await GetRemoteOrarioData(
+          const orario = await GetRemoteData(
             url_Orario +
               "?tecnico=" +
               GlobalData?.tecnico +
@@ -120,124 +98,75 @@ export default function SearchMenu() {
     }
   }, [filter]);
 
-  function ListaTecnici() {
-    return (
-      <>
-        <div hidden={!GlobalData?.isAdmin}>
-          <label className="m-2">Tecnico</label>
-          <select
-            className="m-2"
-            onChange={(tecnico) =>
-              tecnico.target.value != null
-                ? GlobalData?.setTecnico &&
-                  GlobalData?.setTecnico(tecnico.target.value)
-                : ""
-            }
-            value={GlobalData?.tecnico}
-          >
-            {GlobalData?.tecnici.map((c) => {
-              return <option>{c.Tecnico}</option>;
-            })}
-          </select>
-        </div>
-      </>
-    );
-  }
-
-  function ListaClienti() {
-    return (
-      <>
-        <label className="m-2">Cliente</label>
-        <select
-          className="m-2"
-          value={cliente}
-          onChange={(cliente) =>
-            cliente.target.value != null ? setCliente(cliente.target.value) : ""
-          }
-        >
-          <option>Tutti *</option>
-          {GlobalData?.clienti.map((c, index) => {
-            return <option key={index}>{c.Cliente}</option>;
-          })}
-        </select>
-      </>
-    );
-  }
+  // FIXME: Da cancellare
+  // function ListaClienti() {
+  //   const options = MapToOptions(GlobalData?.clienti,"Cliente","Tutti *")
+  //   return (
+  //     <>
+  //       <label className="m-2">Cliente</label>
+  //       <Select 
+  //               options={options}
+  //               value={{value: cliente,label:cliente}}
+  //               onChange={(e)=>setCliente(e?.value || "")}
+  //           />
+  //     </>
+  //   );
+  // }
 
   function ListaCommesse() {
+    const options = MapToOptions(GlobalData?.commesse,"Commessa","Tutte *")
     return (
       <>
-        <label className="m-2">Commessa</label>
-        <select
-          className="m-2"
-          value={commessa}
-          onChange={(commessa) =>
-            commessa.target.value != null
-              ? setCommessa(commessa.target.value)
-              : ""
-          }
-        >
-          <option>Tutte *</option>
-          {GlobalData?.commesse.map((c) => {
-            return <option>{c.Commessa}</option>;
-          })}
-        </select>
+        {/* <label className="m-2">Commessa</label> */}
+        <Select 
+          options={options} 
+          value={{value: commessa,label:commessa}}
+          onChange={(e)=>setCommessa(e?.value || "")}
+        />
       </>
     );
   }
 
   function TipoFiltroData() {
-    function MeseCorrente(): void {
+
+    function MesiPassati(mesi:number): void {
       var today = new Date();
-      const days = new Date(today.getFullYear(), today.Mese(), 0).getDate();
+      const days = new Date(today.getFullYear(), today.Mese() - mesi, 0).getDate();
+
       const data_inizio = new Date(
         today.getFullYear(),
-        today.Mese() - 1,
+        today.Mese() - mesi - 1,
         1,
         12
       );
       const data_fine = new Date(
         today.getFullYear(),
-        today.Mese() - 1,
+        today.Mese() - mesi - 1,
         days,
         12
       );
       setStartDate(data_inizio);
       setEndDate(data_fine);
     }
-
-    function MeseScorso(): void {
-      var today = new Date();
-      const days = new Date(today.getFullYear(), today.Mese() - 1, 0).getDate();
-
-      const data_inizio = new Date(
-        today.getFullYear(),
-        today.Mese() - 2,
-        1,
-        12
-      );
-      const data_fine = new Date(
-        today.getFullYear(),
-        today.Mese() - 2,
-        days,
-        12
-      );
-      setStartDate(data_inizio);
-      setEndDate(data_fine);
-    }
-
     return (
       <>
         <button
           type="button"
-          onClick={() => MeseScorso()}
+          onClick={() => MesiPassati(2)}
+          className="btn btn-warning m-2"
+        >
+          2 Mesi fa
+        </button>
+        <button
+          type="button"
+          onClick={() => MesiPassati(1)}
           className="btn btn-warning m-2"
         >
           Mese Scorso
         </button>
         <button
           type="button"
-          onClick={() => MeseCorrente()}
+          onClick={() => MesiPassati(0)}
           className="btn btn-warning m-2"
         >
           Mese Corrente
@@ -249,9 +178,9 @@ export default function SearchMenu() {
   function DataInizio() {
     return (
       <>
-        <label htmlFor="data_inizio" className="m-2">
+        {/* <label htmlFor="data_inizio" className="m-2">
           Dal
-        </label>
+        </label> */}
         <DatePicker
           id="data_inizio"
           className="m-2"
@@ -267,9 +196,9 @@ export default function SearchMenu() {
   function DataFine() {
     return (
       <>
-        <label htmlFor="data_fine" className="m-2">
+        {/* <label htmlFor="data_fine" className="m-2">
           Al
-        </label>
+        </label> */}
         <DatePicker
           id="data_fine"
           className="m-2"
@@ -299,19 +228,25 @@ export default function SearchMenu() {
 
   return (
     <>
-      <div className="d-flex flex-row ticky-top w-100  mb-3">
-        <Accordion defaultActiveKey="0">
+      <div className="d-flex flex-row  w-100  mb-3 mt-5">
+        <Accordion defaultActiveKey="0" className="w-100">
           <Accordion.Item eventKey="0">
             <Accordion.Header>
               <h3>Parametri filtro</h3>
             </Accordion.Header>
-            <Accordion.Body className="bg-primary bg-gradient">
+            <Accordion.Body className="bg-secondary-subtle bg-gradient">
               <div>
-                <ListaTecnici />
-                <ListaClienti />
+                {GlobalData?.isAdmin && <ListaTecnici />}
+                <ListaClienti 
+                  defaultvalue="Tutti *"
+                  value={cliente}
+                  onChange={setCliente}
+                />
                 <ListaCommesse />
-                <div className="d-flex flex-row">
+                <div className="d-flex ">
                   <TipoFiltroData />
+                </div>
+                <div>
                   <DataInizio />
                   <DataFine />
                   <Fatturato />

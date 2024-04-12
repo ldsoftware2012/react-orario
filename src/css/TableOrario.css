@@ -1,28 +1,84 @@
-.Sabato{
-    border-bottom: solid;
-    border-top: solid;
-    border-left: solid;
-    border-right: solid;
-    border-color: yellow;
-    background-color: yellow;
-    
+body{
+    margin: 0;
 }
 
-.Domenica{
-    border-bottom: solid;
-    border-top: solid;
-    border-left: solid;
-    border-right: solid;
-    border-color: red;
-    background-color: red;
+#ListaOre{
+    cursor: pointer;
+    display: grid; 
+    grid-template-columns: 30% 70%;
+    margin:auto;
+    padding: 0;
+    min-width: 20%;
+    flex: auto;
+    border: solid black 1pt;
 }
 
-.Viaggio{
-    border-bottom: solid;
-    border-top: solid;
-    border-left: solid;
-    border-right: solid;
-    border-color: blue;
-    background-color: blue;
+#ListaOre div>p{
+    margin: 5px;
 }
 
+#ListaOre .colonna-1{
+    margin: 0px;
+    padding: 0%;   
+    height: 100%;
+    color: white;
+    background-color: black;
+    border-top: solid white;
+    border-left: solid white;
+    border-bottom: solid white; 
+}
+
+#ListaOre .colonna-2{
+    margin: 0;
+    padding: 1%;
+    color: white;
+    background-color: black;
+    border-top: solid white;
+    border-right: solid white;
+    border-bottom: solid white;
+}
+
+#TotaleCommessa{
+    position: relative;
+    margin:0;
+    padding: 1%;
+    color: white;
+    background-color: black;
+    height: 7vh;
+}
+
+#TotaleCommessa .TotaleProgress{
+    height: 50%;
+}
+
+#TotaleCommessa .TotaleIcone{
+    display: flex;
+    margin: 0 0 0 5px ;
+    padding: 0.5%;
+}
+
+#TotaleCommessa .TotaleIcone>p{
+    margin-left: 20px;
+}
+
+#CampiCommessa{
+    cursor: pointer;
+    display: grid; 
+    grid-template-columns: 20% 80%;
+    margin:auto;
+    padding: 0;
+    min-width: 20%;
+    flex: auto;
+}
+
+#CampiCommessa .colonna-1{
+    margin: 0px;
+    padding: 1%;   
+    height: 100%;
+}
+
+#CampiCommessa .colonna-2{
+    margin: 0;
+    padding: 1%;
+
+}

@@ -1,8 +1,8 @@
-import { Dispatch, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
-import { ICliente, IModelOrario } from "../interface/interface";
+import { IModelOrario } from "../interface/interface";
 import {
-  AddDay, DeleteDay, GetRemoteOrarioDataByID, UpdateDay,
+  AddDay, DataLoading, Delete, GetRemoteData, ListaClienti, MapToOptions, UpdateDay,
 } from "../data/Datasource";
 import { url_AddDay, url_DeleteDay, url_OrarioByID, url_UpdateDay } from "../data/config";
 import {
@@ -16,14 +16,17 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import { OrarioDataContext } from "../App";
-import PopupInfo from "./PopupInfo";
 import { Menu } from "./Menu";
 import { Footer } from "./Footer";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave } from "@fortawesome/free-regular-svg-icons";
-import { faArrowCircleLeft, faTrash } from "@fortawesome/free-solid-svg-icons";
-import PopupConfirm from "./PopupConfirm";
+import { faClose, faTrash } from "@fortawesome/free-solid-svg-icons";
+import Popup from "./Popup";
+import { format } from "date-fns";
+import ListaCommesse from "./ListaCommesse";
+import Select from "react-select"
+
 
 export function UpdateDataDay() {
   const hasLoadedBefore = useRef(true);
@@ -49,11 +52,11 @@ export function UpdateDataDay() {
   const [fatturato, setFatturato] = useState("false");
 
   const [isEnableCommand, setIsEnableCommand] = useState(false);
-  const [resultInsert, setResultInsert] = useState("");
-  const [showPopupInsert, setShowPopupInsert] = useState(false);
+  const [resultRemoteOperation, setResultRemoteOperation] = useState<{status : Number, description:string}>();
   const [error,setError] = useState("")
   const [orario, setOrario] = useState<IModelOrario[]>([]);
-  const [showPanelDelete, setshowPanelDelete] = useState(false);
+  const [isLoading,setIsLoading] = useState(true)
+  const [isDataLoaded,setIsDataLoaded] = useState(false)
 
   const navigate = useNavigate();
   const ore = [
@@ -115,7 +118,8 @@ export function UpdateDataDay() {
   let NuovaData = Parameters.get("Data");
   if(NuovaData==null) {NuovaData = new Date().toString()} 
 
- 
+
+
   function differenzaOrari(orario1: string, orario2: string) {
     const data1 = new Date(`1970-01-01T${orario1}`);
     const data2 = new Date(`1970-01-01T${orario2}`);
@@ -135,67 +139,79 @@ export function UpdateDataDay() {
   }
   
   function AggiornaOrari() {
-    let oo = 0, os = 0,op = 0,of = 0,ov = 0;
-    setError("");
-
-    const giorno = new Date(data).getDay();
-    var reg = new RegExp("^([0-9])+$");
-
-    if (differenzaOrari(orain1, oraout1).oreNumber > 0) {
-      oo = differenzaOrari(orain1, oraout1).oreNumber;
-    } else {
-      setError("Anomalia orario mattina")
-      oo=0
-    }
-
-    if (differenzaOrari(orain2, oraout2).oreNumber > 0) {
-      oo = oo + differenzaOrari(orain2, oraout2).oreNumber;
-      console.log(orain2,oraout2,oo)
-    } else if((orain2 == "" && oraout2 == "") || (orain2 == undefined && oraout2 == undefined)){
-    }
-    else {
-      console.log(orain2,oraout2)
-      if(orain2 != "" || oraout2 != ""){
-        setError("Anomalia orario pomeriggio")
+if (isDataLoaded) {  
+      let oo = 0, os = 0,op = 0,of = 0,ov = 0;
+      setError("");
+  
+      const giorno = new Date(data).getDay();
+      var reg = new RegExp("^([0-9])+$");
+  
+      if (differenzaOrari(orain1, oraout1).oreNumber > 0) {
+        oo = differenzaOrari(orain1, oraout1).oreNumber;
+      } else if(tipo != "Riposo trasferta") {
+        setError("Anomalia orario mattina")
         oo=0
       }
-    }
+  
+      if (differenzaOrari(orain2, oraout2).oreNumber > 0) {
+        oo = oo + differenzaOrari(orain2, oraout2).oreNumber;
+      } else if((orain2 == "" && oraout2 == "") || (orain2 == undefined && oraout2 == undefined)){
+      }
+      else {
+        console.log(orain2,oraout2)
+        if(orain2 != "" || oraout2 != ""){
+          setError("Anomalia orario pomeriggio")
+          oo=0
+        }
+      }
+  
+      if (oo > 8) {
+        os = oo - 8;
+        oo = 8;
+      }
+  
+      if (giorno == 6 && tipo == "Lavoro") {
+        //saturday
+        op = oo + os;
+        oo = 0;
+        os = 0;
+      }
+  
+      if ((giorno == 0 || data.isHoliday()) && tipo == "Lavoro") {
+        //sunday or holiday
+        of = oo + os;
+        oo = 0;
+        os = 0;
+      }
+  
+      if (tipo == "Viaggio") {
+        //traveling
+        ov = oo + os;
+        oo = 0;
+        os = 0;
+      }
 
-    if (oo > 8) {
-      os = oo - 8;
-      oo = 8;
-    }
-
-    if (giorno == 6 && tipo == "Lavoro") {
-      //saturday
-      op = oo + os;
-      oo = 0;
-      os = 0;
-    }
-
-    if ((giorno == 0 || data.isHoliday()) && tipo == "Lavoro") {
-      //sunday or holiday
-      of = oo + os;
-      oo = 0;
-      os = 0;
-    }
-
-    if (tipo == "Viaggio") {
-      //traveling
-      ov = oo + os;
-      oo = 0;
-      os = 0;
-    }
-
-    if(!cliente){setError("Selezionare un cliente")}
-    if(!commessa){setError("Selezionare una commessa")}
-    if(!reg.test(km) && km !=""){setError("Valore km immesso non corretto")}
-
-    setOreOrd(oo);
-    setOreStra(os);
-    setOreViaggio(ov);
-    setOrePrefestive(op);
-    setOreFestive(of);
+      if (tipo == "Riposo trasferta") {
+        //traveling
+        ov = 0;
+        oo = 0;
+        op = 0;
+        of = 0;
+        os = 0;
+      }
+  
+      if(!cliente){setError("Selezionare un cliente")}
+      if(!commessa){setError("Selezionare una commessa")}
+      if(!reg.test(km) && km !=""){setError("Valore km immesso non corretto")}
+  
+      setOreOrd(oo);
+      setOreStra(os);
+      setOreViaggio(ov);
+      setOrePrefestive(op);
+      setOreFestive(of);
+  
+      setIsLoading(false)
+}
   }
 
 
@@ -205,21 +221,16 @@ useEffect(() => {
 
   //change day parameter
 useEffect(() => {    
-    // if(ID != null && ID != undefined){
       AggiornaOrari();
-    // }
-    return () => {};
-  }, [orain1, orain2, , oraout1, oraout2, tipo, data, cliente, commessa, km]);
+  }, [orain1, orain2, , oraout1, oraout2, tipo, data, cliente, commessa,km]);
 
+//Load page
 useEffect(() => {
   if (hasLoadedBefore.current) {
     hasLoadedBefore.current = false;
     (async()=>{
-      console.log(Method,ID)
       if(Method =="Update" && ID != null && ID != undefined){
-        const ore = await GetRemoteOrarioDataByID(
-          url_OrarioByID + "?id=" + ID
-        );
+        const ore = await GetRemoteData(url_OrarioByID + "?id=" + ID);
         setOrario(ore);
         if(ore.length > 0){
           const data = new Date(ore.at(0)?.Data);
@@ -243,16 +254,24 @@ useEffect(() => {
           setNote(ore.at(0)?.Note || "");
           setFatturato(ore.at(0)?.Fatturato || "");
           setKm(ore.at(0)?.Km || "");
+          setIsDataLoaded(true)
           }
       }
 
-      if(Method == "Add" && NuovaData != ""){
-        const d = new Date(NuovaData || "")
-        setData(d);
-        setOraIn1("08:00");
-        setOraOut1("12:30");
-        setOraIn2("13:30");
-        setOraOut2("17:00");
+      try {
+        if(Method == "Add" && NuovaData != ""){
+          const d = new Date(NuovaData || new Date())
+          setCliente("")
+          setCommessa("")
+          setData(d);
+          setOraIn1("08:00");
+          setOraOut1("12:30");
+          setOraIn2("13:30");
+          setOraOut2("17:00");
+          setIsDataLoaded(true)
+        }
+      } catch (error) {
+        console.log("error",error)
       }
     })()
   }
@@ -278,57 +297,37 @@ useEffect(() => {
       <>
         <select
           id="tipo1"
-          className="m-2"
+          className="m-2 form-control"
           value={tipo}
           onChange={(e) => setTipo(e.target.value)}
         >
-          <option key="lavoro" defaultValue={tipo}>
-            Lavoro
-          </option>
+          <option key="lavoro" defaultValue={tipo}>Lavoro</option>
           <option key="viaggio">Viaggio</option>
-        </select>
+          <option key="Riposo trasferta">Riposo trasferta</option>
+        </select>  
       </>
     );
   }
   function Cliente() {
     return (
       <>
-        <select
-          className= {cliente ?  "m-2" : "m-2 border-danger border-3"}
+        <ListaClienti 
+          placeholder = ""          
           value={cliente}
-          onChange={(cliente) =>
-            cliente.target.value != null ? setCliente(cliente.target.value) : ""
-          }
-        >
-          <option value="" disabled selected hidden>
-            Seleziona cliente
-          </option>
-          {GlobalData?.clienti.map((c, index) => {
-            return <option key={index}>{c.Cliente}</option>;
-          })}
-        </select>
+          onChange={setCliente}
+        />
       </>
     );
   }
   function ListaCommesse() {
+    const options = MapToOptions(GlobalData?.commesse,"Commessa","Tutte *")
     return (
       <>
-        <select
-          className= {commessa ?  "m-2" : "m-2 border-danger border-3"}
-          value={commessa}
-          onChange={(commessa) =>
-            commessa.target.value != null
-              ? setCommessa(commessa.target.value)
-              : ""
-          }
-        >
-          <option value="" disabled selected hidden>
-            Seleziona commessa
-          </option>
-          {GlobalData?.commesse.map((c, index) => {
-            return <option key={index}>{c.Commessa}</option>;
-          })}
-        </select>
+        <Select 
+          options={options} 
+          value={{value: commessa,label:commessa}}
+          onChange={(e)=>setCommessa(e?.value || "")}
+        />
       </>
     );
   }
@@ -390,6 +389,22 @@ useEffect(() => {
             setEstero(e.target.checked == true ? "true" : "false")
           }
           label="Estero"
+        ></Form.Check>
+      </Form>
+    );
+  }
+  function FatturatoCheck() {
+    return (
+      <Form>
+        <Form.Check
+          type="switch"
+          id="custom-switch"
+          name="ratingCheckbox"
+          checked={fatturato == "true" ? true : false}
+          onChange={(e) =>
+            setFatturato(e.target.checked == true ? "true" : "false")
+          }
+          label="Evaso"
         ></Form.Check>
       </Form>
     );
@@ -517,24 +532,23 @@ useEffect(() => {
       </>
     );
   }
-  
   async function EliminaRow(index: number) {
     try {
       const url = url_DeleteDay + "?id=" + index;
-      const del = await DeleteDay(url);
+      const del = await Delete(url);
       console.log(" delete result = " + del);
-      setshowPanelDelete(false);
       GlobalData?.setIsDataUpdated(true);
       navigate(-1)
     } catch (error) {
       console.log(error);
     }
   }
-
   async function SaveData() {
+
     const new_orario: IModelOrario = {
       id: parseInt(ID || ""),
       Data: data,
+      DataString : format(data,"yyyy-MM-dd"),
       Cliente: cliente,
       Tecnico: GlobalData?.tecnico || "",
       Commessa: commessa,
@@ -548,37 +562,46 @@ useEffect(() => {
       Cena: cena,
       Pernotto: pernotto,
       Estero: estero,
+      Fatturato: fatturato,
       Ore_Ord: oreOrd.toString(),
       Ore_Stra: oreStra.toString(),
       Ore_Pre: orePrefestive.toString(),
       Ore_Fest: oreFestive.toString(),
       Ore_Viaggio: oreViaggio.toString(),
       Note: note,
-      Fatturato: fatturato,
     };
 
     const result = ""
     if(Method == "Add"){
       const result = await AddDay(url_AddDay, new_orario);
-      setShowPopupInsert(true);
-      setResultInsert(result);
+      setResultRemoteOperation({status:result.status,description:result.description});
     }
 
     if(Method == "Update"){
     const result = await UpdateDay(url_UpdateDay, new_orario);
-      setShowPopupInsert(true);
-      setResultInsert(result);
+      setResultRemoteOperation({status:result.status,description:result.description});
     }
-
-    console.log(" result = " + result);
   }
+
+useEffect(() => {
+  if (resultRemoteOperation?.status != 0) {
+    const timeoutId = setTimeout(() => {
+        setResultRemoteOperation({status:0,description:""})
+    }, 3000);
+  }
+}, [resultRemoteOperation])
 
   return (
     <>
       <Menu />
+      {(isLoading || !isDataLoaded) && <DataLoading/>}
 
-      <Container fluid>
-      <div className="container fluid bg-light mt-5">
+      {!isLoading && isDataLoaded && <Container fluid>     
+
+        <legend className="text-center">Gestione Giorno</legend>
+      <Row>
+        <Col className="text-end"><Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 rounded"><FontAwesomeIcon icon={faClose}/></Button></Col>
+      </Row>
       <Row className="align-items-center">
         <Col>
           <Data />
@@ -615,46 +638,46 @@ useEffect(() => {
         posizione="sinistra"
       />
 
-      <Row className="m-2">
-        <Col>
-          <Pranzo />
-        </Col>
-        <Col>
-          <Cena />
-        </Col>
-        <Col>
-          <Pernotto />
-        </Col>
-        <Col>
-          <Estero />
-        </Col>
+      <Row className="m-5">
+        <Col><Pranzo /></Col>
+        <Col><Cena /></Col>
+        <Col><Pernotto /></Col>
+        <Col><Estero /></Col>
       </Row>
 
-      <Row className="mt-3 text-center">
+      <Row>
         <Col>
-          <input
-            type="text"
-            value={km}
-            placeholder="Km"
-            onChange={(e) => setKm(e.target.value)}
-            className="text-center"
-          ></input>
+        <div className="input-group input-group-sm mb-3">
+              <div className="input-group-prepend">
+                  <span className="input-group-text" id="inputGroup-sizing-sm">KM</span>
+              </div>
+              <input type="text" 
+              className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              value={km}
+              onChange={(e)=>setKm(e.target.value)}
+              />
+          </div> 
         </Col>
+      </Row>  
+
+      <Row>
+        <Col>
+        <div className="input-group input-group-sm mb-3">
+              <div className="input-group-prepend">
+                  <span className="input-group-text" id="inputGroup-sizing-sm">Note</span>
+              </div>
+              <input type="text" 
+              className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              value={note}
+              onChange={(e)=>setNote(e.target.value)}
+              />
+          </div> 
+        </Col>
+
       </Row>
 
-      <Row className="mt-3">
-        <Col>
-        <div>
-        <input
-          type="text"
-          value={note}
-          placeholder="Note"
-          className="w-100"
-          onChange={(e) => setNote(e.target.value)}
-          key="note"
-        ></input>
-      </div>
-        </Col>
+      <Row>
+        <Col>{GlobalData?.isAdmin && <FatturatoCheck/>}</Col>
       </Row>
 
       <div className="mt-3">
@@ -688,45 +711,18 @@ useEffect(() => {
           </Badge>
         )}
       </div>
-
+        
       <div className="bg-danger">{error}</div>
-
-      {showPopupInsert && (
-        <PopupInfo
-          Titolo="Salvataggio"
-          setClose={() => setShowPopupInsert(false)}
-          Descrizione={resultInsert}
-        />
-      )}
-        {showPanelDelete && (
-          <PopupConfirm
-            Titolo="Elimina"
-            Descrizione="Vuoi eliminare questo giorno?"
-            onConfirmation={() => EliminaRow(parseInt(ID || "-1"))}
-            setClose={() => setshowPanelDelete(false)}
-          ></PopupConfirm>
-        )}
-
+      
+      {resultRemoteOperation?.status != null && <div className={resultRemoteOperation?.status === 1 ? "bg-success text-white" : "bg-danger text-white"}>{resultRemoteOperation?.description}</div>}
 
       <div className="align-items-center text-center ">
-      <button onClick={()=>navigate(-1)} className="btn btn-outline-dark"><FontAwesomeIcon icon={faArrowCircleLeft}/></button>
-        <button
-          disabled={!isEnableCommand}
-          type="button"
-          className="btn btn-primary "
-          onClick={() => SaveData()}>
-          <FontAwesomeIcon icon={faSave}/> Salva
-        </button>
-        {ID !=null && <button
-          disabled={!isEnableCommand}
-          type="button"
-          className="btn bg-danger"
-          onClick={(e) => setshowPanelDelete(true)} title="Elimina">
-          <FontAwesomeIcon icon={faTrash}/> Elimina
-        </button>}
-      </div>
+        {/* <Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 w-25 m-ms-0"><FontAwesomeIcon icon={faArrowCircleLeft}/></Button> */}
+        <Popup Disabled={!isEnableCommand} Icon={faSave} IconColor="green" Label="Salva" MessageTitle="Salvataggio dati" MessageDescription="Vuoi salvare questo orario?" onConfirm={()=>SaveData()}></Popup>
+        <Popup Disabled={!isEnableCommand} Icon={faTrash} IconColor="red" Label="Elimina" MessageTitle="Elimina" MessageDescription="Vuoi eliminare questo orario?" onConfirm={()=>EliminaRow(parseInt(ID || "-1"))}></Popup>
       </div>
       </Container>
+      }
       <Footer />
     </>
   );

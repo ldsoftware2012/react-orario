@@ -1,5 +1,11 @@
-import { Dispatch, SetStateAction } from "react";
+import { format } from "date-fns";
+import { Dispatch } from "react";
 
+export interface IDayMissing{
+  id:number,
+  data:Date,
+  missinghours:number
+}
 
 export interface ISearchParameter{
   Tecnico? : string,
@@ -14,7 +20,7 @@ export interface IDataContext{
   orario : IModelOrario[],
   setOrario? : Dispatch<IModelOrario[]>,
   tecnico : string,
-  setTecnico? : Dispatch<string>,
+  setTecnico? : Dispatch<string>
   isDataLoad : boolean,
   setIsDataLoad : Dispatch<boolean>,
   isLogged : boolean,
@@ -32,8 +38,21 @@ export interface IDataContext{
   data_ref : Date,
   setData_ref : Dispatch<Date>,
   isEnableChange : string,
-  setIsEnableChange : Dispatch<string>
+  setIsEnableChange : Dispatch<string>,
+  acconti : IAcconto[],
+  setAcconti : Dispatch<IAcconto[]>
 } 
+
+export interface IAcconto{
+  ID : number | undefined,
+  Data : Date,
+  Tecnico : string,
+  Uscita : number,
+  Entrata : number,
+  Note? : string,
+  Fattura? : string,
+  Cliente : string
+}
 
 export interface IGlobalData{
     activeIndex : number,
@@ -79,6 +98,7 @@ export interface IGlobalData{
     Cliente : string,
     Tecnico : string,
     Data : Date,
+    DataString? : string,
     Tipo? : string
     Ora_IN1 : string,
     Ora_OUT1 : string,
@@ -88,6 +108,7 @@ export interface IGlobalData{
     Pranzo : string,
     Cena : string,
     Pernotto : string,
+    Evaso?:string,
     Estero : string
     Ore_Ord : string,
     Ore_Stra : string,
@@ -100,18 +121,27 @@ export interface IGlobalData{
 
 export interface ICliente{
   Cliente : string,
-  Indirizzo : string
+  Indirizzo : string,
+  Localita : string,
+  Provincia? : string,
+  Tel? : string,
+  Cell? : string,
+  Fax? :string,
+  Email?:string,
+  Piva? : string,
+  CAP? : string,
+  Pricelist? : string
 }
 export interface ICommesse{
-  ID : number,
   Descrizione : string,
   Commessa : string,
-  DataInizio : string
+  DataInizio : Date
 }
 
 export interface ITecnico{
   Tecnico : string,
-  Indirizzo : string
+  Indirizzo : string,
+  Acronimo : string
 }
 
 
@@ -152,9 +182,16 @@ declare global{
   interface Date{
     Mese():number;
     Anno():number;
+    Giorno():number;
     isHoliday():boolean;
     GiornoTesto():string;
     MeseTesto():string;
+    FormatoYY_MM_DD():string;
+    FormatoYYMMDD():string;
+    NumOfDaysInMonth():number;
+    DataText():string;
+    RapportoIntervento() : string;
+    RedOnCalendar():boolean;
     }
   }
   
@@ -174,29 +211,71 @@ declare global{
   const day = this.getDate()
   const month = this.Mese()
 
-  const holiday = feste.filter((f) => f.giorno == day && f.mese==(month))
+  const holiday = feste.filter((f) => f.giorno == day && f.mese==(month)) 
 
-  if (holiday.length > 0 ) {
+  if (holiday.length > 0) {
       return true
   }else{
       return false
   }
 
   }
-  
+  Date.prototype.FormatoYY_MM_DD = function ():string{
+    if (this===null) {return ""}
+    const giorno = this.getDate() > 10 ? this.getDate() : "0" + this.getDate()  
+    const mese = this.Mese() > 10 ? this.Mese() : "0" + this.Mese()
+
+    return (this.Anno() + "-" + mese + "-" + giorno)
+  }
+  Date.prototype.FormatoYYMMDD = function ():string{
+    if (this===null) {return ""}
+    const giorno = this.getDate() > 10 ? this.getDate() : "0" + this.getDate()  
+    const mese = this.Mese() > 10 ? this.Mese() : "0" + this.Mese()
+
+    return (this.Anno() + mese.toString() + giorno)
+  }
   Date.prototype.Mese = function ():number {
     return this.getMonth() + 1;
   }
   Date.prototype.Anno = function ():number {
     return this.getFullYear();
   }
+  Date.prototype.Giorno = function ():number {
+    return this.getDate()-1;
+  }
   Date.prototype.GiornoTesto = function ():string {
-    const Giorni = ["D","L","M","M","G","V","S"]
+    const Giorni = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"]
     return Giorni[this.getDay()];
   }  
+  Date.prototype.NumOfDaysInMonth = function ():number {
+    const y = this.getFullYear()
+    const m = this.Mese()
+    return new Date(y,m,0).getDate()
+  }  
+  Date.prototype.DataText = function ():string {
+    return "Il giorno " + this.GiornoTesto() + " " + this.getDate() + " " + this.MeseTesto();
+  }  
+  Date.prototype.RapportoIntervento = function ():string {
+    if (this===null) {return ""}
+    const giorno = this.getDate() > 10 ? this.getDate() : "0" + this.getDate()  
+    const mese = this.Mese() > 10 ? this.Mese() : "0" + this.Mese()
+
+    return this.getFullYear().toString() + mese + giorno;
+  } 
+  Date.prototype.RedOnCalendar = function ():boolean {
+    return this.isHoliday() || this.Giorno()==0;
+  }  
+
   Date.prototype.MeseTesto = function ():string {
     const Mesi = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"]
-    let index = this.getMonth() - 1
+    let index = this.getMonth()
     if(index == -1){index = 11}
     return Mesi[index];
   }
+
+export function DateCompare(data1:Date,data2:Date):boolean{
+  const d1 = format(data1,"dd-MM-yyyy");    
+    const d2 = format(data2,"dd-MM-yyyy");
+    return (d1===d2)
+}
+

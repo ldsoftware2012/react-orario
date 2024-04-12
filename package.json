@@ -1,4 +1,5 @@
 {
+  "homepage": "https://www.ldsoftware.eu/react-orario",
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
@@ -13,19 +14,25 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.69",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
+    "ag-grid-react": "^31.0.3",
+    "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
     "date-fns": "^3.2.0",
+    "file-saver": "^2.0.5",
+    "fs": "^0.0.1-security",
     "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.9.2",
     "react-bootstrap-switch": "^15.5.3",
+    "react-currency-input-field": "^3.7.0",
     "react-datepicker": "^4.25.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.2",
     "react-scripts": "^5.0.1",
+    "react-select": "^5.8.0",
+    "timers-promises": "^1.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -54,6 +61,8 @@
     ]
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^20.11.24",
     "@types/react-datepicker": "^4.19.5"
   }
 }

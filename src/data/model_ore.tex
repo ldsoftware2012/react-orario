@@ -1,0 +1,45 @@
+\documentclass[a4paper,11pt]{article} 
+\usepackage[a4paper,includehead,left=0.2cm,right=0.2cm,top=2cm,headheight=25pt]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{color, colortbl}
+\usepackage{fancyhdr}
+\usepackage{datetime2}
+\graphicspath{ {./images/} }
+\pagestyle{myheadings}
+
+\def \tecnico {lacanale}
+\def \mese {Gennaio}
+\def \anno {2024}
+
+\begin{document}
+\definecolor{Gray}{gray}{0.9}
+\pagestyle{fancy}
+\fancyhead{} % clear all header fields
+\fancyhead[RO,LE]{\textbf{LD SOFTWARE S.R.L.}  \hfill \textbf{Lista Ore \tecnicoIntervento }\\Via S. Savino 35/a - 66010 - Torrevecchia T. (CH)    \hfill}
+\fancyfoot{} % clear all footer fields
+
+\center{\Huge \textbf{{LISTA ORE}  \tecnico}}
+\center{\Huge \textbf{\mese  \anno}}
+\break
+\textcolor{blue}{\rule{19cm}{3pt}}
+
+\textcolor{black}{\rule{20cm}{0.1pt}}
+\begin{flushleft}
+\begin{table}[h!]
+\begin{tabular}{|p{4cm}|p{4cm}|p{10cm} |} 
+\rowcolor{Gray}
+\hline
+\centering
+\textbf{DATA} & 
+\centering
+\textbf{ORE} &
+\textbf{NOTE} \\
+\hline
+\sectionmark{ListaOre}
+
+\sectionmark{Parte Finale}
+\end{tabular}\end{table}\end{flushleft}
+\end{document}

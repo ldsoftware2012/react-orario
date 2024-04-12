@@ -1,3 +1,4 @@
+
 .Calendario{    
     border: solid 1px black;    
 }
@@ -36,3 +37,19 @@
     text-align: center;
 }
 
+.Pointer{
+    cursor: pointer;
+}
+
+.GiornoMese {
+    margin:2;
+    padding:0;
+}
+
+.pari{
+    background-color: lightgray;
+}
+
+.dispari{
+    background-color: white;
+}

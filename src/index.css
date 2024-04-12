@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.Menu{
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+}

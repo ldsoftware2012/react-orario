@@ -1,0 +1,23 @@
+table tr:not(:last-child) {
+    border-bottom: solid 1pt;
+    align-items: center;
+    justify-content: center;
+}
+
+table th{
+    padding-left: 30px;
+    background-color: gray;
+    color: white;
+    align-items: center;
+    justify-content: center;
+}
+
+table td{
+    padding-left: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.testo_barrato{
+    text-decoration: line-through;
+}

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { url_Login } from "../data/config";
-import { GetLogin } from "../data/Datasource";
+import { GetRemoteData } from "../data/Datasource";
 import { IUtente } from "../interface/interface";
 import { OrarioDataContext } from "../App";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,19 +15,24 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
-    const login = await GetLogin(
-      url_Login + "?user=" + user + "&password=" + password
-    );
 
-    if (login.Utente != null && login.Utente != undefined) {
-      setutente(login);
-    } else {
-      setError("Utente non trovato");
-    }
+try {
+      const login = await GetRemoteData(
+        url_Login + "?user=" + user + "&password=" + password
+      );
+  
+      if (login.Utente != null && login.Utente != undefined) {
+        setutente(login);
+      } else {
+        setError("Utente non trovato");
+      }
+} catch (error) {
+  alert("Si è verificato un' errore con il server " +  error)
+}
+
   };
 
   useEffect(() => {
-    console.log("utente=" + utente?.Utente);
     if ((utente != undefined && utente != null) || GlobalData?.isLogged) {
       GlobalData?.setIsLogged(true);
       GlobalData?.setTecnico &&
@@ -39,15 +44,14 @@ export default function Login() {
     } else {
       GlobalData?.setIsLogged(false);
       GlobalData?.setIsAdmin(false);
-      console.log("non trovato");
     }
 
     return () => {};
   }, [utente]);
 
   return (
-    <Container className="mt-5 col-md-4 border">
-      <h2>Login</h2>
+    <Container className="mt-5 col-md-4 border">    
+      <h2 className="mt-5 text-center">Login</h2>
       <Form>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Utente</Form.Label>
