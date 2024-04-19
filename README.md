@@ -7,4 +7,4 @@
 ### ver 1.1.4 : -Tolto l'obbligo di scegliere il modello per il rapporto di intervento, il modello è salvato
 ###              dentro la cartella public.
 ###             -Corretto dimensione campo cliente dentro la sezione rapporto di intervento
-### ver 1.1.4   -Implementata la funzione upload file all'interno di gestione acconti
+### ver 1.1.5   -Implementata la funzione upload file all'interno di gestione acconti
