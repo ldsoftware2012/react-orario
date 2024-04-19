@@ -2,6 +2,7 @@ const express = require('express')
 var cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser');
+var multer = require('multer')
 
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,6 +17,33 @@ Date.prototype.toString_yyyymmdd = function() {
           (dd>9 ? '' : '0') + dd
         ].join('/');
 };
+
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+  cb(null, 'public')
+},
+filename: function (req, file, cb) {
+  cb(null,file.originalname )
+}
+})
+
+var upload = multer({ storage: storage }).single('file')
+
+app.post('/upload',function(req, res) {
+    
+  console.log("request",req)
+  upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+          return res.status(500).json(err)
+        } else if (err) {
+            return res.status(500).json(err)
+        }
+    return res.status(200).send(req.file)
+
+  })
+
+});
 
 function CreateConnection(){
   const mysql = require('mysql')

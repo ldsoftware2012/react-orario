@@ -9,7 +9,7 @@ import { faSave } from "@fortawesome/free-regular-svg-icons"
 import { Menu } from "./Menu"
 import { Footer } from "./Footer"
 import { Delete, GetRemoteData, ListaClienti, ListaTecnici, ListaTecniciLocal, UpdateAcconto } from "../data/Datasource"
-import { url_Acconti, url_DeleteAcconto, url_UpdateAcconto } from "../data/config"
+import { url_Acconti, url_DeleteAcconto, url_UpdateAcconto, url_UploadFile } from "../data/config"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Button, Col, Row } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -126,18 +126,23 @@ const handleDeleteAcconto: any = async()=> {
         const formData = new FormData();
         formData.append("file", file);
         formData.append('fileName', file.name);
-        
+        console.log("formdata",formData)
+
         const config = {
             headers: {
             'content-type': 'multipart/form-data',
             },
         };
 
-        axios.post("http://localhost:3000/upload", formData, config).then((response) => {
+        axios.post(url_UploadFile, formData, config).then((response) => {
             console.log(response.data);
+            setStatus("success")
         });
+
+        
         }
     };
+
 
     const handleUpload2 = async () => {
         if (file) {

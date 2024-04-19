@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { OrarioDataContext } from "../App";
 import { url_DeleteDay } from "../data/config";
-import { DeleteDay } from "../data/Datasource";
+import { Delete } from "../data/Datasource";
 import PopupConfirm from "./PopupConfirm";
 
 
@@ -77,7 +77,7 @@ export function Giorno(props: any) {
   async function EliminaRow(index: number) {
     try {
       const url = url_DeleteDay + "?id=" + index;
-      const del = await DeleteDay(url);
+      const del = await Delete(url);
       console.log(" delete result = " + del);
       setshowPanelDelete(false);
       GlobalData?.setIsDataUpdated(true);

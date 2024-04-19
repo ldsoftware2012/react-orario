@@ -36,4 +36,5 @@ export const url_DeleteCliente = "http://"+ server + ":" + port + "/DeleteClient
 export const url_UpdateCommessa = "http://"+ server + ":" + port + "/UpdateCommessa"
 export const url_UpdateAcconto = "http://"+ server + ":" + port + "/UpdateAcconto"
 export const url_UpdateCliente = "http://"+ server + ":" + port + "/UpdateCliente"
+export const url_UploadFile = "http://"+ server + ":" + port + "/Upload"
 
