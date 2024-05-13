@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
-import { DownloadDanea, ListaClienti } from "../data/Datasource"
-import { IModelOrario} from "../interface/interface"
+import { DownloadDanea, ListaClienti } from "../data/Datasource";
+import { IModelOrario } from "../interface/interface";
 import { OrarioDataContext } from "../App";
 import DatePicker from "react-datepicker";
-import Select from 'react-select'
+import Select from 'react-select';
 import { Button } from "react-bootstrap";
 
 export default function Danea(props:any){

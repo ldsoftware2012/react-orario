@@ -24,7 +24,6 @@ import { faSave } from "@fortawesome/free-regular-svg-icons";
 import { faClose, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Popup from "./Popup";
 import { format } from "date-fns";
-import ListaCommesse from "./ListaCommesse";
 import Select from "react-select"
 
 

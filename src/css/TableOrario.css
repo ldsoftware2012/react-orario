@@ -21,8 +21,8 @@ body{
     margin: 0px;
     padding: 0%;   
     height: 100%;
-    color: white;
-    background-color: black;
+    color: black;
+    background-color: white;
     border-top: solid white;
     border-left: solid white;
     border-bottom: solid white; 
@@ -31,8 +31,8 @@ body{
 #ListaOre .colonna-2{
     margin: 0;
     padding: 1%;
-    color: white;
-    background-color: black;
+    color: black;
+    background-color: white;
     border-top: solid white;
     border-right: solid white;
     border-bottom: solid white;
@@ -42,8 +42,8 @@ body{
     position: relative;
     margin:0;
     padding: 1%;
-    color: white;
-    background-color: black;
+    color: black;
+    background-color: white;
     height: 7vh;
 }
 

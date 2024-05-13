@@ -2,9 +2,8 @@ import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { OrarioDataContext } from "../App";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
-import { DownloadRI, ListaClienti, Somma } from "../data/Datasource";
+import { DownloadRI, Somma } from "../data/Datasource";
 import { ICliente, IModelOrario } from "../interface/interface";
-import { Form } from "react-bootstrap";
 
 
 export default function StampaOre(props:any){

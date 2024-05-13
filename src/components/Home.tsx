@@ -1,10 +1,10 @@
 import Login from "./login";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { OrarioDataContext } from "../App";
 import "bootstrap/dist/css/bootstrap.css";
 import { Menu } from "./Menu";
 import { Footer } from "./Footer";
-import { GetMissingData, GetRemoteData, GetWorkingDays } from "../data/Datasource";
+import { GetMissingData, GetRemoteData } from "../data/Datasource";
 import { format } from "date-fns";
 import { url_Orario } from "../data/config";
 import { IDayMissing } from "../interface/interface";

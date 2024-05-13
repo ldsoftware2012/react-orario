@@ -76,7 +76,7 @@ export default function OrarioAnalisi() {
   }, [Anno, Mese, GlobalData?.tecnico,GlobalData?.isdataUpdated]);
 
   function Filtro() {
-    function MesePiu(e: any) {
+    function MesePiu(_e: any) {
       let m = Mese;
       let a = Anno
       m = m + 1;
@@ -91,7 +91,7 @@ export default function OrarioAnalisi() {
       GlobalData?.setData_ref(new Date(a,m-1,1))
     }
 
-    function MeseMeno(e: any) {
+    function MeseMeno(_e: any) {
       let m = Mese;
       let a = Anno
       m = m - 1;
@@ -106,12 +106,12 @@ export default function OrarioAnalisi() {
       GlobalData?.setData_ref(new Date(a,m-1,1))
     }
 
-    function AnnoMeno(e: any): void {
+    function AnnoMeno(_e: any): void {
       setAnno(Anno - 1);    
       GlobalData?.setData_ref(new Date(Anno-1,Mese,1))  
     }
 
-    function AnnoPiu(e: any): void {
+    function AnnoPiu(_e: any): void {
       setAnno(Anno + 1);
       GlobalData?.setData_ref(new Date(Anno+1,Mese,1))  
     }

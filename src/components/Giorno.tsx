@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Col, ProgressBar, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { OrarioDataContext } from "../App";
 import { url_DeleteDay } from "../data/config";
 import { Delete } from "../data/Datasource";

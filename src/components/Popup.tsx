@@ -1,7 +1,7 @@
 import { IconDefinition, faCheck, faClose } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon, FontAwesomeIconProps } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
-import { Button, Overlay, Tooltip } from "react-bootstrap";
+import { Button, Overlay } from "react-bootstrap";
 import { Placement } from "react-bootstrap/esm/types";
 
 type AppProps = {

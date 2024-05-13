@@ -72,7 +72,7 @@ try {
       SetFestivo(Data.isHoliday() || Data.getDay()==Sabato || Data.getDay()==Domenica)
       SetDataLoaded(true) 
       if(Filtro.length > 0){setOrario(Filtro)
-        const {oo,op,of,os,ov,cena,estero,KM,pernotto,pranzo,tot_hours,total0} = Somma(Filtro)
+        const {oo,op,of,os,ov,cena,estero,pernotto,pranzo,tot_hours} = Somma(Filtro)
       SetOre_Ord(oo)
       SetOre_Stra(os)
       SetOre_Viaggio(ov)
@@ -96,7 +96,7 @@ try {
 
 
 function GetIcon():any  {
-    let ok=false,nok=false,festivo=false,viaggio=false
+    let ok=false,nok=false,viaggio=false
 
     //Colore blu
     if (Ore_Viaggio > 0) {

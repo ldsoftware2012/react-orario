@@ -13,7 +13,6 @@ export default function AnalisiMese(props: any) {
   const {Anno,Mese} = props
   const GlobalData = useContext(OrarioDataContext);
   let Indice = 0;
-  let giorno = 0;
 
   const d = new Date(Anno, (Mese) - 1);
   let primogiorno = d.getDay();

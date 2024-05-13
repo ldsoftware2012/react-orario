@@ -7,9 +7,8 @@ import { Delete, GetRemoteData, UpdateCommessa } from "../data/Datasource";
 import { url_Commesse, url_DeleteCommessa, url_UpdateCommessa } from "../data/config";
 import { ICommesse } from "../interface/interface";
 import Popup from "./Popup";
-import { faMagnifyingGlass, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faSave } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { OrarioDataContext } from "../App";
 

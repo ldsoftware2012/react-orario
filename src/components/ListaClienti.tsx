@@ -1,18 +1,17 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu } from "./Menu";
 import { Col, Row } from "react-bootstrap";
 import '../css/AnalisiMese.css';
 import { Footer } from "./Footer";
-import { Delete, GetRemoteData, UpdateCliente, UpdateCommessa } from "../data/Datasource";
-import { url_Clienti, url_Commesse, url_DeleteCliente, url_DeleteCommessa, url_UpdateCliente, url_UpdateCommessa } from "../data/config";
-import { ICliente, ICommesse } from "../interface/interface";
+import { Delete, GetRemoteData, UpdateCliente } from "../data/Datasource";
+import { url_Clienti, url_DeleteCliente, url_UpdateCliente } from "../data/config";
+import { ICliente } from "../interface/interface";
 import Popup from "./Popup";
 import { faMagnifyingGlass, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faSave } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select from "react-select"
 import React from "react";
-import { OrarioDataContext } from "../App";
 
 export default function Clienti(){
 

@@ -1,20 +1,18 @@
-import { MouseEvent, useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { DateCompare, IAcconto } from "../interface/interface"
 import { OrarioDataContext } from "../App"
-import Select  from "react-select"
 import DatePicker from "react-datepicker"
-import CurrencyInput from "react-currency-input-field"
 import Popup from "./Popup"
 import { faSave } from "@fortawesome/free-regular-svg-icons"
 import { Menu } from "./Menu"
 import { Footer } from "./Footer"
-import { Delete, GetRemoteData, ListaClienti, ListaTecnici, ListaTecniciLocal, UpdateAcconto } from "../data/Datasource"
+import { Delete, GetRemoteData, ListaClienti, ListaTecniciLocal, UpdateAcconto } from "../data/Datasource"
 import { url_Acconti, url_DeleteAcconto, url_UpdateAcconto, url_UploadFile } from "../data/config"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { Button, Col, Row } from "react-bootstrap"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faClose, faTrash } from "@fortawesome/free-solid-svg-icons"
-import axios from 'axios';
+import axios from 'axios'
 
 export default function GestioneAcconti(){
     const GlobalData = useContext(OrarioDataContext);
