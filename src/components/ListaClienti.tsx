@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Menu } from "./Menu";
 import { Col, Row } from "react-bootstrap";
 import '../css/AnalisiMese.css';
@@ -12,6 +12,7 @@ import { faSave } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select from "react-select"
 import React from "react";
+import { OrarioDataContext } from "../App";
 
 export default function Clienti(){
 
@@ -29,7 +30,7 @@ export default function Clienti(){
     const [listino,SetListino] = useState<string>("")
     const listinooptions = [{value:"Selmec_2020",label:"Selmec_2020"},{value:"Standard",label:"Standard"}]
     const [resultRemoteOperation, setResultRemoteOperation] = useState<{status : Number, description:string}>();
-
+    
     const LoadClientiData = (e:string)=>{
         const cl=clienti.find((c:ICliente)=>c.Cliente === e)
         if (cl != null) {

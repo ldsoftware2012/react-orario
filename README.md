@@ -8,3 +8,4 @@
 ###              dentro la cartella public.
 ###             -Corretto dimensione campo cliente dentro la sezione rapporto di intervento
 ### ver 1.1.5   -Implementata la funzione upload file all'interno di gestione acconti
+### ver 1.1.6 : -Corretto aggiornamento lista commesse dopo inserimento nuova commessa

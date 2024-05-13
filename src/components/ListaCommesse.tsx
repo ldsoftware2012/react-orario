@@ -42,6 +42,7 @@ export default function ListaCommesse(){
         if (result.status==1) {
             const comm = await GetRemoteData(url_Commesse)
             setCommesse(comm)
+            GlobalData?.setCommesse(comm)
         }
     }
 
