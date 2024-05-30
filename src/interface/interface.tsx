@@ -184,6 +184,7 @@ declare global{
     Anno():number;
     Giorno():number;
     isHoliday():boolean;
+    isWeekEnd():boolean;
     GiornoTesto():string;
     MeseTesto():string;
     FormatoYY_MM_DD():string;
@@ -195,6 +196,11 @@ declare global{
     }
   }
   
+Date.prototype.isWeekEnd = function():boolean{
+  const day = this.getDay()
+  if (day == 0 || day == 6) {return true}else{return false}
+}
+
   Date.prototype.isHoliday = function():boolean{
     const feste = [
       {giorno : 1 ,mese : 1},

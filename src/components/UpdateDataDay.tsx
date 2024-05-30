@@ -114,6 +114,7 @@ export function UpdateDataDay() {
   const [Parameters] = useSearchParams();
   const Method = Parameters.get("Method");
   const ID = Parameters.get("ID");
+  const OreMancanti = Parameters.get("OreMancanti");
   let NuovaData = Parameters.get("Data");
   if(NuovaData==null) {NuovaData = new Date().toString()} 
 
@@ -269,6 +270,83 @@ useEffect(() => {
           setOraOut2("17:00");
           setIsDataLoaded(true)
         }
+      else if(Method=="Permesso" && NuovaData !=""){
+        const d = new Date(NuovaData || new Date())
+        setCliente("LD Software")
+        setCommessa("permesso")
+        setData(d);
+        setOraIn1("08:00");        
+        setOraIn2("");
+        setOraOut2("");
+        switch (OreMancanti?.toString()) {
+          case "0.5":
+            setOraOut1("08:30");
+            break;
+            case "1":
+              setOraOut1("09:00");
+              break;     
+            case "1.5":
+              setOraOut1("09:30");
+              break;      
+            case "2":
+              setOraOut1("10:00");
+              break;     
+            case "2.5":
+              setOraOut1("10:30");
+              break;            
+            case "3":
+              setOraOut1("11:00");
+              break;     
+            case "3.5":
+                setOraOut1("11:30");
+                break;     
+            case "4":
+              setOraOut1("12:00");
+              break;     
+            case "4.5":
+              setOraOut1("12:30");
+              break; 
+            case "5":
+              setOraOut1("12:30");
+              setOraIn2("13:30");
+              setOraOut2("14:00");
+              break;     
+            case "5.5":
+              setOraOut1("12:30");
+              setOraIn2("13:30");
+              setOraOut2("14:30");
+              break;      
+            case "6":
+              setOraOut1("12:30");
+              setOraIn2("13:30");
+              setOraOut2("15:00");
+              break;     
+            case "6.5":
+              setOraOut1("12:30");
+              setOraIn2("13:30");
+              setOraOut2("15:30");
+              break;            
+            case "7":
+              setOraOut1("12:30");
+              setOraIn2("13:30");
+              setOraOut2("16:00");
+              break;     
+            case "7.5":
+              setOraOut1("12:30");
+              setOraIn2("13:30");
+              setOraOut2("16:30");
+                break;     
+            case "8":
+              setOraOut1("12:30");
+              setOraIn2("13:30");
+              setOraOut2("17:00");
+              break;     
+        default:
+            break;
+        }
+
+        setIsDataLoaded(true)
+      }
       } catch (error) {
         console.log("error",error)
       }
@@ -571,7 +649,7 @@ useEffect(() => {
     };
 
     const result = ""
-    if(Method == "Add"){
+    if(Method == "Add" || Method=="Permesso"){
       const result = await AddDay(url_AddDay, new_orario);
       setResultRemoteOperation({status:result.status,description:result.description});
     }

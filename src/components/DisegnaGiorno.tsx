@@ -3,13 +3,14 @@ import {
   faAutomobile,
   faBed,
   faEuro,
+  faHandshake,
   faNoteSticky,
   faPlane,
   faTrash,
   faWineBottle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
-import { Col, ProgressBar } from "react-bootstrap";
+import { Button, Col, ProgressBar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { OrarioDataContext } from "../App";
 import { Delete, Somma } from "../data/Datasource";
@@ -20,11 +21,17 @@ import { DateCompare, IAcconto, IModelOrario } from "../interface/interface";
 import { format } from "date-fns";
 import React from "react";
 
+
 export function DisegnaGiorno(props: any) {
   const {
     Data,
     Orari,
   } = props;
+
+  type OreMancanti = {
+    giorno : Date,
+    ore : number
+  }
 
   const navigate = useNavigate();
   const GlobalData = useContext(OrarioDataContext);
@@ -48,8 +55,10 @@ export function DisegnaGiorno(props: any) {
   const [GiornoMancante,SetGiornoMancante] = useState<boolean>(false)
   const [acconti,SetAcconti] = useState<IAcconto[]>([])
   const [dataLoaded,SetDataLoaded] = useState<boolean>(false)
+  const [ore_Mancanti,setOreMancanti] = useState<OreMancanti>()
   const Sabato =6
   const Domenica = 0
+
 
 useEffect(() => {
 if (!dataLoaded) {
@@ -73,6 +82,10 @@ try {
       SetDataLoaded(true) 
       if(Filtro.length > 0){setOrario(Filtro)
         const {oo,op,of,os,ov,cena,estero,pernotto,pranzo,tot_hours} = Somma(Filtro)
+        console.log("Giorno =======" , Data)
+        console.log("Ore totali ====== ",tot_hours)
+      setOreMancanti({giorno : Data , ore : 8-tot_hours})
+      //tot_hours < 8 ? setOreMancanti{(8-tot_hours) : setOreMancanti(0)  
       SetOre_Ord(oo)
       SetOre_Stra(os)
       SetOre_Viaggio(ov)
@@ -86,6 +99,7 @@ try {
       SetNote(Filtro[0].Note)
     }else{
       SetGiornoMancante(true)
+      setOreMancanti({giorno : Data , ore : 8})
     }
   } catch (error) {
   console.log("error",error)
@@ -334,7 +348,7 @@ const ClienteCommessa = (props:any) =>{
   const {Commessa,Cliente}=props.dati
   const className = Cliente == "LD Software" ? "bg-danger":""
     
-  
+
   return(
     <>
       <div title={Note}>
@@ -343,6 +357,23 @@ const ClienteCommessa = (props:any) =>{
       </div>
     </>
   )
+}
+function HandleAggiungiPermesso(dati:OreMancanti){
+  navigate("/updateDataDay?Method=Permesso&OreMancanti=" + dati.ore + "&Data=" + format(dati.giorno, "yyyy/MM/dd"))
+}
+
+function AggiungiOreMancanti (props:any){
+  const {giorno,ore} = props.dati
+  let day = new Date
+  day = giorno
+  return (
+  <>
+    {!day.isHoliday() && !day.isWeekEnd() && ore > 0 && GlobalData?.isEnableChange == "true" && 
+    <Button
+    onClick={()=>HandleAggiungiPermesso(props.dati)}
+    ><FontAwesomeIcon icon={faHandshake} title="Aggiungi Permesso"/>
+    </Button>}
+  </>)
 }
   return (
     <React.Fragment>
@@ -368,6 +399,9 @@ const ClienteCommessa = (props:any) =>{
           {GlobalData?.isAdmin && <GiornoAccontoUpdate/>} 
         </div>
         <VerificaAcconti/>
+        <AggiungiOreMancanti dati = {ore_Mancanti}/>
+        {/* <div>Ore mancanti {ore_Mancanti?.ore}</div> */}
+        
         </div>
         }
     </React.Fragment>
