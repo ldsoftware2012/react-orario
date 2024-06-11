@@ -56,6 +56,7 @@ export function UpdateDataDay() {
   const [orario, setOrario] = useState<IModelOrario[]>([]);
   const [isLoading,setIsLoading] = useState(true)
   const [isDataLoaded,setIsDataLoaded] = useState(false)
+  const [showButtonHours, setshowButtonHours] = useState(true)
 
   const navigate = useNavigate();
   const ore = [
@@ -142,6 +143,7 @@ export function UpdateDataDay() {
 if (isDataLoaded) {  
       let oo = 0, os = 0,op = 0,of = 0,ov = 0;
       setError("");
+      setshowButtonHours(true)
   
       const giorno = new Date(data).getDay();
       var reg = new RegExp("^([0-9])+$");
@@ -198,6 +200,7 @@ if (isDataLoaded) {
         op = 0;
         of = 0;
         os = 0;
+        setshowButtonHours(false)
       }
   
       if(!cliente){setError("Selezionare un cliente")}
@@ -555,6 +558,7 @@ useEffect(() => {
     titolo = "",
     setOra = (o: string) => {},
     posizione = "destra",
+    visibile = true
   }) {
     const [show, setShow] = useState(false);
     const target = useRef(null);
@@ -562,7 +566,7 @@ useEffect(() => {
     return (
       <>
         <span className="m-1">
-          {titolo != "" && (
+          {titolo != "" && visibile && (
             <Button ref={target} onClick={() => setShow(!show)}>
               {titolo}
             </Button>
@@ -584,14 +588,14 @@ useEffect(() => {
       </>
     );
   }
-  function ButtonShowPresetOrario() {
+  function ButtonShowPresetOrario({visibile=true}) {
     const [show, setShow] = useState(false);
     const target = useRef(null);
     return (
       <>
-        <Button ref={target} onClick={() => setShow(!show)}>
+        {visibile && <Button ref={target} onClick={() => setShow(!show)}>
           ...
-        </Button>
+        </Button>}
         <Overlay target={target.current} show={show} placement="right">
           {(props) => (
             <Tooltip id="overlay-example" {...props}>
@@ -696,23 +700,31 @@ useEffect(() => {
         </Col>
       </Row>
 
-      <ButtonShowPresetOrario />
+      <ButtonShowPresetOrario visibile={showButtonHours} />
 
-      <ButtonShowOrario titolo={orain1} setOra={setOraIn1} posizione="destra" />
+      <ButtonShowOrario 
+        titolo={orain1} 
+        setOra={setOraIn1} 
+        posizione="destra" 
+        visibile={showButtonHours} 
+      />
       <ButtonShowOrario
         titolo={oraout1}
         setOra={setOraOut1}
         posizione="destra"
+        visibile={showButtonHours} 
       />
       <ButtonShowOrario
         titolo={orain2}
         setOra={setOraIn2}
         posizione="sinistra"
+        visibile={showButtonHours} 
       />
       <ButtonShowOrario
         titolo={oraout2}
         setOra={setOraOut2}
         posizione="sinistra"
+        visibile={showButtonHours} 
       />
 
       <Row className="m-5">

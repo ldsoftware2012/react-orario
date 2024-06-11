@@ -10,3 +10,4 @@
 ### ver 1.1.5   -Implementata la funzione upload file all'interno di gestione acconti
 ### ver 1.1.6 : -Corretto aggiornamento lista commesse dopo inserimento nuova commessa
 ### ver 1.1.7 : -Aggiunta gestione inserimento ore permesso
+### ver 1.1.8 : -Aggiunta scomparsa campi orari quando si seleziona riposo in trasferta
