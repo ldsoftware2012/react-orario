@@ -11,6 +11,7 @@ import {
   Col,
   Container,
   Form,
+  FormControl,
   Overlay,
   Row,
   Tooltip,
@@ -25,12 +26,14 @@ import { faClose, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Popup from "./Popup";
 import { format } from "date-fns";
 import Select from "react-select"
+import "../css/TableOrario.css";
 
 
 export function UpdateDataDay() {
   const hasLoadedBefore = useRef(true);
   const [data, setData] = useState<Date>(new Date());
   const [commessa, setCommessa] = useState("");
+  const [descrizioneCommessa, setdescrizioneCommessa] = useState("")
   const [tipo, setTipo] = useState<string>("Lavoro");
   const [cliente, setCliente] = useState("");
   const [orain1, setOraIn1] = useState("08:00");
@@ -207,6 +210,13 @@ if (isDataLoaded) {
       if(!commessa){setError("Selezionare una commessa")}
       if(!reg.test(km) && km !=""){setError("Valore km immesso non corretto")}
   
+      if(commessa){
+        const comm = GlobalData?.commesse.find((c) => c.Commessa==commessa) 
+        if(comm){
+        setdescrizioneCommessa(comm?.Descrizione)               
+        }
+      }
+
       setOreOrd(oo);
       setOreStra(os);
       setOreViaggio(ov);
@@ -358,17 +368,19 @@ useEffect(() => {
   }, [])
 
 
+
   function Data() {
     return (
       <>
-        <DatePicker
+        <DatePicker        
           id="data"
           className="m-2"
           dateFormat="dd/MM/yyyy"
           showIcon
           selected={data}
-          onChange={(data) => (data != null ? setData(data) : new Date())}
+          onChange={(data) => (data != null ? setData(data) : new Date())}          
         />
+      
       </>
     );
   }
@@ -377,7 +389,7 @@ useEffect(() => {
       <>
         <select
           id="tipo1"
-          className="m-2 form-control"
+          className="m-2 form-select"
           value={tipo}
           onChange={(e) => setTipo(e.target.value)}
         >
@@ -394,7 +406,7 @@ useEffect(() => {
         <ListaClienti 
           placeholder = ""          
           value={cliente}
-          onChange={setCliente}
+          onChange={setCliente}          
         />
       </>
     );
@@ -678,17 +690,94 @@ useEffect(() => {
       {(isLoading || !isDataLoaded) && <DataLoading/>}
 
       {!isLoading && isDataLoaded && <Container fluid>     
+        <legend className="text-center mt-3">Gestione Giorno</legend>
 
-        <legend className="text-center">Gestione Giorno</legend>
-      <Row>
+        <Col className="text-end"><Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 rounded"><FontAwesomeIcon icon={faClose}/></Button></Col>
+
+        <div className="form_ins_orario">
+          <label>Data</label>
+          <Data />
+          <label>Tipo</label>
+          <Tipo />
+        </div >
+        <div className="form_ins_orario">
+          <label className="m-2">Cliente</label>
+          <Cliente />
+        </div>  
+        <div className="form_ins_orario">
+          <label className="m-2">Commessa</label>          
+          <ListaCommesse />  
+          <label className="m-3 text-bg-secondary">{descrizioneCommessa}</label> 
+        </div >       
+        <div className="form_ins_orario_space_beetween">
+          <Pranzo />
+          <Cena />
+          <Pernotto />
+          <Estero />
+        </div>
+
+        <div className="form_ins_orario">
+        <ButtonShowPresetOrario visibile={showButtonHours} />
+
+        <ButtonShowOrario 
+          titolo={orain1} 
+          setOra={setOraIn1} 
+          posizione="destra" 
+          visibile={showButtonHours} 
+        />
+        <ButtonShowOrario
+          titolo={oraout1}
+          setOra={setOraOut1}
+          posizione="destra"
+          visibile={showButtonHours} 
+        />
+        <ButtonShowOrario
+          titolo={orain2}
+          setOra={setOraIn2}
+          posizione="sinistra"
+          visibile={showButtonHours} 
+        />
+        <ButtonShowOrario
+          titolo={oraout2}
+          setOra={setOraOut2}
+          posizione="sinistra"
+          visibile={showButtonHours} 
+        />
+        </div>
+        <div className="form_ins_orario">
+          <div className="input-group input-group-sm mb-3 w-25">
+                <div className="input-group-prepend">
+                    <span className="input-group-text" id="inputGroup-sizing-sm">KM</span>
+                </div>
+                <input type="text" 
+                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                value={km}
+                onChange={(e)=>setKm(e.target.value)}
+                />
+            </div> 
+        </div>
+        <div className="form_ins_orario">
+        <div className="input-group input-group-sm mb-3">
+              <div className="input-group-prepend">
+                  <span className="input-group-text" id="inputGroup-sizing-sm">Note</span>
+              </div>
+              <input type="text" 
+              className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              value={note}
+              onChange={(e)=>setNote(e.target.value)}
+              />
+          </div> 
+        </div>
+      
+      {/* <Row>
         <Col className="text-end"><Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 rounded"><FontAwesomeIcon icon={faClose}/></Button></Col>
       </Row>
       <Row className="align-items-center">
         <Col>
-          <Data />
+            <Data />
         </Col>
         <Col>
-          <Tipo />
+            <Tipo />
         </Col>
       </Row>
       <Row>
@@ -732,9 +821,9 @@ useEffect(() => {
         <Col><Cena /></Col>
         <Col><Pernotto /></Col>
         <Col><Estero /></Col>
-      </Row>
+      </Row> */}
 
-      <Row>
+      {/* <Row>
         <Col>
         <div className="input-group input-group-sm mb-3">
               <div className="input-group-prepend">
@@ -763,7 +852,7 @@ useEffect(() => {
           </div> 
         </Col>
 
-      </Row>
+      </Row> */}
 
       <Row>
         <Col>{GlobalData?.isAdmin && <FatturatoCheck/>}</Col>

@@ -82,3 +82,21 @@ body{
     padding: 1%;
 
 }
+
+.form_ins_orario{
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;    
+    background-color: ghostwhite;
+    padding: 0.2%;
+}
+
+.form_ins_orario_space_beetween{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: last baseline;    
+    background-color: ghostwhite;
+    padding: 0.2%;
+}

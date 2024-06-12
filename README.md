@@ -11,3 +11,4 @@
 ### ver 1.1.6 : -Corretto aggiornamento lista commesse dopo inserimento nuova commessa
 ### ver 1.1.7 : -Aggiunta gestione inserimento ore permesso
 ### ver 1.1.8 : -Aggiunta scomparsa campi orari quando si seleziona riposo in trasferta
+### ver 1.1.9 : -Inserita descrizione commessa dopo la selezione dalla select nella pagina inserimento ore e modificato il layout della pagina inserimento orario

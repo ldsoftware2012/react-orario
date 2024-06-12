@@ -98,21 +98,6 @@ export default function SearchMenu() {
     }
   }, [filter]);
 
-  // FIXME: Da cancellare
-  // function ListaClienti() {
-  //   const options = MapToOptions(GlobalData?.clienti,"Cliente","Tutti *")
-  //   return (
-  //     <>
-  //       <label className="m-2">Cliente</label>
-  //       <Select 
-  //               options={options}
-  //               value={{value: cliente,label:cliente}}
-  //               onChange={(e)=>setCliente(e?.value || "")}
-  //           />
-  //     </>
-  //   );
-  // }
-
   function ListaCommesse() {
     const options = MapToOptions(GlobalData?.commesse,"Commessa","Tutte *")
     return (
@@ -236,18 +221,23 @@ export default function SearchMenu() {
             </Accordion.Header>
             <Accordion.Body className="bg-secondary-subtle bg-gradient">
               <div>
-                {GlobalData?.isAdmin && <ListaTecnici />}
+                <label>Tecnico</label>
+                {GlobalData?.isAdmin && <ListaTecnici />}   
+                <label>Cliente</label>             
                 <ListaClienti 
                   defaultvalue="Tutti *"
                   value={cliente}
                   onChange={setCliente}
                 />
+                <label>Commessa</label>
                 <ListaCommesse />
                 <div className="d-flex ">
                   <TipoFiltroData />
                 </div>
                 <div>
+                <label>Dal</label>
                   <DataInizio />
+                  <label>Al</label>
                   <DataFine />
                   <Fatturato />
                 </div>
