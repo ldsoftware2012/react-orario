@@ -7,7 +7,8 @@ import {
   faNoteSticky,
   faPlane,
   faTrash,
-  faWineBottle} from "@fortawesome/free-solid-svg-icons";
+  faWineBottle
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, ProgressBar } from "react-bootstrap";
@@ -16,7 +17,6 @@ import { OrarioDataContext } from "../App";
 import { Delete, Somma } from "../data/Datasource";
 import { url_DeleteDay } from "../data/config";
 import Popup from "./Popup";
-import { faCheckCircle, faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
 import { DateCompare, IAcconto, IModelOrario } from "../interface/interface";
 import { format } from "date-fns";
 import React from "react";

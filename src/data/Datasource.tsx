@@ -392,6 +392,7 @@ export function ListaClienti(props:any) {
                 value={{value: value,label:value}}
                 onChange={(e)=>onChange(e?.value)}
                 placeholder={placeholder}
+                className="w-25"
             />
     </>
     );

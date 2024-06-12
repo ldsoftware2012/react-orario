@@ -71,7 +71,8 @@ useEffect(() => {
 
     return (
         <>
-        <Menu/>        
+        <Menu/> 
+        <legend className="text-center mt-4">Situazione Acconti</legend>      
         <div className="m-5">
             {GlobalData?.isAdmin && <ListaTecnici />}
         </div>

@@ -185,7 +185,7 @@ const handleDeleteAcconto: any = async()=> {
         <Row>
             <Col className="text-end"><Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 rounded"><FontAwesomeIcon icon={faClose}/></Button></Col>
         </Row>
-        <legend className="text-center">Gestione Acconti</legend>
+        <legend className="text-center mt-5">Gestione Acconti</legend>
 
         <div className="m-5 px-3">
             <ListaClienti 

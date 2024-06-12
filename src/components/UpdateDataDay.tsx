@@ -10,11 +10,9 @@ import {
   Button,
   Col,
   Container,
-  Form,
-  FormControl,
-  Overlay,
+  Form, Overlay,
   Row,
-  Tooltip,
+  Tooltip
 } from "react-bootstrap";
 import { OrarioDataContext } from "../App";
 import { Menu } from "./Menu";
@@ -25,7 +23,7 @@ import { faSave } from "@fortawesome/free-regular-svg-icons";
 import { faClose, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Popup from "./Popup";
 import { format } from "date-fns";
-import Select from "react-select"
+import Select from "react-select";
 import "../css/TableOrario.css";
 
 
@@ -419,6 +417,7 @@ useEffect(() => {
           options={options} 
           value={{value: commessa,label:commessa}}
           onChange={(e)=>setCommessa(e?.value || "")}
+          className="w-25"
         />
       </>
     );
@@ -690,7 +689,7 @@ useEffect(() => {
       {(isLoading || !isDataLoaded) && <DataLoading/>}
 
       {!isLoading && isDataLoaded && <Container fluid>     
-        <legend className="text-center mt-3">Gestione Giorno</legend>
+        <legend className="text-center mt-5">Gestione Giorno</legend>
 
         <Col className="text-end"><Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 rounded"><FontAwesomeIcon icon={faClose}/></Button></Col>
 
