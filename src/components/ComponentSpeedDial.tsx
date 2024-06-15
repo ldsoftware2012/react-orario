@@ -1,8 +1,4 @@
-import { SpeedDial, SpeedDialAction, SpeedDialIcon, SpeedDialProps, styled } from '@mui/material';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
+import { SpeedDial, SpeedDialAction, SpeedDialProps, styled } from '@mui/material';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import Battery0BarOutlinedIcon from '@mui/icons-material/Battery0BarOutlined';
 import BatteryCharging20OutlinedIcon from '@mui/icons-material/BatteryCharging20Outlined';

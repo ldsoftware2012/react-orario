@@ -345,8 +345,8 @@ export default function TableOrario(props: any) {
   return (
     <>
       <div className="Container">
-        {tipoVisualizzazione == "Commesse" && OrarioCommesse()}
-        {tipoVisualizzazione == "Lista" && OrarioList()}
+        {tipoVisualizzazione === "Commesse" && OrarioCommesse()}
+        {tipoVisualizzazione === "Lista" && OrarioList()}
       </div>
     </>
   );

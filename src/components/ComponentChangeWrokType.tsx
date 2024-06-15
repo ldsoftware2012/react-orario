@@ -1,9 +1,4 @@
-import { Accordion,AccordionDetails, AccordionSummary, Button, FormControl, FormControlLabel, FormLabel, Paper, Popover, Radio, RadioGroup, Stack, Typography, styled } from '@mui/material';
-import { green } from '@mui/material/colors';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { useEffect, useState } from 'react';
-
-
+import { FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 
 export const ComponentChangeWorkType = (props:IComponentChangeWorkType)=>{
 

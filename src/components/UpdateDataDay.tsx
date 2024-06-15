@@ -286,8 +286,12 @@ useEffect(() => {
           setOreViaggio(ore.at(0)?.Ore_Viaggio || "");
           setNote(ore.at(0)?.Note || "");
           setFatturato(ore.at(0)?.Fatturato || "");
-          setKm(ore.at(0)?.Km || "");
+          setKm(ore.at(0)?.Km || "");                    
           setIsDataLoaded(true)
+          if(ore.at(0)?.Tipo === "Permesso" || ore.at(0)?.Tipo === "Ferie" 
+          || ore.at(0)?.Tipo === "Riposo trasferta" || ore.at(0)?.Tipo === "Donazione"){
+            sethideHourButtons(true)
+          }
           }
       }
 
@@ -312,6 +316,7 @@ useEffect(() => {
         setOraIn1("08:00");        
         setOraIn2("");
         setOraOut2("");
+        sethideHourButtons(true)
         switch (OreMancanti?.toString()) {
           case "0.5":
             setOraOut1("08:30");
@@ -399,22 +404,6 @@ useEffect(() => {
           onChange={(data) => (data != null ? setData(data) : new Date())}          
         />
       
-      </>
-    );
-  }
-  function Tipo() {
-    return (
-      <>
-        <select
-          id="tipo1"
-          className="m-2 form-select"
-          value={tipo}
-          onChange={(e) => setTipo(e.target.value)}
-        >
-          <option key="lavoro" defaultValue={tipo}>Lavoro</option>
-          <option key="viaggio">Viaggio</option>
-          <option key="Riposo trasferta">Riposo trasferta</option>
-        </select>  
       </>
     );
   }
@@ -620,7 +609,6 @@ useEffect(() => {
       setResultRemoteOperation({status:result.status,description:result.description});
     }
   }
-
   function handleHourListSelected(e:Event,newValue:string){
     e.preventDefault();
     switch (newValue) {
@@ -818,8 +806,7 @@ useEffect(() => {
       
       {resultRemoteOperation?.status != null && <div className={resultRemoteOperation?.status === 1 ? "bg-success text-white" : "bg-danger text-white"}>{resultRemoteOperation?.description}</div>}
 
-      <div className="align-items-center text-center ">
-        {/* <Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 w-25 m-ms-0"><FontAwesomeIcon icon={faArrowCircleLeft}/></Button> */}
+      <div className="align-items-center text-center ">        
         <Popup Disabled={!isEnableCommand} Icon={faSave} IconColor="green" Label="Salva" MessageTitle="Salvataggio dati" MessageDescription="Vuoi salvare questo orario?" onConfirm={()=>SaveData()}></Popup>
         <Popup Disabled={!isEnableCommand} Icon={faTrash} IconColor="red" Label="Elimina" MessageTitle="Elimina" MessageDescription="Vuoi eliminare questo orario?" onConfirm={()=>EliminaRow(parseInt(ID || "-1"))}></Popup>
       </div>
