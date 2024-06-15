@@ -25,6 +25,12 @@ import Popup from "./Popup";
 import { format } from "date-fns";
 import Select from "react-select";
 import "../css/TableOrario.css";
+import { ComponentHoursPreset } from "./ComponentHoursList";
+import { ComponentSelectHour } from "./ComponentSelectHour";
+import { InputAdornment, TextField } from "@mui/material";
+import { ComponentChangeWorkType } from "./ComponentChangeWrokType";
+
+
 
 
 export function UpdateDataDay() {
@@ -57,7 +63,8 @@ export function UpdateDataDay() {
   const [orario, setOrario] = useState<IModelOrario[]>([]);
   const [isLoading,setIsLoading] = useState(true)
   const [isDataLoaded,setIsDataLoaded] = useState(false)
-  const [showButtonHours, setshowButtonHours] = useState(true)
+  //const [showButtonHours, setshowButtonHours] = useState(true)
+  const [hideHourButtons, sethideHourButtons] = useState(false)
 
   const navigate = useNavigate();
   const ore = [
@@ -120,8 +127,6 @@ export function UpdateDataDay() {
   let NuovaData = Parameters.get("Data");
   if(NuovaData==null) {NuovaData = new Date().toString()} 
 
-
-
   function differenzaOrari(orario1: string, orario2: string) {
     const data1 = new Date(`1970-01-01T${orario1}`);
     const data2 = new Date(`1970-01-01T${orario2}`);
@@ -144,7 +149,7 @@ export function UpdateDataDay() {
 if (isDataLoaded) {  
       let oo = 0, os = 0,op = 0,of = 0,ov = 0;
       setError("");
-      setshowButtonHours(true)
+      // setshowButtonHours(true)
   
       const giorno = new Date(data).getDay();
       var reg = new RegExp("^([0-9])+$");
@@ -194,16 +199,36 @@ if (isDataLoaded) {
         os = 0;
       }
 
-      if (tipo == "Riposo trasferta") {
+      if (tipo === "Riposo trasferta" || tipo==="Ferie" || tipo==="Malattia" || tipo ==="Donazione") {
         //traveling
         ov = 0;
         oo = 0;
         op = 0;
         of = 0;
         os = 0;
-        setshowButtonHours(false)
+        // setshowButtonHours(false)
+      }
+
+      if(tipo==="Malattia"){
+        setCommessa("Malattia")
       }
   
+      if(tipo==="Ferie"){
+        setCommessa("Ferie")
+      }
+
+      if(tipo==="Permesso"){
+        setCommessa("Permesso")
+      }
+
+      if(tipo==="Donazione"){
+        setCommessa("Donazione Sangue")
+      }
+
+      if(tipo==="Riposo trasferta"){
+        setCommessa("Riposo trasferta")
+      }
+
       if(!cliente){setError("Selezionare un cliente")}
       if(!commessa){setError("Selezionare una commessa")}
       if(!reg.test(km) && km !=""){setError("Valore km immesso non corretto")}
@@ -220,12 +245,9 @@ if (isDataLoaded) {
       setOreViaggio(ov);
       setOrePrefestive(op);
       setOreFestive(of);
-  
       setIsLoading(false)
 }
   }
-
-
 useEffect(() => {
   error == "" ? setIsEnableCommand(true):setIsEnableCommand(false)  
 }, [error])
@@ -285,6 +307,7 @@ useEffect(() => {
         const d = new Date(NuovaData || new Date())
         setCliente("LD Software")
         setCommessa("permesso")
+        setTipo("Permesso")        
         setData(d);
         setOraIn1("08:00");        
         setOraIn2("");
@@ -364,9 +387,6 @@ useEffect(() => {
     })()
   }
   }, [])
-
-
-
   function Data() {
     return (
       <>
@@ -417,7 +437,7 @@ useEffect(() => {
           options={options} 
           value={{value: commessa,label:commessa}}
           onChange={(e)=>setCommessa(e?.value || "")}
-          className="w-25"
+          className="w-100"
         />
       </>
     );
@@ -550,80 +570,6 @@ useEffect(() => {
       </>
     );
   }
-  function OrarioTemplate(props : any){
-    return (
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          setOraIn1(props.OraIN1);
-          setOraOut1(props.OraOUT1);
-          setOraIn2(props.OraIN2);
-          setOraOut2(props.OraOUT2);
-        }}
-      >
-        {props.Label}
-      </button>
-    );
-  }
-  function ButtonShowOrario({
-    titolo = "",
-    setOra = (o: string) => {},
-    posizione = "destra",
-    visibile = true
-  }) {
-    const [show, setShow] = useState(false);
-    const target = useRef(null);
-
-    return (
-      <>
-        <span className="m-1">
-          {titolo != "" && visibile && (
-            <Button ref={target} onClick={() => setShow(!show)}>
-              {titolo}
-            </Button>
-          )}
-          <Overlay
-            target={target.current}
-            show={show}
-            placement={posizione != "destra" ? "left" : "right"}
-          >
-            {(props) => (
-              <Tooltip id="overlay-example" {...props}>
-                {ore.map((o) => {
-                  return <Button onClick={() => setOra(o)}>{o}</Button>;
-                })}
-              </Tooltip>
-            )}
-          </Overlay>
-        </span>
-      </>
-    );
-  }
-  function ButtonShowPresetOrario({visibile=true}) {
-    const [show, setShow] = useState(false);
-    const target = useRef(null);
-    return (
-      <>
-        {visibile && <Button ref={target} onClick={() => setShow(!show)}>
-          ...
-        </Button>}
-        <Overlay target={target.current} show={show} placement="right">
-          {(props) => (
-            <Tooltip id="overlay-example" {...props}>
-              <OrarioTemplate Label="Mezza" OraIN1="08:00" OraOUT1="12:30"/>     
-              <OrarioTemplate Label="Standard" OraIN1="08:00" OraOUT1="12:30" OraIN2="13:30" OraOUT2="17:00"/>
-              <OrarioTemplate Label="+0.5" OraIN1="08:00" OraOUT1="12:30" OraIN2="13:30" OraOUT2="17:30"/>
-              <OrarioTemplate Label="+1" OraIN1="08:00" OraOUT1="12:30" OraIN2="13:30" OraOUT2="18:00"/>
-              <OrarioTemplate Label="+1.5" OraIN1="08:00" OraOUT1="12:30" OraIN2="13:30" OraOUT2="18:30"/>
-              <OrarioTemplate Label="+2" OraIN1="08:00" OraOUT1="12:30" OraIN2="13:30" OraOUT2="19:00"/>
-              <OrarioTemplate Label="+2.5" OraIN1="08:00" OraOUT1="12:30" OraIN2="13:30" OraOUT2="19:30"/>
-              <OrarioTemplate Label="+3" OraIN1="08:00" OraOUT1="12:30" OraIN2="13:30" OraOUT2="20:00"/>
-            </Tooltip>
-          )}
-        </Overlay>
-      </>
-    );
-  }
   async function EliminaRow(index: number) {
     try {
       const url = url_DeleteDay + "?id=" + index;
@@ -675,6 +621,92 @@ useEffect(() => {
     }
   }
 
+  function handleHourListSelected(e:Event,newValue:string){
+    e.preventDefault();
+    switch (newValue) {
+      case "Mattina":
+        setOraIn1("08:00");
+        setOraOut1("12:30");
+        setOraIn2("");
+        setOraOut2("");
+        break;
+        case "Pomeriggio":
+          setOraIn1("13:30");
+          setOraOut1("17:00");
+          setOraIn2("");
+          setOraOut2("");
+          break;        
+      case "Standard":
+        setOraIn1("08:00");
+        setOraOut1("12:30");
+        setOraIn2("13:30");
+        setOraOut2("17:00");
+        break;
+      case "0.5":
+        setOraIn1("08:00");
+        setOraOut1("12:30");
+        setOraIn2("13:30");
+        setOraOut2("17:30");
+        break;
+      case "1":
+        setOraIn1("08:00");
+        setOraOut1("12:30");
+        setOraIn2("13:30");
+        setOraOut2("18:00");
+        break;    
+      case "1.5":
+        setOraIn1("08:00");
+        setOraOut1("12:30");
+        setOraIn2("13:30");
+        setOraOut2("18:30");
+        break;    
+      case "2":
+        setOraIn1("08:00");
+        setOraOut1("12:30");
+        setOraIn2("13:30");
+        setOraOut2("19:00");
+        break;    
+      case "2.5":
+        setOraIn1("08:00");
+        setOraOut1("12:30");
+        setOraIn2("13:30");
+        setOraOut2("19:30");
+        break;    
+      case "3":
+        setOraIn1("08:00");
+        setOraOut1("12:30");
+        setOraIn2("13:30");
+        setOraOut2("20:00");
+        break;    
+        case "3.5":
+          setOraIn1("08:00");
+          setOraOut1("12:30");
+          setOraIn2("13:30");
+          setOraOut2("20:30");
+          break;                             
+          case "4":
+            setOraIn1("08:00");
+            setOraOut1("12:30");
+            setOraIn2("13:30");
+            setOraOut2("21:00");
+            break;          
+
+      default:
+        break;
+    }
+  }
+
+  function handleChangeWorkType(e:Event,newValue:string){  
+    sethideHourButtons(false)
+    if(newValue==="Ferie" || newValue==="Permesso" || newValue ==="Malattia" || newValue === "Donazione" || newValue==="Riposo trasferta"){
+      sethideHourButtons(true)
+    }
+
+    if(newValue==="Ferie" || newValue==="Permesso" || newValue ==="Malattia" || newValue === "Donazione"){
+      setCliente("LD Software")
+    }
+    setTipo(newValue)
+  }
 useEffect(() => {
   if (resultRemoteOperation?.status != 0) {
     const timeoutId = setTimeout(() => {
@@ -696,9 +728,10 @@ useEffect(() => {
         <div className="form_ins_orario">
           <label>Data</label>
           <Data />
-          <label>Tipo</label>
-          <Tipo />
         </div >
+        <div>
+          <ComponentChangeWorkType value={tipo} onChange={handleChangeWorkType}></ComponentChangeWorkType>
+        </div>  
         <div className="form_ins_orario">
           <label className="m-2">Cliente</label>
           <Cliente />
@@ -706,152 +739,44 @@ useEffect(() => {
         <div className="form_ins_orario">
           <label className="m-2">Commessa</label>          
           <ListaCommesse />  
-          <label className="m-3 text-bg-secondary">{descrizioneCommessa}</label> 
-        </div >       
+        </div > 
+        <label className="p-2">Descrizione</label>      
+        <label className="m-3 text-success">{descrizioneCommessa}</label> 
         <div className="form_ins_orario_space_beetween">
           <Pranzo />
           <Cena />
           <Pernotto />
           <Estero />
         </div>
-
-        <div className="form_ins_orario">
-        <ButtonShowPresetOrario visibile={showButtonHours} />
-
-        <ButtonShowOrario 
-          titolo={orain1} 
-          setOra={setOraIn1} 
-          posizione="destra" 
-          visibile={showButtonHours} 
-        />
-        <ButtonShowOrario
-          titolo={oraout1}
-          setOra={setOraOut1}
-          posizione="destra"
-          visibile={showButtonHours} 
-        />
-        <ButtonShowOrario
-          titolo={orain2}
-          setOra={setOraIn2}
-          posizione="sinistra"
-          visibile={showButtonHours} 
-        />
-        <ButtonShowOrario
-          titolo={oraout2}
-          setOra={setOraOut2}
-          posizione="sinistra"
-          visibile={showButtonHours} 
-        />
+        
+        <div className="p-1"> 
+          
+        {!hideHourButtons &&<ComponentSelectHour value={orain1} onClick={(e,value)=>setOraIn1(value)}></ComponentSelectHour>}
+        {!hideHourButtons &&<ComponentSelectHour value={oraout1} onClick={(e,value)=>setOraOut1(value)}></ComponentSelectHour>}
+        {!hideHourButtons &&<ComponentSelectHour value={orain2} onClick={(e,value)=>setOraIn2(value)}></ComponentSelectHour>}
+        {!hideHourButtons &&<ComponentSelectHour value={oraout2} onClick={(e,value)=>setOraOut2(value)}></ComponentSelectHour>}
+        {!hideHourButtons &&<ComponentHoursPreset onClick={handleHourListSelected}></ComponentHoursPreset>}
         </div>
-        <div className="form_ins_orario">
-          <div className="input-group input-group-sm mb-3 w-25">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">KM</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
-                value={km}
-                onChange={(e)=>setKm(e.target.value)}
-                />
-            </div> 
-        </div>
-        <div className="form_ins_orario">
-        <div className="input-group input-group-sm mb-3">
-              <div className="input-group-prepend">
-                  <span className="input-group-text" id="inputGroup-sizing-sm">Note</span>
-              </div>
-              <input type="text" 
-              className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
-              value={note}
-              onChange={(e)=>setNote(e.target.value)}
-              />
-          </div> 
-        </div>
-      
-      {/* <Row>
-        <Col className="text-end"><Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 rounded"><FontAwesomeIcon icon={faClose}/></Button></Col>
-      </Row>
-      <Row className="align-items-center">
-        <Col>
-            <Data />
-        </Col>
-        <Col>
-            <Tipo />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Cliente />
-        </Col>
-        <Col>
-          <ListaCommesse />
-        </Col>
-      </Row>
 
-      <ButtonShowPresetOrario visibile={showButtonHours} />
+        <TextField
+          label="Percorso"
+          id="outlined-start-adornment"
+          sx={{ m: 1, width: '25ch' }}
+          InputProps={{
+            startAdornment: <InputAdornment position="start">Km</InputAdornment>,
+          }}
+          value={km}
+          onChange={(e)=>setKm(e.target.value)}
+        />
 
-      <ButtonShowOrario 
-        titolo={orain1} 
-        setOra={setOraIn1} 
-        posizione="destra" 
-        visibile={showButtonHours} 
-      />
-      <ButtonShowOrario
-        titolo={oraout1}
-        setOra={setOraOut1}
-        posizione="destra"
-        visibile={showButtonHours} 
-      />
-      <ButtonShowOrario
-        titolo={orain2}
-        setOra={setOraIn2}
-        posizione="sinistra"
-        visibile={showButtonHours} 
-      />
-      <ButtonShowOrario
-        titolo={oraout2}
-        setOra={setOraOut2}
-        posizione="sinistra"
-        visibile={showButtonHours} 
-      />
-
-      <Row className="m-5">
-        <Col><Pranzo /></Col>
-        <Col><Cena /></Col>
-        <Col><Pernotto /></Col>
-        <Col><Estero /></Col>
-      </Row> */}
-
-      {/* <Row>
-        <Col>
-        <div className="input-group input-group-sm mb-3">
-              <div className="input-group-prepend">
-                  <span className="input-group-text" id="inputGroup-sizing-sm">KM</span>
-              </div>
-              <input type="text" 
-              className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
-              value={km}
-              onChange={(e)=>setKm(e.target.value)}
-              />
-          </div> 
-        </Col>
-      </Row>  
-
-      <Row>
-        <Col>
-        <div className="input-group input-group-sm mb-3">
-              <div className="input-group-prepend">
-                  <span className="input-group-text" id="inputGroup-sizing-sm">Note</span>
-              </div>
-              <input type="text" 
-              className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
-              value={note}
-              onChange={(e)=>setNote(e.target.value)}
-              />
-          </div> 
-        </Col>
-
-      </Row> */}
+        <TextField
+          label="Note"
+          id="outlined-start-adornment"
+          sx={{ m: 1, width: '100%' }}
+          
+          value={note}
+          onChange={(e)=>setNote(e.target.value)}
+        />
 
       <Row>
         <Col>{GlobalData?.isAdmin && <FatturatoCheck/>}</Col>
