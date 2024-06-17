@@ -13,7 +13,8 @@ type AppProps = {
     Position? : string,
     Disabled? : boolean,
     onConfirm? : ()=>any,
-    onCancel? : ()=>any
+    onCancel? : ()=>any,
+    onClick? : ()=>any
 }
 
 export default function Popup(props : AppProps) {
@@ -41,7 +42,14 @@ return (
     <>
     <span className="m-2">
         {MessageTitle !== "" && (
-        <Button disabled = {Disabled} className="bg-light text-black " ref={target} onClick={() => setShow(!show)}>
+        <Button disabled = {Disabled} className="bg-light text-black " ref={target} 
+        onClick={
+                    () => {
+                        props.onClick && props.onClick()
+                        setShow(!show);
+                        }
+                        
+                }>
         <FontAwesomeIcon icon={Icon} color={IconColor}></FontAwesomeIcon>{Label}
         </Button>
         )}

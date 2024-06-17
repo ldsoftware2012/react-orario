@@ -20,7 +20,9 @@ import Popup from "./Popup";
 import { DateCompare, IAcconto, IModelOrario } from "../interface/interface";
 import { format } from "date-fns";
 import React from "react";
-
+import { IconButton } from "@mui/material";
+import { ContentCopy } from "@mui/icons-material";
+import { ComponentContextMenu } from "./ComponentContextMenu";
 
 export function DisegnaGiorno(props: any) {
   const {
@@ -56,6 +58,7 @@ export function DisegnaGiorno(props: any) {
   const [acconti,SetAcconti] = useState<IAcconto[]>([])
   const [dataLoaded,SetDataLoaded] = useState<boolean>(false)
   const [ore_Mancanti,setOreMancanti] = useState<OreMancanti>()
+  const [giornoCopiato, setgiornoCopiato] = useState<number>()
   const Sabato =6
   const Domenica = 0
 
@@ -270,7 +273,7 @@ const GiornoProgressBar = (props: any)=>{
 const GiornoEsistenteAdd = (props:any)=>{
     return(<>
       {/* {Aggiungi su esistente} */}
-      {GlobalData?.isEnableChange == "true" && id != undefined &&
+      {GlobalData?.isEnableChange === "true" && id != undefined &&
         <p style={{margin:0,padding:0}} className="justify-content-end">
         <button 
         className="btn bg-white border-primary "        
@@ -288,7 +291,7 @@ const GiornoEsistenteAdd = (props:any)=>{
 const GiornoNuovoAdd = () =>{
     return(<>
         {/* {Aggiungi nuovo} */}      
-      {GlobalData?.isEnableChange == "true" && GiornoMancante &&
+      {GlobalData?.isEnableChange === "true" && GiornoMancante &&
       <p style={{margin:0,padding:0}} className="justify-content-end">
       <button 
       className="btn border-primary"        
@@ -361,7 +364,30 @@ const ClienteCommessa = (props:any) =>{
 function HandleAggiungiPermesso(dati:OreMancanti){
   navigate("/updateDataDay?Method=Permesso&OreMancanti=" + dati.ore + "&Data=" + format(dati.giorno, "yyyy/MM/dd"))
 }
-
+function HandleAggiungiPermessoNew(data:string,ore:number){
+  navigate("/updateDataDay?Method=Permesso&OreMancanti=" + ore + "&Data=" + data)
+}
+function handleContextMenu(e:Event,value:string,id:number){
+  const data = format(Data,"yyyy-MM-dd")
+  const tecnico = GlobalData?.tecnico || ""
+  // setgiornoCopiato(id)
+  switch (value) {
+    case "Aggiungi":
+        navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
+    break;
+    case "Elimina":
+    break;
+    case "Acconti":
+      navigate("/updateAcconto?Data=" + data + "&Tecnico=" + tecnico)
+      break;
+    case "Permesso":
+      HandleAggiungiPermessoNew(data,ore_Mancanti?.ore || 0)
+      break;
+    default:
+      break;
+  }
+    
+}
 function AggiungiOreMancanti (props:any){
   const {giorno,ore} = props.dati
   let day = new Date
@@ -378,14 +404,16 @@ function AggiungiOreMancanti (props:any){
   return (
     <React.Fragment>
     {dataLoaded && <div>
-        <NumeroGiorno/>
+        {/* <ComponentSpeedDial onClick={handleCopiaGiornoClick}></ComponentSpeedDial> */}
+        <ComponentContextMenu id={1 || -1} onClick={handleContextMenu}></ComponentContextMenu>
+        <NumeroGiorno/>        
         <div className="d-flex">
           <GiornoIcons/>
         </div>
         
         {orario.map((o:IModelOrario)=>{
           return(
-            <>
+            <>            
             <div  onClick={() => EditDate(o.id || -1)}>
               <ClienteCommessa dati={o} />
               <GiornoProgressBar ore={o} />
