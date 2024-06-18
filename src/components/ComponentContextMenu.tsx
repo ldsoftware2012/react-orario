@@ -1,5 +1,5 @@
 import { Add, Cancel, ContentCopy, ContentPaste, Euro } from '@mui/icons-material';
-import { Button, Icon, IconButton, Paper, Popover, Stack, Typography, styled } from '@mui/material';
+import { Box, Button, Divider, Icon, IconButton, Paper, Popover, Stack, Typography, styled } from '@mui/material';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import { useContext, useEffect, useState } from 'react';
 import Popup from './Popup';
@@ -70,12 +70,32 @@ async function EliminaRow(index: number) {
 
                     <Typography sx={{ p: 2,backgroundColor:'white'}}>
                         <Stack direction="row" spacing={1} className='mb-1'>
-                            <IconButton title='Aggiungi' color='success' onClick={(event)=>props.onClick(event,"Aggiungi",props.id)}><Add></Add></IconButton>   
-                            {props.id !== -1 && <Popup2 Type='Elimina' QuestionText='Vuoi veramente eliminare?' onCancel={handleClose} onConfirm={()=>{EliminaRow(props.id);handleClose()}}></Popup2>}
-                            <IconButton title='Acconti' color='info' onClick={(event)=>props.onClick(event,"Acconti",props.id)}><Euro></Euro></IconButton>   
-                            {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&<IconButton title='Permesso' color='warning' onClick={(event)=>props.onClick(event,"Permesso",props.id)}><BeachAccessIcon></BeachAccessIcon></IconButton>}
-                            <IconButton title='Copia' onClick={(event)=>{props.onClick(event,"Copia",props.id);handleClose()}}><ContentCopy></ContentCopy></IconButton>
-                            {GlobalData?.giornoCopiato.id !== -1 && <IconButton title='Incolla' onClick={(event)=>{props.onClick(event,"Incolla",props.id);handleClose()}}><ContentPaste></ContentPaste></IconButton>}
+                            <Button endIcon={<Add/>} title='Aggiungi' color='success' onClick={(event)=>props.onClick(event,"Aggiungi",props.id)}>Nuovo</Button>   
+                            
+                            {props.id !== -1 && 
+                                <Popup2 color='error' IconText={"Elimina"} Type='Elimina' QuestionText='Vuoi veramente eliminare?' onCancel={handleClose} onConfirm={()=>{EliminaRow(props.id);handleClose()}}></Popup2>
+                            }
+                            
+                            {props.id !== -1 &&
+                                <Button endIcon={<ContentCopy/>} title='Copia' onClick={(event)=>{props.onClick(event,"Copia",props.id);handleClose()}}>Copia</Button>
+                            }
+                            
+                            {GlobalData?.giornoCopiato.id !== -1 && 
+                                <Button endIcon={<ContentPaste/>} title='Incolla' onClick={(event)=>{props.onClick(event,"Incolla",props.id);handleClose()}}>Incolla</Button>
+                            }
+                            
+                            
+                        </Stack>
+                            
+                        <Divider sx={{ backgroundColor: "teal", height: "3px", margin: "16px 0" }} />
+                        <Stack direction="row" spacing={1} className='mb-1'>
+                            <Button endIcon={<Euro/>} title='Acconti' color='primary' onClick={(event)=>props.onClick(event,"Acconti",props.id)}>Acconti</Button>   
+
+                            {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
+                                <Button endIcon={<BeachAccessIcon/>} title='Permesso' color='warning' onClick={(event)=>props.onClick(event,"Permesso",props.id)}>Permesso</Button>
+                            }                                                        
+                            
+
                         </Stack>
                     </Typography>
                     </Popover>

@@ -2,7 +2,6 @@ import { Add, Cancel, Check, Delete, Edit, Label } from '@mui/icons-material';
 import { Alert, Button, IconButton, Paper, Popover, Stack, Typography, styled } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-
 export const Popup2 = (props:IComponentContextMenu)=>{
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const [visible, setvisible] = useState(true)
@@ -24,7 +23,7 @@ useEffect(() => {
 
     return(
         <>
-            <Button aria-describedby={id}  onClick={handleClick} color='primary'  hidden={!visible}>
+            <Button aria-describedby={id}  onClick={handleClick} color="error"  hidden={!visible}>
                 {props.IconText}
                 {props.Type ==="Elimina" && <Delete color='error'></Delete>}
                 {props.Type ==="Aggiungi" && <Add color='primary'></Add>}
@@ -72,5 +71,6 @@ export interface IComponentContextMenu{
     IconText? : any;
     onConfirm:()=>any;
     onCancel : ()=>any;
+    color? : string;
 
 }
