@@ -37,16 +37,12 @@ export const ComponentContextMenu = (props:IComponentContextMenu)=>{
 
 //Chiudi finestra dopo selezione orario
 useEffect(() => {
-    console.log("close window")
-    // setAnchorEl(null); 
 }, [props.onClick])
 
 async function EliminaRow(index: number) {
     try {
     const url = url_DeleteDay + "?id=" + index;
-    console.log(url)
     const del = await Delete(url);
-    console.log(" delete result = " + del);
     GlobalData?.setIsDataUpdated(true);
     } catch (error) {
     console.log(error);
@@ -79,7 +75,7 @@ async function EliminaRow(index: number) {
                             <IconButton title='Acconti' color='info' onClick={(event)=>props.onClick(event,"Acconti",props.id)}><Euro></Euro></IconButton>   
                             {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&<IconButton title='Permesso' color='warning' onClick={(event)=>props.onClick(event,"Permesso",props.id)}><BeachAccessIcon></BeachAccessIcon></IconButton>}
                             <IconButton title='Copia' onClick={(event)=>{props.onClick(event,"Copia",props.id);handleClose()}}><ContentCopy></ContentCopy></IconButton>
-                            {GlobalData?.IDgiornoCopiato !== null && <IconButton title='Incolla' onClick={(event)=>{props.onClick(event,"Incolla",props.id);handleClose()}}><ContentPaste></ContentPaste></IconButton>}
+                            {GlobalData?.giornoCopiato.id !== -1 && <IconButton title='Incolla' onClick={(event)=>{props.onClick(event,"Incolla",props.id);handleClose()}}><ContentPaste></ContentPaste></IconButton>}
                         </Stack>
                     </Typography>
                     </Popover>

@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { CalcolaOre, IAcconto, ICliente, ICommesse, IDataContext, IModelOrario, ISearchParameter, ITecnico } from "./interface/interface";
+import { CalcolaOre, IAcconto, ICliente, ICommesse, ICopyAndPasteData, IDataContext, IModelOrario, ISearchParameter, ITecnico } from "./interface/interface";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import OrarioList from "./components/OrarioList";
 import OrarioAnalisi from "./components/OrarioAnalisi";
@@ -30,7 +30,7 @@ const [tecnici,setTecnici] = useState<ITecnico[]>([])
 const [data_ref,setData_ref] = useState<Date>(new Date())
 const [isEnableChange,setIsEnableChange] = useState<string>("false")
 const [acconti, setAcconti] = useState<IAcconto[]>([])
-const [IDgiornoCopiato,setIDgiornoCopiato] = useState<IModelOrario[]>([])
+const [giornoCopiato,setgiornoCopiato] = useState<ICopyAndPasteData>({orario:[],id:-1})
 const [resultRemoteOperation, setResultRemoteOperation] = useState<{status : Number, description:string}>();
 
 useEffect(() => {
@@ -54,30 +54,32 @@ useEffect(() => {
 
 
 const onPaste =async (data:Date)=>{
-    const {oo,os,ov,op,of} = CalcolaOre(IDgiornoCopiato[0],data)
+  const arrayIndex = giornoCopiato.orario.findIndex((o)=>o.id === giornoCopiato.id) || 0
+  const {oo,os,ov,op,of} = CalcolaOre(giornoCopiato.orario[arrayIndex],data)
+
   const new_orario: IModelOrario = {
     Data: data,
     DataString : format(data,"yyyy-MM-dd"),
-    Cliente: IDgiornoCopiato[0].Cliente,
-    Tecnico: IDgiornoCopiato[0].Tecnico || "",
-    Commessa: IDgiornoCopiato[0].Commessa,
-    Tipo: IDgiornoCopiato[0].Tipo,
-    Ora_IN1: IDgiornoCopiato[0].Ora_IN1,
-    Ora_OUT1: IDgiornoCopiato[0].Ora_OUT1,
-    Ora_IN2: IDgiornoCopiato[0].Ora_IN2 != undefined ? IDgiornoCopiato[0].Ora_IN2 : "",
-    Ora_OUT2: IDgiornoCopiato[0].Ora_OUT2 != undefined ? IDgiornoCopiato[0].Ora_OUT2 : "",
-    Km: IDgiornoCopiato[0].Km,
-    Pranzo: IDgiornoCopiato[0].Pranzo,
-    Cena: IDgiornoCopiato[0].Cena,
-    Pernotto: IDgiornoCopiato[0].Pernotto,
-    Estero: IDgiornoCopiato[0].Estero,
-    Fatturato: IDgiornoCopiato[0].Fatturato,
+    Cliente: giornoCopiato.orario[arrayIndex].Cliente,
+    Tecnico: giornoCopiato.orario[arrayIndex].Tecnico || "",
+    Commessa: giornoCopiato.orario[arrayIndex].Commessa,
+    Tipo: giornoCopiato.orario[arrayIndex].Tipo,
+    Ora_IN1: giornoCopiato.orario[arrayIndex].Ora_IN1,
+    Ora_OUT1: giornoCopiato.orario[arrayIndex].Ora_OUT1,
+    Ora_IN2: giornoCopiato.orario[arrayIndex].Ora_IN2 != undefined ? giornoCopiato.orario[arrayIndex].Ora_IN2 : "",
+    Ora_OUT2: giornoCopiato.orario[arrayIndex].Ora_OUT2 != undefined ? giornoCopiato.orario[arrayIndex].Ora_OUT2 : "",
+    Km: giornoCopiato.orario[arrayIndex].Km,
+    Pranzo: giornoCopiato.orario[arrayIndex].Pranzo,
+    Cena: giornoCopiato.orario[arrayIndex].Cena,
+    Pernotto: giornoCopiato.orario[arrayIndex].Pernotto,
+    Estero: giornoCopiato.orario[arrayIndex].Estero,
+    Fatturato: giornoCopiato.orario[arrayIndex].Fatturato,
     Ore_Ord: oo.toString(),
     Ore_Stra: os.toString(),
     Ore_Pre: op.toString(),
     Ore_Fest: of.toString(),
     Ore_Viaggio: ov.toString(),
-    Note: IDgiornoCopiato[0].Note,
+    Note: giornoCopiato.orario[arrayIndex].Note,
   };
 
   const result = await AddDay(url_AddDay, new_orario);
@@ -115,8 +117,8 @@ setIsDataUpdated(false)
       setIsEnableChange,
       acconti,
       setAcconti,
-      IDgiornoCopiato,
-      setIDgiornoCopiato,
+      giornoCopiato,
+      setgiornoCopiato,
       onPaste
     }}>
       <BrowserRouter basename={'/react-orario'}>

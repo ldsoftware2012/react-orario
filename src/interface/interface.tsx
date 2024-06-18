@@ -42,10 +42,15 @@ export interface IDataContext{
   setIsEnableChange : Dispatch<string>,
   acconti : IAcconto[],
   setAcconti : Dispatch<IAcconto[]>,
-  IDgiornoCopiato : IModelOrario[],
-  setIDgiornoCopiato : Dispatch<IModelOrario[]>,
+  giornoCopiato : ICopyAndPasteData,
+  setgiornoCopiato : Dispatch<ICopyAndPasteData>,
   onPaste : (data:Date)=>void
 } 
+
+export interface ICopyAndPasteData {
+  orario:IModelOrario[],
+  id : number
+}
 
 export interface IAcconto{
   ID : number | undefined,

@@ -1,27 +1,17 @@
 import {
-  faAdd,
   faAutomobile,
-  faBed,
-  faEuro,
-  faHandshake,
-  faNoteSticky,
-  faPlane,
-  faTrash,
-  faWineBottle
+  faBed, faNoteSticky,
+  faPlane, faWineBottle
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, ProgressBar } from "react-bootstrap";
+import { Col, ProgressBar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { OrarioDataContext } from "../App";
-import { Delete, Somma } from "../data/Datasource";
-import { url_DeleteDay } from "../data/config";
-import Popup from "./Popup";
+import { Somma } from "../data/Datasource";
 import { DateCompare, IAcconto, IModelOrario } from "../interface/interface";
 import { format } from "date-fns";
 import React from "react";
-import { IconButton } from "@mui/material";
-import { ContentCopy } from "@mui/icons-material";
 import { ComponentContextMenu } from "./ComponentContextMenu";
 
 export function DisegnaGiorno(props: any) {
@@ -65,7 +55,6 @@ export function DisegnaGiorno(props: any) {
 
 useEffect(() => {
 if (!dataLoaded) {
-  console.log(GlobalData?.IDgiornoCopiato)
 try {
 
     const Filtro = Orari.filter((o:IModelOrario) => {      
@@ -86,10 +75,7 @@ try {
       SetDataLoaded(true) 
       if(Filtro.length > 0){setOrario(Filtro)
         const {oo,op,of,os,ov,cena,estero,pernotto,pranzo,tot_hours} = Somma(Filtro)
-        console.log("Giorno =======" , Data)
-        console.log("Ore totali ====== ",tot_hours)
       setOreMancanti({giorno : Data , ore : 8-tot_hours})
-      //tot_hours < 8 ? setOreMancanti{(8-tot_hours) : setOreMancanti(0)  
       SetOre_Ord(oo)
       SetOre_Stra(os)
       SetOre_Viaggio(ov)
@@ -139,16 +125,6 @@ function GetIcon():any  {
 
     return { ok, nok, viaggio}
 }
-// async function EliminaRow(index: number) {
-//     try {
-//       const url = url_DeleteDay + "?id=" + index;
-//       const del = await Delete(url);
-//       console.log(" delete result = " + del);
-//       GlobalData?.setIsDataUpdated(true);
-//     } catch (error) {
-//       console.log(error);
-//     }
-// }
 function EditDate(ID: number) {
     if(ID != undefined){
       navigate("/updateDataDay?Method=Update&ID="+ ID);
@@ -271,60 +247,6 @@ const GiornoProgressBar = (props: any)=>{
     </>
     )
 }
-// const GiornoEsistenteAdd = (props:any)=>{
-//     return(<>
-//       {/* {Aggiungi su esistente} */}
-//       {GlobalData?.isEnableChange === "true" && id != undefined &&
-//         <p style={{margin:0,padding:0}} className="justify-content-end">
-//         <button 
-//         className="btn bg-white border-primary "        
-//         onClick={()=>{
-//           navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
-//         }          
-//         }
-//         >
-//           <FontAwesomeIcon icon={faAdd}/>
-//         </button>
-//         <Popup Icon={faTrash} IconColor="red" Label="" MessageTitle="Elimina" MessageDescription="Vuoi eliminare questo orario?" onConfirm={()=>EliminaRow(props.id)}></Popup>
-//       </p>}
-//     </>)
-// }
-// const GiornoNuovoAdd = () =>{
-//     return(<>
-//         {/* {Aggiungi nuovo} */}      
-//       {GlobalData?.isEnableChange === "true" && GiornoMancante &&
-//       <p style={{margin:0,padding:0}} className="justify-content-end">
-//       <button 
-//       className="btn border-primary"        
-//       onClick={()=>{
-//         navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
-//       }          
-//       }
-//       >
-//         <FontAwesomeIcon icon={faAdd}/>
-//       </button>
-//     </p>}
-//     </>)
-// }
-// const GiornoAccontoUpdate = () =>{
-//   const data = format(Data,"yyyy-MM-dd")
-//     return(<>
-//       {/* {Aggiungi su esistente} */}      
-//       {GlobalData?.isEnableChange == "true" &&
-//         <p style={{marginBottom:0,padding:0}} className="justify-content-end">
-//         <button 
-//         className="btn border-primary "        
-//         onClick={()=>{
-//           navigate("/updateAcconto?Data=" + data + "&Tecnico=" + GlobalData.tecnico)
-//         }          
-//         }
-//         >
-//           <FontAwesomeIcon icon={faEuro}/>
-//         </button>
-        
-//       </p>}
-//     </>)
-// }
 const GetStatusColor = ():string=>{
     let className = ""
     if (GetIcon().ok && !GetIcon().viaggio) {
@@ -362,9 +284,7 @@ const ClienteCommessa = (props:any) =>{
     </>
   )
 }
-// function HandleAggiungiPermesso(dati:OreMancanti){
-//   navigate("/updateDataDay?Method=Permesso&OreMancanti=" + dati.ore + "&Data=" + format(dati.giorno, "yyyy/MM/dd"))
-// }
+
 function HandleAggiungiPermessoNew(data:string,ore:number){
   navigate("/updateDataDay?Method=Permesso&OreMancanti=" + ore + "&Data=" + data)
 }
@@ -383,7 +303,7 @@ function handleContextMenu(e:Event,value:string,id:number){
       HandleAggiungiPermessoNew(data,ore_Mancanti?.ore || 0)
       break;
     case "Copia":
-      GlobalData?.setIDgiornoCopiato(orario)
+      GlobalData?.setgiornoCopiato({orario:orario,id:id})
       break;  
     case "Incolla":
       GlobalData?.onPaste(Data)
@@ -393,19 +313,6 @@ function handleContextMenu(e:Event,value:string,id:number){
   }
     
 }
-// function AggiungiOreMancanti (props:any){
-//   const {giorno,ore} = props.dati
-//   let day = new Date
-//   day = giorno
-//   return (
-//   <>
-//     {!day.isHoliday() && !day.isWeekEnd() && ore > 0 && GlobalData?.isEnableChange == "true" && 
-//     <Button
-//     onClick={()=>HandleAggiungiPermesso(props.dati)}
-//     ><FontAwesomeIcon icon={faHandshake} title="Aggiungi Permesso"/>
-//     </Button>}
-//   </>)
-// }
 
   return (
     <React.Fragment>
@@ -414,7 +321,6 @@ function handleContextMenu(e:Event,value:string,id:number){
         <div className="d-flex">
           <GiornoIcons/>
         </div>
-        
         {orario.map((o:IModelOrario)=>{
           return(
             <>            
@@ -428,13 +334,7 @@ function handleContextMenu(e:Event,value:string,id:number){
           )
         })}
         {GiornoMancante && <ComponentContextMenu data={data} ore={ore_Mancanti?.ore} id={-1} onClick={handleContextMenu}></ComponentContextMenu>}
-        {/* <div className=""> */}
-          {/* <GiornoNuovoAdd/>  */}
-          {/* {GlobalData?.isAdmin && <GiornoAccontoUpdate/>}  */}
-        {/* </div> */}
         <VerificaAcconti/>
-        {/* <AggiungiOreMancanti dati = {ore_Mancanti}/> */}
-        
         </div>
         }
     </React.Fragment>
