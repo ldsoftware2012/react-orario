@@ -1,8 +1,9 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import DatePicker from "react-datepicker";
-import { IModelOrario } from "../interface/interface";
+import { CalcolaOre, IModelOrario } from "../interface/interface";
 import {
   AddDay, DataLoading, Delete, GetRemoteData, ListaClienti, MapToOptions, UpdateDay,
+  differenzaOrari,
 } from "../data/Datasource";
 import { url_AddDay, url_DeleteDay, url_OrarioByID, url_UpdateDay } from "../data/config";
 import {
@@ -127,87 +128,38 @@ export function UpdateDataDay() {
   let NuovaData = Parameters.get("Data");
   if(NuovaData==null) {NuovaData = new Date().toString()} 
 
-  function differenzaOrari(orario1: string, orario2: string) {
-    const data1 = new Date(`1970-01-01T${orario1}`);
-    const data2 = new Date(`1970-01-01T${orario2}`);
-
-    // Calcola la differenza in millisecondi
-    const differenzaInMillisecondi = data2.getTime() - data1.getTime();
-
-    // Calcola le ore, i minuti e i secondi dalla differenza in millisecondi
-    const ore = Math.floor(differenzaInMillisecondi / 3600000);
-    const minuti = Math.floor((differenzaInMillisecondi % 3600000) / 60000);
-    const secondi = Math.floor((differenzaInMillisecondi % 60000) / 1000);
-
-    const oreNumber = ore + minuti / 60;
-
-    // Restituisci un oggetto con le informazioni sulla differenza
-    return { ore, minuti, secondi, oreNumber };
-  }
-  
   function AggiornaOrari() {
 if (isDataLoaded) {  
-      let oo = 0, os = 0,op = 0,of = 0,ov = 0;
+
+    const ore : IModelOrario ={
+      Data: data,
+      DataString : format(data,"yyyy-MM-dd"),
+      Cliente: "",
+      Tecnico: "",
+      Commessa:"" ,
+      Tipo: tipo,
+      Ora_IN1: orain1,
+      Ora_OUT1: oraout1,
+      Ora_IN2: orain2 != undefined ? orain2 : "",
+      Ora_OUT2: oraout2 != undefined ? oraout2 : "",
+      Km: "0",
+      Pranzo: "false",
+      Cena: "false",
+      Pernotto: "false",
+      Estero: "false",
+      Fatturato: "false",
+      Ore_Ord:oreOrd.toString(),
+      Ore_Stra: oreStra.toString(),
+      Ore_Pre: orePrefestive.toString(),
+      Ore_Fest: oreFestive.toString(),
+      Ore_Viaggio: oreViaggio.toString(),
+      Note: ""
+    }
+      const {oo,os,ov,op,of} = CalcolaOre(ore,data)
       setError("");
-      // setshowButtonHours(true)
-  
+    
       const giorno = new Date(data).getDay();
       var reg = new RegExp("^([0-9])+$");
-  
-      if (differenzaOrari(orain1, oraout1).oreNumber > 0) {
-        oo = differenzaOrari(orain1, oraout1).oreNumber;
-      } else if(tipo != "Riposo trasferta") {
-        setError("Anomalia orario mattina")
-        oo=0
-      }
-  
-      if (differenzaOrari(orain2, oraout2).oreNumber > 0) {
-        oo = oo + differenzaOrari(orain2, oraout2).oreNumber;
-      } else if((orain2 == "" && oraout2 == "") || (orain2 == undefined && oraout2 == undefined)){
-      }
-      else {
-        console.log(orain2,oraout2)
-        if(orain2 != "" || oraout2 != ""){
-          setError("Anomalia orario pomeriggio")
-          oo=0
-        }
-      }
-  
-      if (oo > 8) {
-        os = oo - 8;
-        oo = 8;
-      }
-  
-      if (giorno == 6 && tipo == "Lavoro") {
-        //saturday
-        op = oo + os;
-        oo = 0;
-        os = 0;
-      }
-  
-      if ((giorno == 0 || data.isHoliday()) && tipo == "Lavoro") {
-        //sunday or holiday
-        of = oo + os;
-        oo = 0;
-        os = 0;
-      }
-  
-      if (tipo == "Viaggio") {
-        //traveling
-        ov = oo + os;
-        oo = 0;
-        os = 0;
-      }
-
-      if (tipo === "Riposo trasferta" || tipo==="Ferie" || tipo==="Malattia" || tipo ==="Donazione") {
-        //traveling
-        ov = 0;
-        oo = 0;
-        op = 0;
-        of = 0;
-        os = 0;
-        // setshowButtonHours(false)
-      }
 
       if(tipo==="Malattia"){
         setCommessa("Malattia")

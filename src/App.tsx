@@ -1,17 +1,18 @@
 import { createContext, useEffect, useState } from "react";
-import { IAcconto, ICliente, ICommesse, IDataContext, IModelOrario, ISearchParameter, ITecnico } from "./interface/interface";
+import { CalcolaOre, IAcconto, ICliente, ICommesse, IDataContext, IModelOrario, ISearchParameter, ITecnico } from "./interface/interface";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import OrarioList from "./components/OrarioList";
 import OrarioAnalisi from "./components/OrarioAnalisi";
 import Home from "./components/Home";
 import { UpdateDataDay } from "./components/UpdateDataDay";
-import { GetRemoteData } from "./data/Datasource";
-import { url_Acconti, url_Clienti, url_Commesse, url_Tecnici } from "./data/config";
+import { AddDay, GetRemoteData, differenzaOrari } from "./data/Datasource";
+import { url_Acconti, url_AddDay, url_Clienti, url_Commesse, url_Orario, url_Tecnici } from "./data/config";
 import ListaCommesse from "./components/ListaCommesse";
 import GestioneAcconti from "./components/GestioneAcconti";
 import SituazioneAcconti from "./components/SituazioneAcconti";
 import Clienti from "./components/ListaClienti";
 import Info from "./components/Info";
+import { format } from "date-fns";
 export const OrarioDataContext = createContext<IDataContext | null>(null);
 
 export default function App() {
@@ -29,6 +30,8 @@ const [tecnici,setTecnici] = useState<ITecnico[]>([])
 const [data_ref,setData_ref] = useState<Date>(new Date())
 const [isEnableChange,setIsEnableChange] = useState<string>("false")
 const [acconti, setAcconti] = useState<IAcconto[]>([])
+const [IDgiornoCopiato,setIDgiornoCopiato] = useState<IModelOrario[]>([])
+const [resultRemoteOperation, setResultRemoteOperation] = useState<{status : Number, description:string}>();
 
 useEffect(() => {
 
@@ -46,6 +49,41 @@ useEffect(() => {
     setAcconti(acc)
   })()
 }, [])
+
+
+
+
+const onPaste =async (data:Date)=>{
+    const {oo,os,ov,op,of} = CalcolaOre(IDgiornoCopiato[0],data)
+  const new_orario: IModelOrario = {
+    Data: data,
+    DataString : format(data,"yyyy-MM-dd"),
+    Cliente: IDgiornoCopiato[0].Cliente,
+    Tecnico: IDgiornoCopiato[0].Tecnico || "",
+    Commessa: IDgiornoCopiato[0].Commessa,
+    Tipo: IDgiornoCopiato[0].Tipo,
+    Ora_IN1: IDgiornoCopiato[0].Ora_IN1,
+    Ora_OUT1: IDgiornoCopiato[0].Ora_OUT1,
+    Ora_IN2: IDgiornoCopiato[0].Ora_IN2 != undefined ? IDgiornoCopiato[0].Ora_IN2 : "",
+    Ora_OUT2: IDgiornoCopiato[0].Ora_OUT2 != undefined ? IDgiornoCopiato[0].Ora_OUT2 : "",
+    Km: IDgiornoCopiato[0].Km,
+    Pranzo: IDgiornoCopiato[0].Pranzo,
+    Cena: IDgiornoCopiato[0].Cena,
+    Pernotto: IDgiornoCopiato[0].Pernotto,
+    Estero: IDgiornoCopiato[0].Estero,
+    Fatturato: IDgiornoCopiato[0].Fatturato,
+    Ore_Ord: oo.toString(),
+    Ore_Stra: os.toString(),
+    Ore_Pre: op.toString(),
+    Ore_Fest: of.toString(),
+    Ore_Viaggio: ov.toString(),
+    Note: IDgiornoCopiato[0].Note,
+  };
+
+  const result = await AddDay(url_AddDay, new_orario);
+  setResultRemoteOperation({status:result.status,description:result.description});
+  setIsDataUpdated(true)
+}
 
 useEffect(() => {
 setIsDataUpdated(false)
@@ -76,7 +114,10 @@ setIsDataUpdated(false)
       isEnableChange,
       setIsEnableChange,
       acconti,
-      setAcconti
+      setAcconti,
+      IDgiornoCopiato,
+      setIDgiornoCopiato,
+      onPaste
     }}>
       <BrowserRouter basename={'/react-orario'}>
       <Routes>

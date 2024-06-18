@@ -20,23 +20,24 @@ export default function AnalisiMese(props: any) {
   if (primogiorno == 0) {primogiorno = 7;}
   const NumGiorni = new Date(Anno, Mese, 0).getDate();
 
-  const AbilitaModifiche = ()=>{
-    return(
-    <>
-      <label className="px-2">Abilita Modifiche<span className="px-2">
-        <input type="checkbox" 
-        checked={GlobalData?.isEnableChange == "true"} 
-        onChange={(e)=>GlobalData?.setIsEnableChange(e.currentTarget.checked ? "true" : "false")}>
-        </input></span>
-      </label>
-    </>)
-  }
+  // const AbilitaModifiche = ()=>{
+  //   return(
+  //   <>
+  //     <label className="px-2">Abilita Modifiche<span className="px-2">
+  //       <input type="checkbox" 
+  //       checked={GlobalData?.isEnableChange == "true"} 
+  //       onChange={(e)=>GlobalData?.setIsEnableChange(e.currentTarget.checked ? "true" : "false")}>
+  //       </input></span>
+  //     </label>
+  //   </>)
+  // }
+
 
   return (
     <>
     <u><h1 className="text-center">{new Date(Anno,Mese,0).MeseTesto()} {Anno} </h1></u>
       
-    <AbilitaModifiche/>
+    {/* <AbilitaModifiche/> */}
 
     <Table className="Calendario">
         {row.map((row,index) => {

@@ -478,3 +478,20 @@ export const GetMissingData=
     return dayList
 }
 
+export function differenzaOrari(orario1: string, orario2: string) {
+    const data1 = new Date(`1970-01-01T${orario1}`);
+    const data2 = new Date(`1970-01-01T${orario2}`);
+
+    // Calcola la differenza in millisecondi
+    const differenzaInMillisecondi = data2.getTime() - data1.getTime();
+
+    // Calcola le ore, i minuti e i secondi dalla differenza in millisecondi
+    const ore = Math.floor(differenzaInMillisecondi / 3600000);
+    const minuti = Math.floor((differenzaInMillisecondi % 3600000) / 60000);
+    const secondi = Math.floor((differenzaInMillisecondi % 60000) / 1000);
+
+    const oreNumber = ore + minuti / 60;
+
+    // Restituisci un oggetto con le informazioni sulla differenza
+    return { ore, minuti, secondi, oreNumber };
+}

@@ -65,12 +65,13 @@ export function DisegnaGiorno(props: any) {
 
 useEffect(() => {
 if (!dataLoaded) {
+  console.log(GlobalData?.IDgiornoCopiato)
 try {
 
     const Filtro = Orari.filter((o:IModelOrario) => {      
       try {
         const d = new Date(o.Data)
-        return (DateCompare(d,Data) && o.Tecnico == GlobalData?.tecnico)
+        return (DateCompare(d,Data) && o.Tecnico === GlobalData?.tecnico)
       } catch (error) {}
     })
     
@@ -81,7 +82,7 @@ try {
       
       SetAcconti(acc)
       SetData(Data)
-      SetFestivo(Data.isHoliday() || Data.getDay()==Sabato || Data.getDay()==Domenica)
+      SetFestivo(Data.isHoliday() || Data.getDay()===Sabato || Data.getDay()===Domenica)
       SetDataLoaded(true) 
       if(Filtro.length > 0){setOrario(Filtro)
         const {oo,op,of,os,ov,cena,estero,pernotto,pranzo,tot_hours} = Somma(Filtro)
@@ -138,16 +139,16 @@ function GetIcon():any  {
 
     return { ok, nok, viaggio}
 }
-async function EliminaRow(index: number) {
-    try {
-      const url = url_DeleteDay + "?id=" + index;
-      const del = await Delete(url);
-      console.log(" delete result = " + del);
-      GlobalData?.setIsDataUpdated(true);
-    } catch (error) {
-      console.log(error);
-    }
-}
+// async function EliminaRow(index: number) {
+//     try {
+//       const url = url_DeleteDay + "?id=" + index;
+//       const del = await Delete(url);
+//       console.log(" delete result = " + del);
+//       GlobalData?.setIsDataUpdated(true);
+//     } catch (error) {
+//       console.log(error);
+//     }
+// }
 function EditDate(ID: number) {
     if(ID != undefined){
       navigate("/updateDataDay?Method=Update&ID="+ ID);
@@ -270,60 +271,60 @@ const GiornoProgressBar = (props: any)=>{
     </>
     )
 }
-const GiornoEsistenteAdd = (props:any)=>{
-    return(<>
-      {/* {Aggiungi su esistente} */}
-      {GlobalData?.isEnableChange === "true" && id != undefined &&
-        <p style={{margin:0,padding:0}} className="justify-content-end">
-        <button 
-        className="btn bg-white border-primary "        
-        onClick={()=>{
-          navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
-        }          
-        }
-        >
-          <FontAwesomeIcon icon={faAdd}/>
-        </button>
-        <Popup Icon={faTrash} IconColor="red" Label="" MessageTitle="Elimina" MessageDescription="Vuoi eliminare questo orario?" onConfirm={()=>EliminaRow(props.id)}></Popup>
-      </p>}
-    </>)
-}
-const GiornoNuovoAdd = () =>{
-    return(<>
-        {/* {Aggiungi nuovo} */}      
-      {GlobalData?.isEnableChange === "true" && GiornoMancante &&
-      <p style={{margin:0,padding:0}} className="justify-content-end">
-      <button 
-      className="btn border-primary"        
-      onClick={()=>{
-        navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
-      }          
-      }
-      >
-        <FontAwesomeIcon icon={faAdd}/>
-      </button>
-    </p>}
-    </>)
-}
-const GiornoAccontoUpdate = () =>{
-  const data = format(Data,"yyyy-MM-dd")
-    return(<>
-      {/* {Aggiungi su esistente} */}      
-      {GlobalData?.isEnableChange == "true" &&
-        <p style={{marginBottom:0,padding:0}} className="justify-content-end">
-        <button 
-        className="btn border-primary "        
-        onClick={()=>{
-          navigate("/updateAcconto?Data=" + data + "&Tecnico=" + GlobalData.tecnico)
-        }          
-        }
-        >
-          <FontAwesomeIcon icon={faEuro}/>
-        </button>
+// const GiornoEsistenteAdd = (props:any)=>{
+//     return(<>
+//       {/* {Aggiungi su esistente} */}
+//       {GlobalData?.isEnableChange === "true" && id != undefined &&
+//         <p style={{margin:0,padding:0}} className="justify-content-end">
+//         <button 
+//         className="btn bg-white border-primary "        
+//         onClick={()=>{
+//           navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
+//         }          
+//         }
+//         >
+//           <FontAwesomeIcon icon={faAdd}/>
+//         </button>
+//         <Popup Icon={faTrash} IconColor="red" Label="" MessageTitle="Elimina" MessageDescription="Vuoi eliminare questo orario?" onConfirm={()=>EliminaRow(props.id)}></Popup>
+//       </p>}
+//     </>)
+// }
+// const GiornoNuovoAdd = () =>{
+//     return(<>
+//         {/* {Aggiungi nuovo} */}      
+//       {GlobalData?.isEnableChange === "true" && GiornoMancante &&
+//       <p style={{margin:0,padding:0}} className="justify-content-end">
+//       <button 
+//       className="btn border-primary"        
+//       onClick={()=>{
+//         navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
+//       }          
+//       }
+//       >
+//         <FontAwesomeIcon icon={faAdd}/>
+//       </button>
+//     </p>}
+//     </>)
+// }
+// const GiornoAccontoUpdate = () =>{
+//   const data = format(Data,"yyyy-MM-dd")
+//     return(<>
+//       {/* {Aggiungi su esistente} */}      
+//       {GlobalData?.isEnableChange == "true" &&
+//         <p style={{marginBottom:0,padding:0}} className="justify-content-end">
+//         <button 
+//         className="btn border-primary "        
+//         onClick={()=>{
+//           navigate("/updateAcconto?Data=" + data + "&Tecnico=" + GlobalData.tecnico)
+//         }          
+//         }
+//         >
+//           <FontAwesomeIcon icon={faEuro}/>
+//         </button>
         
-      </p>}
-    </>)
-}
+//       </p>}
+//     </>)
+// }
 const GetStatusColor = ():string=>{
     let className = ""
     if (GetIcon().ok && !GetIcon().viaggio) {
@@ -361,9 +362,9 @@ const ClienteCommessa = (props:any) =>{
     </>
   )
 }
-function HandleAggiungiPermesso(dati:OreMancanti){
-  navigate("/updateDataDay?Method=Permesso&OreMancanti=" + dati.ore + "&Data=" + format(dati.giorno, "yyyy/MM/dd"))
-}
+// function HandleAggiungiPermesso(dati:OreMancanti){
+//   navigate("/updateDataDay?Method=Permesso&OreMancanti=" + dati.ore + "&Data=" + format(dati.giorno, "yyyy/MM/dd"))
+// }
 function HandleAggiungiPermessoNew(data:string,ore:number){
   navigate("/updateDataDay?Method=Permesso&OreMancanti=" + ore + "&Data=" + data)
 }
@@ -375,37 +376,40 @@ function handleContextMenu(e:Event,value:string,id:number){
     case "Aggiungi":
         navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
     break;
-    case "Elimina":
-    break;
     case "Acconti":
       navigate("/updateAcconto?Data=" + data + "&Tecnico=" + tecnico)
       break;
     case "Permesso":
       HandleAggiungiPermessoNew(data,ore_Mancanti?.ore || 0)
       break;
+    case "Copia":
+      GlobalData?.setIDgiornoCopiato(orario)
+      break;  
+    case "Incolla":
+      GlobalData?.onPaste(Data)
+      break;
     default:
       break;
   }
     
 }
-function AggiungiOreMancanti (props:any){
-  const {giorno,ore} = props.dati
-  let day = new Date
-  day = giorno
-  return (
-  <>
-    {!day.isHoliday() && !day.isWeekEnd() && ore > 0 && GlobalData?.isEnableChange == "true" && 
-    <Button
-    onClick={()=>HandleAggiungiPermesso(props.dati)}
-    ><FontAwesomeIcon icon={faHandshake} title="Aggiungi Permesso"/>
-    </Button>}
-  </>)
-}
+// function AggiungiOreMancanti (props:any){
+//   const {giorno,ore} = props.dati
+//   let day = new Date
+//   day = giorno
+//   return (
+//   <>
+//     {!day.isHoliday() && !day.isWeekEnd() && ore > 0 && GlobalData?.isEnableChange == "true" && 
+//     <Button
+//     onClick={()=>HandleAggiungiPermesso(props.dati)}
+//     ><FontAwesomeIcon icon={faHandshake} title="Aggiungi Permesso"/>
+//     </Button>}
+//   </>)
+// }
+
   return (
     <React.Fragment>
-    {dataLoaded && <div>
-        {/* <ComponentSpeedDial onClick={handleCopiaGiornoClick}></ComponentSpeedDial> */}
-        <ComponentContextMenu id={1 || -1} onClick={handleContextMenu}></ComponentContextMenu>
+    {dataLoaded && <div>        
         <NumeroGiorno/>        
         <div className="d-flex">
           <GiornoIcons/>
@@ -418,17 +422,18 @@ function AggiungiOreMancanti (props:any){
               <ClienteCommessa dati={o} />
               <GiornoProgressBar ore={o} />
             </div>
-            <GiornoEsistenteAdd id={o.id || -1}/>
+            {/* <GiornoEsistenteAdd id={o.id || -1}/> */}
+            <ComponentContextMenu data={data} ore={ore_Mancanti?.ore} id={o.id || -1} onClick={handleContextMenu}></ComponentContextMenu>
             </>
           )
         })}
-        <div className="">
-          <GiornoNuovoAdd/> 
-          {GlobalData?.isAdmin && <GiornoAccontoUpdate/>} 
-        </div>
+        {GiornoMancante && <ComponentContextMenu data={data} ore={ore_Mancanti?.ore} id={-1} onClick={handleContextMenu}></ComponentContextMenu>}
+        {/* <div className=""> */}
+          {/* <GiornoNuovoAdd/>  */}
+          {/* {GlobalData?.isAdmin && <GiornoAccontoUpdate/>}  */}
+        {/* </div> */}
         <VerificaAcconti/>
-        <AggiungiOreMancanti dati = {ore_Mancanti}/>
-        {/* <div>Ore mancanti {ore_Mancanti?.ore}</div> */}
+        {/* <AggiungiOreMancanti dati = {ore_Mancanti}/> */}
         
         </div>
         }

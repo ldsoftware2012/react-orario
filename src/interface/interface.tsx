@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { Dispatch } from "react";
+import { differenzaOrari } from "../data/Datasource";
 
 export interface IDayMissing{
   id:number,
@@ -40,7 +41,10 @@ export interface IDataContext{
   isEnableChange : string,
   setIsEnableChange : Dispatch<string>,
   acconti : IAcconto[],
-  setAcconti : Dispatch<IAcconto[]>
+  setAcconti : Dispatch<IAcconto[]>,
+  IDgiornoCopiato : IModelOrario[],
+  setIDgiornoCopiato : Dispatch<IModelOrario[]>,
+  onPaste : (data:Date)=>void
 } 
 
 export interface IAcconto{
@@ -285,3 +289,60 @@ export function DateCompare(data1:Date,data2:Date):boolean{
     return (d1===d2)
 }
 
+export const CalcolaOre = (orario:IModelOrario,data:Date)=>{
+
+  let oo = 0, os = 0,op = 0,of = 0,ov = 0;
+  const giorno = new Date(data).getDay();
+  if (differenzaOrari(orario.Ora_IN1, orario.Ora_OUT1).oreNumber > 0) {
+    oo = differenzaOrari(orario.Ora_IN1, orario.Ora_OUT1).oreNumber;
+  } else if(orario.Tipo != "Riposo trasferta") {
+    oo=0
+  }
+
+  if (differenzaOrari(orario.Ora_IN2, orario.Ora_OUT2).oreNumber > 0) {
+    oo = oo + differenzaOrari(orario.Ora_IN2, orario.Ora_OUT2).oreNumber;
+  } else if((orario.Ora_IN2 === "" && orario.Ora_OUT2 === "") || (orario.Ora_IN2 === undefined && orario.Ora_OUT2 === undefined)){
+  }
+  else {
+    if(orario.Ora_IN2 !== "" || orario.Ora_OUT2 != ""){
+      oo=0
+    }
+  }
+  if (oo > 8) {
+    os = oo - 8;
+    oo = 8;
+  }
+
+  if (giorno === 6 && orario.Tipo === "Lavoro") {
+    //saturday
+    op = oo + os;
+    oo = 0;
+    os = 0;
+  }
+
+  if ((giorno === 0 || data.isHoliday()) && orario.Tipo === "Lavoro") {
+    //sunday or holiday
+    of = oo + os;
+    oo = 0;
+    os = 0;
+  }
+
+  if (orario.Tipo === "Viaggio") {
+    //traveling
+    ov = oo + os;
+    oo = 0;
+    os = 0;
+  }
+
+  if (orario.Tipo === "Riposo trasferta" || orario.Tipo==="Ferie" || orario.Tipo==="Malattia" || orario.Tipo ==="Donazione") {
+    //traveling
+    ov = 0;
+    oo = 0;
+    op = 0;
+    of = 0;
+    os = 0;
+    // setshowButtonHours(false)
+  }
+
+  return {oo,os,ov,of,op}
+}
