@@ -90,12 +90,27 @@ async function EliminaRow(index: number) {
                         <Divider sx={{ backgroundColor: "teal", height: "3px", margin: "16px 0" }} />
                         <Stack direction="row" spacing={1} className='mb-1'>
                             <Button endIcon={<Euro/>} title='Acconti' color='primary' onClick={(event)=>props.onClick(event,"Acconti",props.id)}>Acconti</Button>   
+                        </Stack>
+
+                        <Divider sx={{ backgroundColor: "teal", height: "3px", margin: "16px 0" }} />
+                        <Stack direction="row" spacing={1} className='mb-1'>
 
                             {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
-                                <Button endIcon={<BeachAccessIcon/>} title='Permesso' color='warning' onClick={(event)=>props.onClick(event,"Permesso",props.id)}>Permesso</Button>
+                                <Button endIcon={<BeachAccessIcon/>} title='Permesso' color='error' onClick={(event)=>props.onClick(event,"Permesso",props.id)}>Permesso</Button>
                             }                                                        
-                            
 
+
+                            {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
+                                <Button endIcon={<BeachAccessIcon/>} title='Ferie' color='error' onClick={(event)=>props.onClick(event,"Ferie",props.id)}>Ferie</Button>
+                            }   
+
+                            {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
+                                <Button endIcon={<BeachAccessIcon/>} title='Malattia' color='error' onClick={(event)=>props.onClick(event,"Malattia",props.id)}>Malattia</Button>
+                            }          
+                            
+                            {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
+                                <Button endIcon={<BeachAccessIcon/>} title='Donazione ' color='error' onClick={(event)=>props.onClick(event,"Donazione",props.id)}>Donazione</Button>
+                            }  
                         </Stack>
                     </Typography>
                     </Popover>

@@ -113,8 +113,6 @@ setIsDataUpdated(false)
       tecnici,
       data_ref,
       setData_ref,
-      isEnableChange,
-      setIsEnableChange,
       acconti,
       setAcconti,
       giornoCopiato,

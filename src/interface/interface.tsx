@@ -2,6 +2,13 @@ import { format } from "date-fns";
 import { Dispatch } from "react";
 import { differenzaOrari } from "../data/Datasource";
 
+export interface IConfigDisegnaGiorno {
+  VisualizzaColoriCommessa? : boolean,
+  VisualizzaDescrizioneCommessa? : boolean,
+  VisualizzaOrediLavoro? : boolean,
+  VisualizzaSoloGiorniNonCompleti? : boolean,
+}
+
 export interface IDayMissing{
   id:number,
   data:Date,
@@ -38,8 +45,6 @@ export interface IDataContext{
   tecnici : ITecnico[],
   data_ref : Date,
   setData_ref : Dispatch<Date>,
-  isEnableChange : string,
-  setIsEnableChange : Dispatch<string>,
   acconti : IAcconto[],
   setAcconti : Dispatch<IAcconto[]>,
   giornoCopiato : ICopyAndPasteData,
@@ -351,3 +356,14 @@ export const CalcolaOre = (orario:IModelOrario,data:Date)=>{
 
   return {oo,os,ov,of,op}
 }
+
+
+//Found all Commesse
+export const ListaCommesse=(orario:IModelOrario[]) => 
+  orario.reduce((commesselista, current) => {
+  if (!commesselista.includes(current.Commessa))
+      commesselista.push(current.Commessa);
+  return commesselista;
+}, [] as string[]);    
+
+

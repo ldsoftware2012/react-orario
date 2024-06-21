@@ -1,11 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faAdd,
   faAutomobile,
   faBed,
   faNoteSticky,
   faPlane,
-  faTrash,
   faWineBottle,
 } from "@fortawesome/free-solid-svg-icons";
 import { Col, ProgressBar, Row } from "react-bootstrap";
@@ -14,7 +12,6 @@ import { useContext, useState } from "react";
 import { OrarioDataContext } from "../App";
 import { url_DeleteDay } from "../data/config";
 import { Delete } from "../data/Datasource";
-import PopupConfirm from "./PopupConfirm";
 
 
 export function Giorno(props: any) {
@@ -197,7 +194,7 @@ export function Giorno(props: any) {
       </div>
 
       {/* {Aggiungi su esistente} */}
-      {GlobalData?.isEnableChange == "true" && id != undefined &&
+      {/* {GlobalData?.isEnableChange == "true" && id != undefined &&
         <p className="justify-content-end">
         <button 
         className="btn border-primary"        
@@ -214,10 +211,10 @@ export function Giorno(props: any) {
         >
           <FontAwesomeIcon icon={faTrash}/>
         </button>
-      </p>}
+      </p>} */}
 
       {/* {Aggiungi nuovo} */}
-      {GlobalData?.isEnableChange == "true" && id == undefined &&
+      {/* {GlobalData?.isEnableChange == "true" && id == undefined &&
         <p className="justify-content-end">
         <button 
         className="btn border-primary"        
@@ -237,7 +234,7 @@ export function Giorno(props: any) {
             onConfirmation={() => EliminaRow(id || -1)}
             setClose={() => setshowPanelDelete(false)}
           ></PopupConfirm>
-        )}
+        )} */}
     </>
   );
 }

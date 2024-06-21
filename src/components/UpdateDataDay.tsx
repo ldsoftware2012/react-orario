@@ -28,9 +28,10 @@ import Select from "react-select";
 import "../css/TableOrario.css";
 import { ComponentHoursPreset } from "./ComponentHoursList";
 import { ComponentSelectHour } from "./ComponentSelectHour";
-import { InputAdornment, TextField } from "@mui/material";
+import { Alert, InputAdornment, TextField } from "@mui/material";
 import { ComponentChangeWorkType } from "./ComponentChangeWrokType";
-
+import CheckIcon from '@mui/icons-material/Check';
+import { Cancel } from "@mui/icons-material";
 
 
 
@@ -660,7 +661,7 @@ useEffect(() => {
       <Menu />
       {(isLoading || !isDataLoaded) && <DataLoading/>}
 
-      {!isLoading && isDataLoaded && <Container fluid>     
+      {!isLoading && isDataLoaded && <Container fluid>   
         <legend className="text-center mt-5">Gestione Giorno</legend>
 
         <Col className="text-end"><Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 rounded"><FontAwesomeIcon icon={faClose}/></Button></Col>
@@ -756,12 +757,25 @@ useEffect(() => {
         
       <div className="bg-danger">{error}</div>
       
-      {resultRemoteOperation?.status != null && <div className={resultRemoteOperation?.status === 1 ? "bg-success text-white" : "bg-danger text-white"}>{resultRemoteOperation?.description}</div>}
+      {/* {resultRemoteOperation?.status != null && <div className={resultRemoteOperation?.status === 1 ? "bg-success text-white" : "bg-danger text-white"}>{resultRemoteOperation?.description}</div>} */}
+      
 
       <div className="align-items-center text-center ">        
         <Popup Disabled={!isEnableCommand} Icon={faSave} IconColor="green" Label="Salva" MessageTitle="Salvataggio dati" MessageDescription="Vuoi salvare questo orario?" onConfirm={()=>SaveData()}></Popup>
         <Popup Disabled={!isEnableCommand} Icon={faTrash} IconColor="red" Label="Elimina" MessageTitle="Elimina" MessageDescription="Vuoi eliminare questo orario?" onConfirm={()=>EliminaRow(parseInt(ID || "-1"))}></Popup>
       </div>
+
+      {resultRemoteOperation?.status === 1 &&
+        <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+        {resultRemoteOperation?.description}
+      </Alert>
+      }
+
+      {resultRemoteOperation?.status === -1 || resultRemoteOperation?.status === -2 &&
+        <Alert icon={<Cancel fontSize="inherit" />} severity="error">
+        {resultRemoteOperation?.description}
+      </Alert>
+      }  
       </Container>
       }
       <Footer />

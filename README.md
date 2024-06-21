@@ -14,3 +14,4 @@
 ### ver 1.1.9 : -Inserita descrizione commessa dopo la selezione dalla select nella pagina inserimento ore e modificato il layout della pagina inserimento orario
 ### ver 1.2.0 : Modificato layout pagina inserimento orari aggiungendo nuovi tipi 
 ### ver 1.2.1 : Aggiunta funzione copia / incolla nella pagina analisi
+### ver 1.2.2 : Aggiunto check dividere le commesse in base al colore

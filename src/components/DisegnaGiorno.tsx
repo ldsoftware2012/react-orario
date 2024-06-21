@@ -8,22 +8,32 @@ import { useContext, useEffect, useState } from "react";
 import { Col, ProgressBar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { OrarioDataContext } from "../App";
-import { Somma } from "../data/Datasource";
-import { DateCompare, IAcconto, IModelOrario } from "../interface/interface";
+import { AddDay, Somma } from "../data/Datasource";
+import { DateCompare, IAcconto, IModelOrario, ListaCommesse } from "../interface/interface";
 import { format } from "date-fns";
 import React from "react";
 import { ComponentContextMenu } from "./ComponentContextMenu";
+import { Box } from "@mui/material";
+import { url_AddDay } from "../data/config";
 
 export function DisegnaGiorno(props: any) {
   const {
     Data,
     Orari,
+    Config,
   } = props;
 
   type OreMancanti = {
     giorno : Date,
     ore : number
   }
+
+  type TListaCommesse = {
+    Commessa : string
+    Colore : string
+  }
+
+
 
   const navigate = useNavigate();
   const GlobalData = useContext(OrarioDataContext);
@@ -41,22 +51,40 @@ export function DisegnaGiorno(props: any) {
   const [Km,SetKm] = useState<number>(0)
   const [Note,SetNote] = useState<string>("")
   const [Pernotto,SetPernotto] = useState<number>(0)
-  const [id,SetID] = useState<number>(-1)
   const [Festivo,SetFestivo] = useState<boolean>(false)
   const [TotaleOre,SetTotaleOre] = useState<number>(0)
   const [GiornoMancante,SetGiornoMancante] = useState<boolean>(false)
   const [acconti,SetAcconti] = useState<IAcconto[]>([])
   const [dataLoaded,SetDataLoaded] = useState<boolean>(false)
   const [ore_Mancanti,setOreMancanti] = useState<OreMancanti>()
-  const [giornoCopiato, setgiornoCopiato] = useState<number>()
+  const [tipo,setTipo] = useState<string>("")
+  const [tecnico,setTecnico] = useState<string>("")
   const Sabato =6
   const Domenica = 0
+  const [resultRemoteOperation, setResultRemoteOperation] = useState<{status : Number, description:string}>();
 
+  let ColoreGiorno : string = 'Black'
+  let ListaComm:TListaCommesse[] = []
+
+const CaricaListaCommesse = ()=>{
+      //Imposta colori alle commesse
+      const ListaColori = ['green','orange','blue','purple','gray','yellow','green','orange','blue','gray','purple','gray','yellow']
+      const Commesse = ListaCommesse(Orari)
+      let IndiceColore = 0
+      Commesse.filter(
+        (c:string)=> c !== undefined).map(
+        (c:string)=>
+          {
+            ListaComm.push({Colore: ListaColori[IndiceColore] ,Commessa:c})
+            IndiceColore++
+          }
+      )
+      return ListaComm
+}
 
 useEffect(() => {
 if (!dataLoaded) {
 try {
-
     const Filtro = Orari.filter((o:IModelOrario) => {      
       try {
         const d = new Date(o.Data)
@@ -87,6 +115,8 @@ try {
       SetPernotto(pernotto)
       SetTotaleOre(tot_hours)
       SetNote(Filtro[0].Note)
+      setTipo(Filtro[0].Tipo)
+      setTecnico(Filtro[0].Tecnico)
     }else{
       SetGiornoMancante(true)
       setOreMancanti({giorno : Data , ore : 8})
@@ -94,10 +124,26 @@ try {
   } catch (error) {
   console.log("error",error)
 }
-
 }  
 }, [])
 
+
+const GiornoCompleto = ()=>{
+  let ok=false,nok=false
+
+  ok = true
+  nok = false
+  if (
+    (TotaleOre < 8 && 
+      !Festivo && 
+      tipo !== "Donazione" &&
+      tipo !== "Ferie" &&
+      tipo !== "Malattia" &&
+      tipo !== "Riposo trasferta"
+    ) 
+      || (GiornoMancante && !Festivo)) {nok = true;ok = false}
+    return {ok,nok}
+}
 
 function GetIcon():any  {
     let ok=false,nok=false,viaggio=false
@@ -280,18 +326,69 @@ const ClienteCommessa = (props:any) =>{
       <div title={Note}>
         <p style={{margin:0}} ><u>{Cliente}</u></p>
         <span title={DescrizioneCommessa(Commessa)} className={className}>{Commessa}</span>
+        {Config.VisualizzaDescrizioneCommessa && <Box sx={{margin:1,border:1}}>{DescrizioneCommessa(Commessa)}</Box>}
       </div>
     </>
   )
+}
+const VisualizzaOrario = (props:any)=>{
+  let ore : IModelOrario = props.ore
+  return(
+  <>
+  {Config.VisualizzaOrediLavoro === true &&
+  ore.Ora_IN1 !== "" && ore.Ora_OUT1 !== "" &&
+    <Box sx={{border:1,margin:1,color:'blue'}}>
+    {ore.Ora_IN1}-{ore.Ora_OUT1}
+  </Box>
+  }
+  {Config.VisualizzaOrediLavoro === true &&
+    ore.Ora_IN2 !== "" && ore.Ora_OUT2 !== "" &&
+    <Box sx={{border:1,margin:1,color:'blue'}}>
+    {ore.Ora_IN2}-{ore.Ora_OUT2}
+  </Box>
+  }
+  </>)
 }
 
 function HandleAggiungiPermessoNew(data:string,ore:number){
   navigate("/updateDataDay?Method=Permesso&OreMancanti=" + ore + "&Data=" + data)
 }
+
+const handleAggiungiGiornoParticolare= async (Type:string)=>{
+  const new_orario: IModelOrario = {
+    Data: Data,
+    DataString : format(Data,"yyyy-MM-dd"),
+    Cliente: "LD Software",
+    Tecnico: GlobalData?.tecnico || "",
+    Commessa: Type,
+    Tipo: Type,
+    Ora_IN1: "",
+    Ora_OUT1: "",
+    Ora_IN2: "",
+    Ora_OUT2: "",
+    Km: "",
+    Pranzo: "",
+    Cena: "",
+    Pernotto: "",
+    Estero: "",
+    Fatturato: "",
+    Ore_Ord: "0",
+    Ore_Stra: "0",
+    Ore_Pre: "0",
+    Ore_Fest: "0",
+    Ore_Viaggio: "0",
+    Note: "",
+  };
+
+  const result = await AddDay(url_AddDay, new_orario);
+  setResultRemoteOperation({status:result.status,description:result.description});
+  GlobalData?.setIsDataUpdated(true)
+}
+
 function handleContextMenu(e:Event,value:string,id:number){
   const data = format(Data,"yyyy-MM-dd")
   const tecnico = GlobalData?.tecnico || ""
-  // setgiornoCopiato(id)
+
   switch (value) {
     case "Aggiungi":
         navigate("/updateDataDay?Method=Add&Data=" + format(Data, "yyyy/MM/dd"))
@@ -302,6 +399,12 @@ function handleContextMenu(e:Event,value:string,id:number){
     case "Permesso":
       HandleAggiungiPermessoNew(data,ore_Mancanti?.ore || 0)
       break;
+      case "Malattia":
+        handleAggiungiGiornoParticolare("Malattia")
+      break;      
+      case "Donazione":
+        handleAggiungiGiornoParticolare("Donazione")
+      break;          
     case "Copia":
       GlobalData?.setgiornoCopiato({orario:orario,id:id})
       break;  
@@ -313,26 +416,28 @@ function handleContextMenu(e:Event,value:string,id:number){
   }
     
 }
-
   return (
     <React.Fragment>
-    {dataLoaded && <div>        
+    {dataLoaded && (!Config.VisualizzaSoloGiorniNonCompleti || (Config.VisualizzaSoloGiorniNonCompleti && GiornoCompleto().nok)) && <div>        
         <NumeroGiorno/>        
         <div className="d-flex">
           <GiornoIcons/>
         </div>
         {orario.map((o:IModelOrario)=>{
+          CaricaListaCommesse()
+          ColoreGiorno = ListaComm.find((c)=>c.Commessa === o.Commessa)?.Colore || 'black'
           return(
             <>            
             <div  onClick={() => EditDate(o.id || -1)}>
               <ClienteCommessa dati={o} />
+              <VisualizzaOrario ore={o}></VisualizzaOrario>
               <GiornoProgressBar ore={o} />
-            </div>
-            {/* <GiornoEsistenteAdd id={o.id || -1}/> */}
+              {Config.VisualizzaColoriCommessa === true && <Box sx={{margin:1, height:2,border:2,borderColor:ColoreGiorno}}></Box>}
+            </div>            
             <ComponentContextMenu data={data} ore={ore_Mancanti?.ore} id={o.id || -1} onClick={handleContextMenu}></ComponentContextMenu>
             </>
           )
-        })}
+          })}
         {GiornoMancante && <ComponentContextMenu data={data} ore={ore_Mancanti?.ore} id={-1} onClick={handleContextMenu}></ComponentContextMenu>}
         <VerificaAcconti/>
         </div>
