@@ -144,7 +144,6 @@ const GiornoCompleto = ()=>{
       || (GiornoMancante && !Festivo)) {nok = true;ok = false}
     return {ok,nok}
 }
-
 function GetIcon():any  {
     let ok=false,nok=false,viaggio=false
 
@@ -308,7 +307,7 @@ const GetStatusColor = ():string=>{
     
 }
 const NumeroGiorno = ()=>{
-    let classOggi = DateCompare(new Date(),Data) ? "border border-5 border-primary rounded-5 shadow-lg" : ""
+    let classOggi = DateCompare(new Date(),Data) ? "bg-primary border border-3 border-primary rounded-5 shadow-lg text-light" : ""
     Festivo ? classOggi = classOggi + "Festivo text-danger " : classOggi = classOggi
     
     return(<>
@@ -404,7 +403,10 @@ function handleContextMenu(e:Event,value:string,id:number){
       break;      
       case "Donazione":
         handleAggiungiGiornoParticolare("Donazione")
-      break;          
+      break;    
+      case "Ferie":
+        handleAggiungiGiornoParticolare("Ferie")
+      break;           
     case "Copia":
       GlobalData?.setgiornoCopiato({orario:orario,id:id})
       break;  

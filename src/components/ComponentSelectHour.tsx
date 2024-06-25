@@ -39,7 +39,7 @@ useEffect(() => {
 
     return(
         <>
-            <Button aria-describedby={id} variant="contained" onClick={handleClick} color='info' hidden={!visible}>
+            <Button aria-describedby={id} variant="contained" onClick={handleClick} color='info' hidden={!visible} className='m-1'>
                 {props.value}
                     </Button>
                     <Popover

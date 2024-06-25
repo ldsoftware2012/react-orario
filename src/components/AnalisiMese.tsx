@@ -53,7 +53,6 @@ export default function AnalisiMese(props: any) {
                         horizontal: 'left',
                         }}
                     >
-
                     <Typography sx={{ p: 2,backgroundColor:'white'}}>
                         <Stack direction="row" spacing={1} className='mb-1'>
                         <Alert>

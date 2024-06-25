@@ -28,10 +28,10 @@ import Select from "react-select";
 import "../css/TableOrario.css";
 import { ComponentHoursPreset } from "./ComponentHoursList";
 import { ComponentSelectHour } from "./ComponentSelectHour";
-import { Alert, InputAdornment, TextField } from "@mui/material";
+import { Alert, Divider, InputAdornment, TextField } from "@mui/material";
 import { ComponentChangeWorkType } from "./ComponentChangeWrokType";
 import CheckIcon from '@mui/icons-material/Check';
-import { Cancel } from "@mui/icons-material";
+import { Cancel, Label } from "@mui/icons-material";
 
 
 
@@ -662,7 +662,8 @@ useEffect(() => {
       {(isLoading || !isDataLoaded) && <DataLoading/>}
 
       {!isLoading && isDataLoaded && <Container fluid>   
-        <legend className="text-center mt-5">Gestione Giorno</legend>
+        {/* <legend className="text-center mt-5">Gestione Giorno</legend> */}
+        <div className="text-center fs-1">Gestione giorno</div>
 
         <Col className="text-end"><Button  onClick={()=>navigate(-1)} className="btn btn-outline-dark bg-light m-2 rounded"><FontAwesomeIcon icon={faClose}/></Button></Col>
 
@@ -670,6 +671,7 @@ useEffect(() => {
           <label>Data</label>
           <Data />
         </div >
+        <Divider sx={{ backgroundColor: "teal", height: "3px", margin: "16px 0" }} />
         <div>
           <ComponentChangeWorkType value={tipo} onChange={handleChangeWorkType}></ComponentChangeWorkType>
         </div>  
@@ -688,16 +690,18 @@ useEffect(() => {
           <Cena />
           <Pernotto />
           <Estero />
+        </div>        
+        <Divider sx={{ backgroundColor: "teal", height: "3px", margin: "16px 0" }} />
+        <div className="p-1 text-center">           
+          <div className="fs-3">Orario di lavoro</div>
+          {!hideHourButtons &&<ComponentSelectHour value={orain1} onClick={(e,value)=>setOraIn1(value)}></ComponentSelectHour>}
+          {!hideHourButtons &&<ComponentSelectHour value={oraout1} onClick={(e,value)=>setOraOut1(value)}></ComponentSelectHour>}
+          {!hideHourButtons &&<ComponentSelectHour value={orain2} onClick={(e,value)=>setOraIn2(value)}></ComponentSelectHour>}
+          {!hideHourButtons &&<ComponentSelectHour value={oraout2} onClick={(e,value)=>setOraOut2(value)}></ComponentSelectHour>}
+          {!hideHourButtons &&<ComponentHoursPreset onClick={handleHourListSelected}></ComponentHoursPreset>}
         </div>
         
-        <div className="p-1"> 
-          
-        {!hideHourButtons &&<ComponentSelectHour value={orain1} onClick={(e,value)=>setOraIn1(value)}></ComponentSelectHour>}
-        {!hideHourButtons &&<ComponentSelectHour value={oraout1} onClick={(e,value)=>setOraOut1(value)}></ComponentSelectHour>}
-        {!hideHourButtons &&<ComponentSelectHour value={orain2} onClick={(e,value)=>setOraIn2(value)}></ComponentSelectHour>}
-        {!hideHourButtons &&<ComponentSelectHour value={oraout2} onClick={(e,value)=>setOraOut2(value)}></ComponentSelectHour>}
-        {!hideHourButtons &&<ComponentHoursPreset onClick={handleHourListSelected}></ComponentHoursPreset>}
-        </div>
+        <Divider sx={{ backgroundColor: "teal", height: "3px", margin: "16px 0" }} />
 
         <TextField
           label="Percorso"
