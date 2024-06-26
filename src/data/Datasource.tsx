@@ -267,6 +267,11 @@ export const DownloadRI = (arr : string[],numero:string)=>{
     saveAs(file, numero + '.tex');
 }
 
+export const DownloadOreDipendente = (arr : string[],tecnico:string)=>{
+    const file = new Blob(arr, { type: 'text/plain;charset=utf-8' });
+    saveAs(file, tecnico + '.tex');
+}
+
 
 export const DownloadDanea = (Ore:IModelOrario[],Tecnico:ITecnico,Cliente:ICliente,Data:string,Listino:string,Iva:string) => {  
     const fields = {

@@ -62,21 +62,10 @@ const userDisplay = () => {
             
             {GlobalData?.isLogged && (
               <Nav className="mr-auto ">
-                {/* <DropdownButton
-                  className="bg-dark"
-                  id="dropdown-basic-button"
-                  variant="dark"
-                  title="File"
-                >  */}
-                {/* <Dropdown.Item className="bg-dark"> */}
                   <NavLink to={"/situazioneacconti"} className="nav-fill nav-link">
                     <FontAwesomeIcon icon={faMoneyBill} className="px-1"/>
                     Acconti
                   </NavLink>
-                {/* </Dropdown.Item> */}
-
-                {/* </DropdownButton> */}
-
                 <NavLink to={"/orario?Tipo=Lista"} className="nav-link">
                   <FontAwesomeIcon icon={faCalendarTimes} className="px-1"/>
                   Lista

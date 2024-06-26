@@ -273,7 +273,7 @@ Date.prototype.isWeekEnd = function():boolean{
     return new Date(y,m,0).getDate()
   }  
   Date.prototype.DataText = function ():string {
-    return "Il giorno " + this.GiornoTesto() + " " + this.getDate() + " " + this.MeseTesto();
+    return "Il giorno " + this.GiornoTesto() + " " + this.getDate() + " " + this.MeseTesto() || "";
   }  
   Date.prototype.RapportoIntervento = function ():string {
     if (this===null) {return ""}
@@ -367,3 +367,11 @@ export const ListaCommesse=(orario:IModelOrario[]) =>
 }, [] as string[]);    
 
 
+export function DataAdaptation(arr: string[] , original:string , replaced : string) {
+  arr.map((t,i)=>{
+      if (t.includes (original)) {
+          arr[i] = replaced ;
+      }
+  })
+  const a = arr.join("\n")
+}

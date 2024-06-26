@@ -54,7 +54,7 @@ useEffect(() => {
             )
         );
         setTesto(files[0]);
-        if(action != "Aggiorna" && action != "" && numeroIntervento != ""){
+        if(action !== "Aggiorna" && action != "" && numeroIntervento != ""){
             const f = ReadFileModel();
         }
     }

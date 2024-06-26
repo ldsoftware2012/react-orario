@@ -21,7 +21,7 @@ try {
         url_Login + "?user=" + user + "&password=" + password
       );
   
-      if (login.Utente != null && login.Utente != undefined) {
+      if (login.Utente !== null && login.Utente !== undefined) {
         setutente(login);
       } else {
         setError("Utente non trovato");
@@ -33,11 +33,11 @@ try {
   };
 
   useEffect(() => {
-    if ((utente != undefined && utente != null) || GlobalData?.isLogged) {
+    if ((utente !== undefined && utente !== null) || GlobalData?.isLogged) {
       GlobalData?.setIsLogged(true);
       GlobalData?.setTecnico &&
         GlobalData?.setTecnico(utente?.Utente ? utente.Utente : "");
-      if (utente?.Gruppo == "admin") {
+      if (utente?.Gruppo === "admin") {
         GlobalData?.setIsAdmin(true);
       }
       setError("");
@@ -78,7 +78,7 @@ try {
             }}
           />
         </Form.Group>
-        {error != "" && <p className="bg-danger mt-2">Utente non trovato!</p>}
+        {error !== "" && <p className="bg-danger mt-2">Utente non trovato!</p>}
 
         <div className="d-flex justify-content-center mt-2">
           {!GlobalData?.isLogged && (

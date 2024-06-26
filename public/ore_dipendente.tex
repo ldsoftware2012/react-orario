@@ -1,0 +1,43 @@
+\documentclass[a4paper,11pt]{article} 
+\usepackage[a4paper,includehead,left=0.2cm,right=0.2cm,top=2cm,headheight=25pt]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{color, colortbl}
+\usepackage{fancyhdr}
+\usepackage{datetime2}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{longtable}
+
+\graphicspath{ {./images/} }
+\pagestyle{myheadings}
+\def \numeroIntervento {O-20240229-01/LD}
+\def \dataIntervento  {29-02-2024}
+\def \completato {}
+\def \noncompletato {}
+\def \tecnico {}
+\begin{document}
+\definecolor{Gray}{gray}{0.9}
+\pagestyle{fancy}
+\fancyhead{} % clear all header fields
+\fancyhead[RO,LE]{\textbf{LD SOFTWARE S.R.L.}  \hfill \textbf{Ore dipendente }\tecnico \\Via S. Savino 35/a - 66010 - Torrevecchia T. (CH)    \hfill}
+\fancyfoot{} % clear all footer fields
+
+
+
+\begin{center}
+    \includegraphics[width=3cm, height=3cm]{logo.jpg}
+\end{center}
+\center{\Huge \textbf{{ORE DIPENDENTE } \tecnico}
+\break
+\fontsize{11}{13}\selectfont
+\begin{center}
+    \begin{longtable}{p{3cm} p{2cm} p{4cm} p{6.5cm}} 
+\sectionmark{Ore Dipendente} 
+    \end{table}
+\end{center}
+
+\sectionmark{Parte Finale}
+
+\end{document}

@@ -3,7 +3,6 @@ import DatePicker from "react-datepicker";
 import { CalcolaOre, IModelOrario } from "../interface/interface";
 import {
   AddDay, DataLoading, Delete, GetRemoteData, ListaClienti, MapToOptions, UpdateDay,
-  differenzaOrari,
 } from "../data/Datasource";
 import { url_AddDay, url_DeleteDay, url_OrarioByID, url_UpdateDay } from "../data/config";
 import {
@@ -11,10 +10,8 @@ import {
   Button,
   Col,
   Container,
-  Form, Overlay,
-  Row,
-  Tooltip
-} from "react-bootstrap";
+  Form, 
+  Row} from "react-bootstrap";
 import { OrarioDataContext } from "../App";
 import { Menu } from "./Menu";
 import { Footer } from "./Footer";
@@ -31,7 +28,7 @@ import { ComponentSelectHour } from "./ComponentSelectHour";
 import { Alert, Divider, InputAdornment, TextField } from "@mui/material";
 import { ComponentChangeWorkType } from "./ComponentChangeWrokType";
 import CheckIcon from '@mui/icons-material/Check';
-import { Cancel, Label } from "@mui/icons-material";
+import { Cancel } from "@mui/icons-material";
 
 
 
@@ -62,65 +59,12 @@ export function UpdateDataDay() {
   const [isEnableCommand, setIsEnableCommand] = useState(false);
   const [resultRemoteOperation, setResultRemoteOperation] = useState<{status : Number, description:string}>();
   const [error,setError] = useState("")
-  const [orario, setOrario] = useState<IModelOrario[]>([]);
+  const [, setOrario] = useState<IModelOrario[]>([]);
   const [isLoading,setIsLoading] = useState(true)
   const [isDataLoaded,setIsDataLoaded] = useState(false)
-  //const [showButtonHours, setshowButtonHours] = useState(true)
   const [hideHourButtons, sethideHourButtons] = useState(false)
 
   const navigate = useNavigate();
-  const ore = [
-    "",
-    "08:00",
-    "08:30",
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-    "20:00",
-    "20:30",
-    "21:00",
-    "21:30",
-    "22:00",
-    "22:30",
-    "23:00",
-    "23:30",
-    "00:00",
-    "00:30",
-    "01:00",
-    "01:30",
-    "02:00",
-    "02:30",
-    "03:00",
-    "03:30",
-    "04:00",
-    "04:30",
-    "05:00",
-    "05:30",
-    "06:00",
-    "06:30",
-    "07:00",
-    "07:30",
-  ];
-
   const GlobalData = useContext(OrarioDataContext);
   const [Parameters] = useSearchParams();
   const Method = Parameters.get("Method");
@@ -141,8 +85,8 @@ if (isDataLoaded) {
       Tipo: tipo,
       Ora_IN1: orain1,
       Ora_OUT1: oraout1,
-      Ora_IN2: orain2 != undefined ? orain2 : "",
-      Ora_OUT2: oraout2 != undefined ? oraout2 : "",
+      Ora_IN2: orain2 !== undefined ? orain2 : "",
+      Ora_OUT2: oraout2 !== undefined ? oraout2 : "",
       Km: "0",
       Pranzo: "false",
       Cena: "false",
@@ -159,7 +103,7 @@ if (isDataLoaded) {
       const {oo,os,ov,op,of} = CalcolaOre(ore,data)
       setError("");
     
-      const giorno = new Date(data).getDay();
+      //const giorno = new Date(data).getDay();
       var reg = new RegExp("^([0-9])+$");
 
       if(tipo==="Malattia"){
@@ -184,10 +128,10 @@ if (isDataLoaded) {
 
       if(!cliente){setError("Selezionare un cliente")}
       if(!commessa){setError("Selezionare una commessa")}
-      if(!reg.test(km) && km !=""){setError("Valore km immesso non corretto")}
+      if(!reg.test(km) && km !==""){setError("Valore km immesso non corretto")}
   
       if(commessa){
-        const comm = GlobalData?.commesse.find((c) => c.Commessa==commessa) 
+        const comm = GlobalData?.commesse.find((c) => c.Commessa===commessa) 
         if(comm){
         setdescrizioneCommessa(comm?.Descrizione)               
         }
@@ -202,7 +146,7 @@ if (isDataLoaded) {
 }
   }
 useEffect(() => {
-  error == "" ? setIsEnableCommand(true):setIsEnableCommand(false)  
+  error === "" ? setIsEnableCommand(true):setIsEnableCommand(false)  
 }, [error])
 
   //change day parameter
@@ -215,7 +159,7 @@ useEffect(() => {
   if (hasLoadedBefore.current) {
     hasLoadedBefore.current = false;
     (async()=>{
-      if(Method =="Update" && ID != null && ID != undefined){
+      if(Method === "Update" && ID != null && ID !== undefined){
         const ore = await GetRemoteData(url_OrarioByID + "?id=" + ID);
         setOrario(ore);
         if(ore.length > 0){
@@ -249,7 +193,7 @@ useEffect(() => {
       }
 
       try {
-        if(Method == "Add" && NuovaData != ""){
+        if(Method === "Add" && NuovaData !== ""){
           const d = new Date(NuovaData || new Date())
           setCliente("")
           setCommessa("")
@@ -260,7 +204,7 @@ useEffect(() => {
           setOraOut2("17:00");
           setIsDataLoaded(true)
         }
-      else if(Method=="Permesso" && NuovaData !=""){
+      else if(Method==="Permesso" && NuovaData !==""){
         const d = new Date(NuovaData || new Date())
         setCliente("LD Software")
         setCommessa("permesso")
@@ -391,9 +335,9 @@ useEffect(() => {
           type="switch"
           id="custom-switch"
           name="ratingCheckbox"
-          checked={pranzo == "true" ? true : false}
+          checked={pranzo === "true" ? true : false}
           onChange={(e) =>
-            setPranzo(e.target.checked == true ? "true" : "false")
+            setPranzo(e.target.checked === true ? "true" : "false")
           }
           label="Pranzo"
         ></Form.Check>
@@ -407,8 +351,8 @@ useEffect(() => {
           type="switch"
           id="custom-switch"
           name="ratingCheckbox"
-          checked={cena == "true" ? true : false}
-          onChange={(e) => setCena(e.target.checked == true ? "true" : "false")}
+          checked={cena === "true" ? true : false}
+          onChange={(e) => setCena(e.target.checked === true ? "true" : "false")}
           label="Cena"
         ></Form.Check>
       </Form>
@@ -421,9 +365,9 @@ useEffect(() => {
           type="switch"
           id="custom-switch"
           name="ratingCheckbox"
-          checked={pernotto == "true" ? true : false}
+          checked={pernotto === "true" ? true : false}
           onChange={(e) =>
-            setPernotto(e.target.checked == true ? "true" : "false")
+            setPernotto(e.target.checked === true ? "true" : "false")
           }
           label="Pernotto"
         ></Form.Check>
@@ -437,9 +381,9 @@ useEffect(() => {
           type="switch"
           id="custom-switch"
           name="ratingCheckbox"
-          checked={estero == "true" ? true : false}
+          checked={estero === "true" ? true : false}
           onChange={(e) =>
-            setEstero(e.target.checked == true ? "true" : "false")
+            setEstero(e.target.checked === true ? "true" : "false")
           }
           label="Estero"
         ></Form.Check>
@@ -453,9 +397,9 @@ useEffect(() => {
           type="switch"
           id="custom-switch"
           name="ratingCheckbox"
-          checked={fatturato == "true" ? true : false}
+          checked={fatturato === "true" ? true : false}
           onChange={(e) =>
-            setFatturato(e.target.checked == true ? "true" : "false")
+            setFatturato(e.target.checked === true ? "true" : "false")
           }
           label="Evaso"
         ></Form.Check>
@@ -535,8 +479,8 @@ useEffect(() => {
       Tipo: tipo,
       Ora_IN1: orain1,
       Ora_OUT1: oraout1,
-      Ora_IN2: orain2 != undefined ? orain2 : "",
-      Ora_OUT2: oraout2 != undefined ? oraout2 : "",
+      Ora_IN2: orain2 !== undefined ? orain2 : "",
+      Ora_OUT2: oraout2 !== undefined ? oraout2 : "",
       Km: km,
       Pranzo: pranzo,
       Cena: cena,
@@ -551,13 +495,13 @@ useEffect(() => {
       Note: note,
     };
 
-    const result = ""
-    if(Method == "Add" || Method=="Permesso"){
+    // const result = ""
+    if(Method === "Add" || Method==="Permesso"){
       const result = await AddDay(url_AddDay, new_orario);
       setResultRemoteOperation({status:result.status,description:result.description});
     }
 
-    if(Method == "Update"){
+    if(Method === "Update"){
     const result = await UpdateDay(url_UpdateDay, new_orario);
       setResultRemoteOperation({status:result.status,description:result.description});
     }
@@ -637,7 +581,7 @@ useEffect(() => {
     }
   }
 
-  function handleChangeWorkType(e:Event,newValue:string){  
+  function handleChangeWorkType(_e:Event,newValue:string){  
     sethideHourButtons(false)
     if(newValue==="Ferie" || newValue==="Permesso" || newValue ==="Malattia" || newValue === "Donazione" || newValue==="Riposo trasferta"){
       sethideHourButtons(true)
@@ -649,8 +593,8 @@ useEffect(() => {
     setTipo(newValue)
   }
 useEffect(() => {
-  if (resultRemoteOperation?.status != 0) {
-    const timeoutId = setTimeout(() => {
+  if (resultRemoteOperation?.status !== 0) {
+    setTimeout(() => {
         setResultRemoteOperation({status:0,description:""})
     }, 3000);
   }
@@ -694,10 +638,10 @@ useEffect(() => {
         <Divider sx={{ backgroundColor: "teal", height: "3px", margin: "16px 0" }} />
         <div className="p-1 text-center">           
           <div className="fs-3">Orario di lavoro</div>
-          {!hideHourButtons &&<ComponentSelectHour value={orain1} onClick={(e,value)=>setOraIn1(value)}></ComponentSelectHour>}
-          {!hideHourButtons &&<ComponentSelectHour value={oraout1} onClick={(e,value)=>setOraOut1(value)}></ComponentSelectHour>}
-          {!hideHourButtons &&<ComponentSelectHour value={orain2} onClick={(e,value)=>setOraIn2(value)}></ComponentSelectHour>}
-          {!hideHourButtons &&<ComponentSelectHour value={oraout2} onClick={(e,value)=>setOraOut2(value)}></ComponentSelectHour>}
+          {!hideHourButtons &&<ComponentSelectHour value={orain1} onClick={(_e,value)=>setOraIn1(value)}></ComponentSelectHour>}
+          {!hideHourButtons &&<ComponentSelectHour value={oraout1} onClick={(_e,value)=>setOraOut1(value)}></ComponentSelectHour>}
+          {!hideHourButtons &&<ComponentSelectHour value={orain2} onClick={(_e,value)=>setOraIn2(value)}></ComponentSelectHour>}
+          {!hideHourButtons &&<ComponentSelectHour value={oraout2} onClick={(_e,value)=>setOraOut2(value)}></ComponentSelectHour>}
           {!hideHourButtons &&<ComponentHoursPreset onClick={handleHourListSelected}></ComponentHoursPreset>}
         </div>
         
@@ -775,7 +719,7 @@ useEffect(() => {
       </Alert>
       }
 
-      {resultRemoteOperation?.status === -1 || resultRemoteOperation?.status === -2 &&
+      {(resultRemoteOperation?.status === -1 || resultRemoteOperation?.status === -2) &&
         <Alert icon={<Cancel fontSize="inherit" />} severity="error">
         {resultRemoteOperation?.description}
       </Alert>

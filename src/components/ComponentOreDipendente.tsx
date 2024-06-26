@@ -1,0 +1,131 @@
+import { useContext, useEffect, useState } from "react";
+import { DateCompare, IModelOrario, DataAdaptation } from "../interface/interface"
+import { DownloadOreDipendente, Somma } from "../data/Datasource";
+import { OrarioDataContext } from "../App";
+import { Button } from "@mui/material";
+import { format } from "date-fns";
+
+export const ComponentOreDipendente = (props:any)=>{
+    const {Orari , Anno, Mese} = props
+    const [testo,setTesto] = useState<string>("") 
+    const [text, setText] = useState<string>()
+    const GlobalData = useContext(OrarioDataContext);
+    const [File,setFile] = useState<string[]>([])
+    let Color = "black"
+    let OreOrd = 0
+    let OreStra = 0
+    let OrePre = 0
+    let OreFest = 0
+    let OreViaggio = 0
+    let Estero = 0
+    useEffect(() => {
+        let links = [process.env.PUBLIC_URL + "/ore_dipendente.tex"];
+        const action = testo
+        async function main() {
+            const files = await Promise.all(
+                links.map((link) => fetch(link)
+                .then((res) => res.text()),
+                )
+            );
+            setTesto(files[0]);
+            if(action != "Aggiorna" && action != ""){
+                const f = ReadFileModel();
+            }
+        }
+        main();
+    
+        }, [testo]);
+        
+        const ReadFileModel=()=>{
+            let content = cleanContent(testo);
+            setText(content.text);
+            AggiungiOreDipendente(content.arr);
+        }
+
+        const cleanContent = (t:string) => {
+            t =t.replace(/^\s*[\r\n]/gm, "");
+            let array = t.split(new RegExp(/[\r\n]/gm));
+            const arr = array.join("\n")
+            console.log("array=" + arr)
+            return {text:arr , arr:array}
+        };
+
+        function AggiungiOreDipendente(arr:string[]) {
+            DataAdaptation(arr,"\\def \\tecnico","\\def \\tecnico {" + GlobalData?.tecnico + "}")
+            const IndexSezioneDettaglio = arr.findIndex((t) => t === "\\sectionmark{Ore Dipendente} ")
+            const IndexSezioneFinale = arr.findIndex((t) => t === "\\sectionmark{Parte Finale}")
+            const FileParte1 = arr.slice(0,IndexSezioneDettaglio)        
+            const FileParte2 = arr.slice(IndexSezioneFinale)
+            const f1=FileParte1.join("\n")
+            const f2=FileParte2.join("\n")
+            const SezioneOrari = [""]
+            const SezioneFinale = [""]
+            const NumGiorni = new Date(Anno, Mese, 0).getDate();
+
+            
+
+            for (let index = 1; index < NumGiorni; index++) {
+                const Data = new Date(Anno, (Mese) - 1,index);
+                const Filtro = Orari.filter((o:IModelOrario) => { 
+                    try {
+                        const d = new Date(o.Data)
+                        return (DateCompare(d,Data) && o.Tecnico === GlobalData?.tecnico)
+                    } catch (error) {}
+                })
+
+                const {oo,ov,of,op,os,estero} = Somma(Filtro)
+                OreOrd = OreOrd + oo
+                OreStra = OreStra + os
+                OreFest = OreFest + of
+                OrePre = OrePre + op
+                OreViaggio = OreViaggio + ov
+                Estero = Estero + estero
+                if (Filtro.length > 0){                    
+                    Filtro.map((o:IModelOrario)=>{                                 
+                        let Ore = []
+                        Ore.push(o)
+                        const {oo,ov,op,of,os} = Somma(Ore)
+                        
+                        const Dat = format(o.Data,"dd-MM-yyyy");
+                        Color = "black";
+                        let Note = "";
+                        if(o.Estero === "true") {Note = "Diaria estero"}
+                        if (o.Tipo === "Viaggio") {Color = "blue"} 
+                        if(o.Tipo !== "Lavoro" && o.Tipo !== "Viaggio")
+                            Color = "red"
+                        SezioneOrari.push("\\color{", Color , "}",Dat ," & ","\\color{" ,Color , "}",(oo+ov+op+of+os).toString(), " & " ,"\\color{" ,Color , "}", o.Tipo || "" , " & " , Note , " & \\\\" + "\n" )
+                    }                    
+                    )
+                }else if(!Data.isHoliday() && Data.getDay() !== 6 && Data.getDay() !== 0){
+                    Color = "red";
+                    const Dat = format(Data,"dd-MM-yyyy");
+                    SezioneOrari.push("\\color{", Color , "}",Dat ," & ","\\color{" ,Color , "}","0", " & " ,"\\color{" ,Color , "}", "Orario assente" || "" , " & " , "Orario assente" , " & \\\\" + "\n" )
+                }
+            }
+            SezioneFinale.push("\\end{longtable}")
+            SezioneFinale.push("\\end{center}")
+            SezioneFinale.push("\\hline")
+            SezioneFinale.push("\\textbf{ Ore ordinarie : " , OreOrd.toString() , "} \\\\" ,"\n")
+            SezioneFinale.push("\\textbf{ Ore straordinarie : " , OreStra.toString() , "} \\\\" ,"\n")
+            SezioneFinale.push("\\textbf{ Ore Prefestive : " , OrePre.toString() , "} \\\\" ,"\n")
+            SezioneFinale.push("\\textbf{ Ore Festive : " , OreFest.toString() , "} \\\\" ,"\n")
+            SezioneFinale.push("\\textbf{ Ore Viaggio : " , OreViaggio.toString() , "} \\\\" ,"\n")
+            SezioneFinale.push("\\textbf{ Trasferte estero : " , Estero.toString() , "} \\\\" ,"\n")
+                
+            setFile([f1, ...SezioneOrari,...SezioneFinale , f2])
+            const testo=File.join("\n");
+            setText(testo)
+            
+        }
+    return <>       
+    {
+        GlobalData?.isAdmin &&
+        <Button className="m-1" variant="contained" onClick={()=>DownloadOreDipendente(File,GlobalData?.tecnico + "-" + Mese + "-" + Anno || "")}>
+        Download Ore dipendente
+    </Button>
+    }
+    </>
+}
+
+
+
