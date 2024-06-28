@@ -45,8 +45,7 @@ export const ComponentOreDipendente = (props:any)=>{
         const cleanContent = (t:string) => {
             t =t.replace(/^\s*[\r\n]/gm, "");
             let array = t.split(new RegExp(/[\r\n]/gm));
-            const arr = array.join("\n")
-            console.log("array=" + arr)
+            const arr = array.join("\n")            
             return {text:arr , arr:array}
         };
 

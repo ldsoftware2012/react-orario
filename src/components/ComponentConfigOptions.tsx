@@ -1,6 +1,7 @@
 import { AddTask } from "@mui/icons-material";
 import { Alert, Button, Popover, Stack, Switch, Typography } from "@mui/material";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { OrarioDataContext } from "../App";
 
 export const ComponentListaOpzioni = (props:any) =>
 {
@@ -11,7 +12,7 @@ export const ComponentListaOpzioni = (props:any) =>
     };
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
-
+    const GlobalData = useContext(OrarioDataContext);
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -54,10 +55,18 @@ Opzioni
             onChange={(e)=>onChange(e,'VisualizzaColoriCommessa')}            
         ></Switch><span>Colori Commesse</span>
         </div>
+        <div>
         <Switch                           
             checked={config.VisualizzaSoloGiorniNonCompleti}
             onChange={(e)=>onChange(e,'VisualizzaSoloGiorniNonCompleti')}            
         ></Switch><span>Giorni non completi</span>
+        </div>
+        <div>
+        {GlobalData?.isAdmin && <Switch                           
+            checked={config.VisualizzaCalcoloFattura}
+            onChange={(e)=>onChange(e,'VisualizzaCalcoloFattura')}            
+        ></Switch>}{GlobalData?.isAdmin && <span>Calcolo fattura</span>}
+        </div>
         </Alert>                            
         </Stack>
     </Typography>

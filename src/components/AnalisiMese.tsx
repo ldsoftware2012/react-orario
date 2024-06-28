@@ -8,11 +8,13 @@ import React from "react";
 import { IConfigDisegnaGiorno } from "../interface/interface";
 import { ComponentListaOpzioni } from "./ComponentConfigOptions";
 import { ComponentOreDipendente } from "./ComponentOreDipendente";
+import { ComponentCalcolaFattura } from "./ComponentCalcolFattura";
 
 export default function AnalisiMese(props: any) {
   const row = [1, 2, 3, 4, 5, 6];
   const col = [1, 2, 3, 4, 5, 6, 7];
-  const {Anno,Mese} = props
+  const {Anno,Mese,Orari} = props
+  const Ore = Orari
   const [configDisegnaGiorno, setconfigDisegnaGiorno] = useState<IConfigDisegnaGiorno>({VisualizzaColoriCommessa:false}) 
   let Indice = 0;
 
@@ -36,7 +38,9 @@ case 'VisualizzaColoriCommessa':
 case 'VisualizzaSoloGiorniNonCompleti':
       setconfigDisegnaGiorno({...configDisegnaGiorno,VisualizzaSoloGiorniNonCompleti:!configDisegnaGiorno.VisualizzaSoloGiorniNonCompleti})
     break;
-  
+case 'VisualizzaCalcoloFattura':
+      setconfigDisegnaGiorno({...configDisegnaGiorno,VisualizzaCalcoloFattura:!configDisegnaGiorno.VisualizzaCalcoloFattura})
+    break;
   default:
     break;
 }
@@ -71,6 +75,7 @@ case 'VisualizzaSoloGiorniNonCompleti':
         }
       )}
     </Table>
+      {configDisegnaGiorno.VisualizzaCalcoloFattura && <ComponentCalcolaFattura Anno = {Anno} Mese = {Mese}/>}
     <Footer />
     </>
   );

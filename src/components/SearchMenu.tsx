@@ -57,7 +57,7 @@ export default function SearchMenu() {
       setFilter(false);
       //get remote data
 
-      if (GlobalData?.tecnico != "" && cliente != "") {
+      if (GlobalData?.tecnico !== "" && cliente !== "") {
         (async () => {
           GlobalData?.setIsDataLoad(false);
           const orario = await GetRemoteData(

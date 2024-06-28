@@ -7,6 +7,7 @@ export interface IConfigDisegnaGiorno {
   VisualizzaDescrizioneCommessa? : boolean,
   VisualizzaOrediLavoro? : boolean,
   VisualizzaSoloGiorniNonCompleti? : boolean,
+  VisualizzaCalcoloFattura? : boolean,
 }
 
 export interface IDayMissing{
@@ -374,4 +375,17 @@ export function DataAdaptation(arr: string[] , original:string , replaced : stri
       }
   })
   const a = arr.join("\n")
+}
+
+export interface IModelCostiOrariTecnico {
+  Nome? : string,
+  Cognome? : string,
+  Nickname : string,
+  Ore_Ord? : number,
+  Ore_Stra? : number,
+  Ore_Viaggio? : number,
+  Ore_Pref? : number,
+  Ore_Fest? : number,
+  Estero? : number,
+  Km? : number
 }

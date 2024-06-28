@@ -1,4 +1,4 @@
-import { DateCompare, IAcconto, ICliente, ICommesse, IDayMissing, IModelOrario, ITecnico } from "../interface/interface";
+import { DateCompare, IAcconto, ICliente, ICommesse, IDayMissing, IModelCostiOrariTecnico, IModelOrario, ITecnico } from "../interface/interface";
 import { saveAs} from 'file-saver';
 import { useContext } from "react";
 import Select from "react-select"
@@ -272,6 +272,13 @@ export const DownloadOreDipendente = (arr : string[],tecnico:string)=>{
     saveAs(file, tecnico + '.tex');
 }
 
+export const GetListaClienti = (Ore:IModelOrario[])=>{
+    const ListaClienti = [""]
+    Ore.map((o)=>{
+        if (!ListaClienti.includes(o.Cliente)){ListaClienti.push(o.Cliente)}
+    })
+    return ListaClienti
+}
 
 export const DownloadDanea = (Ore:IModelOrario[],Tecnico:ITecnico,Cliente:ICliente,Data:string,Listino:string,Iva:string) => {  
     const fields = {
@@ -289,6 +296,8 @@ export const DownloadDanea = (Ore:IModelOrario[],Tecnico:ITecnico,Cliente:IClien
             commesselista.push(current.Commessa);
         return commesselista;
       }, [] as string[]); //Added as string[]
+
+
 
 
     const WriteRow=(Description="",Value="",Iva="")=>{        
@@ -500,3 +509,54 @@ export function differenzaOrari(orario1: string, orario2: string) {
     // Restituisci un oggetto con le informazioni sulla differenza
     return { ore, minuti, secondi, oreNumber };
 }
+
+export const Tecnici: IModelCostiOrariTecnico[] = 
+    [
+    {Cognome : "Lacanale",
+    Nome : "Daniele",
+    Nickname : "lacanale",
+    Ore_Ord : 42,
+    Ore_Stra : 42,
+    Ore_Pref : 45,
+    Ore_Fest : 50,
+    Ore_Viaggio : 35,
+    Estero : 50,
+    Km : 0.6,
+    },    
+    
+    {Cognome : "Mariotti",
+    Nome : "Alessandro",
+    Nickname : "mariotti",
+    Ore_Ord : 35,
+    Ore_Stra : 35,
+    Ore_Pref : 38,
+    Ore_Fest : 45,
+    Ore_Viaggio : 35,
+    Estero : 50,
+    Km : 0.6,
+    },
+    
+    {Cognome : "Di Credico",
+        Nome : "Nikolas",
+        Nickname : "dicredico",
+        Ore_Ord : 32,
+        Ore_Stra : 32,
+        Ore_Pref : 35,
+        Ore_Fest : 36,
+        Ore_Viaggio : 30,
+        Estero : 50,
+        Km : 0.6,
+        },
+
+    {Cognome : "Scurti",
+        Nome : "Antonio",
+        Nickname : "scurti",
+        Ore_Ord : 38,
+        Ore_Stra : 38,
+        Ore_Pref : 42,
+        Ore_Fest : 45,
+        Ore_Viaggio : 35,
+        Estero : 50,
+        Km : 0.6,
+        },        
+]
