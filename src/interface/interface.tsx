@@ -381,6 +381,7 @@ export interface IModelCostiOrariTecnico {
   Nome? : string,
   Cognome? : string,
   Nickname : string,
+  Listino : string,
   Ore_Ord? : number,
   Ore_Stra? : number,
   Ore_Viaggio? : number,

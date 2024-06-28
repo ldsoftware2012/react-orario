@@ -273,9 +273,13 @@ export const DownloadOreDipendente = (arr : string[],tecnico:string)=>{
 }
 
 export const GetListaClienti = (Ore:IModelOrario[])=>{
-    const ListaClienti = [""]
-    Ore.map((o)=>{
-        if (!ListaClienti.includes(o.Cliente)){ListaClienti.push(o.Cliente)}
+    const ListaClienti = [{Cliente : "",Listino : ""}]
+    const GlobalData = useContext(OrarioDataContext);
+
+    Ore.map((o)=>{        
+        const Listino = GlobalData?.clienti.find((c)=>c.Cliente === o.Cliente)
+        if (!ListaClienti.some((c) => c.Cliente === o.Cliente))
+            {ListaClienti.push({Cliente : o.Cliente , Listino : Listino?.Pricelist || ""})}
     })
     return ListaClienti
 }
@@ -515,6 +519,7 @@ export const Tecnici: IModelCostiOrariTecnico[] =
     {Cognome : "Lacanale",
     Nome : "Daniele",
     Nickname : "lacanale",
+    Listino : "Selmec_2020",
     Ore_Ord : 42,
     Ore_Stra : 42,
     Ore_Pref : 45,
@@ -527,6 +532,7 @@ export const Tecnici: IModelCostiOrariTecnico[] =
     {Cognome : "Mariotti",
     Nome : "Alessandro",
     Nickname : "mariotti",
+    Listino : "Selmec_2020",
     Ore_Ord : 35,
     Ore_Stra : 35,
     Ore_Pref : 38,
@@ -539,6 +545,7 @@ export const Tecnici: IModelCostiOrariTecnico[] =
     {Cognome : "Di Credico",
         Nome : "Nikolas",
         Nickname : "dicredico",
+        Listino : "Selmec_2020",
         Ore_Ord : 32,
         Ore_Stra : 32,
         Ore_Pref : 35,
@@ -551,6 +558,7 @@ export const Tecnici: IModelCostiOrariTecnico[] =
     {Cognome : "Scurti",
         Nome : "Antonio",
         Nickname : "scurti",
+        Listino : "Selmec_2020",
         Ore_Ord : 38,
         Ore_Stra : 38,
         Ore_Pref : 42,
@@ -558,5 +566,63 @@ export const Tecnici: IModelCostiOrariTecnico[] =
         Ore_Viaggio : 35,
         Estero : 50,
         Km : 0.6,
-        },        
+        }, 
+    {Cognome : "Lacanale",
+        Nome : "Daniele",
+        Nickname : "lacanale",
+        Listino : "Standard",
+        Ore_Ord : 42,
+        Ore_Stra : 42,
+        Ore_Pref : 45,
+        Ore_Fest : 50,
+        Ore_Viaggio : 35,
+        Estero : 50,
+        Km : 0.6,
+        },    
+        
+    {Cognome : "Mariotti",
+    Nome : "Alessandro",
+    Nickname : "mariotti",
+    Listino : "Standard",
+    Ore_Ord : 35,
+    Ore_Stra : 35,
+    Ore_Pref : 38,
+    Ore_Fest : 45,
+    Ore_Viaggio : 35,
+    Estero : 50,
+    Km : 0.6,
+    },
+    
+    {Cognome : "Di Credico",
+        Nome : "Nikolas",
+        Nickname : "dicredico",
+        Listino : "Standard",
+        Ore_Ord : 32,
+        Ore_Stra : 32,
+        Ore_Pref : 35,
+        Ore_Fest : 36,
+        Ore_Viaggio : 30,
+        Estero : 50,
+        Km : 0.6,
+        },
+
+    {Cognome : "Scurti",
+        Nome : "Antonio",
+        Nickname : "scurti",
+        Listino : "Standard",
+        Ore_Ord : 38,
+        Ore_Stra : 38,
+        Ore_Pref : 42,
+        Ore_Fest : 45,
+        Ore_Viaggio : 35,
+        Estero : 50,
+        Km : 0.6,
+        }, 
+        
+
+
+
+
+
+
 ]

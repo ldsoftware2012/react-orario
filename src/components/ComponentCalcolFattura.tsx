@@ -44,6 +44,7 @@ export const  ComponentCalcolaFattura = (props:any)=>{
 
     type ITotali = {
         Cliente:string,
+        Listino : string,
         oo:number,
         os:number,
         ov:number,
@@ -56,10 +57,10 @@ export const  ComponentCalcolaFattura = (props:any)=>{
     const Clienti = GetListaClienti(Orario)
     if (Clienti.length > 0){
         Clienti.map((c) =>{
-            const Filtro = Orario.filter((o)=>(o.Cliente === c && o.Cliente !== "LD Software"))
+            const Filtro = Orario.filter((o)=>(o.Cliente === c.Cliente && o.Cliente !== "LD Software"))
             if (Filtro.length > 0){
                 const {oo,ov,op,of,os,estero} = Somma(Filtro)
-                Totali.push({Cliente : Filtro[0].Cliente , oo:oo, ov:ov,os:os,op:op,of:of,estero:estero })
+                Totali.push({Cliente : Filtro[0].Cliente , Listino : c.Listino,oo:oo, ov:ov,os:os,op:op,of:of,estero:estero })
             }
         })
     }
@@ -69,9 +70,7 @@ export const  ComponentCalcolaFattura = (props:any)=>{
     <Alert>
         
         {Totali.map((t)=>{
-
-        // const {oo,ov,op,of,os,estero} = Somma(Orario)
-        const Tecnico = Tecnici.find((t)=>t.Nickname === GlobalData?.tecnico)
+        const Tecnico = Tecnici.find((tec)=>tec.Nickname === GlobalData?.tecnico && tec.Listino ===t.Listino)
         const ore_ord = t.oo * (Tecnico?.Ore_Ord || 0)
         const ore_stra =t.os * (Tecnico?.Ore_Stra || 0)
         const ore_viaggio = t.ov * (Tecnico?.Ore_Viaggio || 0)
@@ -83,7 +82,7 @@ export const  ComponentCalcolaFattura = (props:any)=>{
 
         return(
             <table>
-            <th>{t.Cliente}</th>
+            <th>{t.Cliente} (Listino:{t.Listino})</th>
             <tr>
                 <td>Ore ordinarie ({t.oo})</td>
                 <td>€ {ore_ord}</td>

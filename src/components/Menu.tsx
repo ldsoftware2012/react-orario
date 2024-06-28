@@ -48,10 +48,10 @@ const userDisplay = () => {
   return (
     <div style={{margin:"7%"}}>
       <Navbar className="navbar navbar-expand-sm bg-dark navbar-dark fixed-top" collapseOnSelect expand="lg" bg="dark" variant="dark">
-          {GlobalData?.isLogged && userDisplay()}
         <Navbar.Brand>
           <img src={Logo} alt="React Logo" className="App-logo" />
         </Navbar.Brand>
+          {GlobalData?.isLogged && userDisplay()}
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav>
@@ -64,32 +64,32 @@ const userDisplay = () => {
               <Nav className="mr-auto ">
                   <NavLink to={"/situazioneacconti"} className="nav-fill nav-link">
                     <FontAwesomeIcon icon={faMoneyBill} className="px-1"/>
-                    Acconti
+                    Gestione <br/> Acconti
                   </NavLink>
                 <NavLink to={"/orario?Tipo=Lista"} className="nav-link">
                   <FontAwesomeIcon icon={faCalendarTimes} className="px-1"/>
-                  Lista
+                  Report <br/> Giornaliero
                 </NavLink>
                 <NavLink
                   to={"/orariocommessa?Tipo=Commesse"}
                   className="nav-link"
                 >
                   <FontAwesomeIcon icon={faList} className="px-1"/>
-                  Commesse
+                  Report <br/> Commesse
                 </NavLink>
                 <NavLink to={"/orarioanalisi"} className="nav-link">
                   <FontAwesomeIcon icon={faCalculator} className="px-1"/>
-                  Analisi
+                  Visualizza <br/> Calendario
                 </NavLink>
 
                 <NavLink to={"/listacommesse"} className="nav-link">
                   <FontAwesomeIcon icon={faList} className="px-1"/>
-                  Lista Commesse
+                  Lista <br/> Commesse
                 </NavLink>
                 
                 {GlobalData.isAdmin && <NavLink to={"/listaclienti"} className="nav-link">
                   <FontAwesomeIcon icon={faPerson} className="px-1"/>
-                  Clienti
+                  Lista <br/> Clienti
                 </NavLink>}
 
                 {<NavLink to={"/info"} className="nav-link">

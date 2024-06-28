@@ -294,13 +294,13 @@ const GiornoProgressBar = (props: any)=>{
 }
 const GetStatusColor = ():string=>{
     let className = ""
-    if (GetIcon().ok && !GetIcon().viaggio) {
+    if ((GetIcon().ok && !GetIcon().viaggio) || tipo ==="Ferie" || tipo ==="Donazione" || tipo ==="Malattia") {
       className = "border border-3 rounded-circle border-success "
     }
     else if (GetIcon().viaggio) {
       className = "border border-3 rounded-circle border-info"
     }
-    else if (GetIcon().nok && !Festivo) {
+    else if (GetIcon().nok && !Festivo ) {
       className = "border border-3 rounded-circle border-danger"
     }
     return className
