@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 export const ComponentHoursPreset = (props:IComponentSliderDial)=>{
 
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const [visible, setvisible] = useState(true)
+    const [visible,] = useState(true)
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };

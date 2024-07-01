@@ -8,7 +8,7 @@ import { format } from "date-fns";
 export const ComponentOreDipendente = (props:any)=>{
     const {Orari , Anno, Mese} = props
     const [testo,setTesto] = useState<string>("") 
-    const [text, setText] = useState<string>()
+    const [, setText] = useState<string>()
     const GlobalData = useContext(OrarioDataContext);
     const [File,setFile] = useState<string[]>([])
     let Color = "black"
@@ -28,7 +28,7 @@ export const ComponentOreDipendente = (props:any)=>{
                 )
             );
             setTesto(files[0]);
-            if(action != "Aggiorna" && action != ""){
+            if(action !== "Aggiorna" && action !== ""){
                 const f = ReadFileModel();
             }
         }
@@ -60,10 +60,9 @@ export const ComponentOreDipendente = (props:any)=>{
             const SezioneOrari = [""]
             const SezioneFinale = [""]
             const NumGiorni = new Date(Anno, Mese, 0).getDate();
-
             
 
-            for (let index = 1; index < NumGiorni; index++) {
+            for (let index = 0; index < NumGiorni+1; index++) {
                 const Data = new Date(Anno, (Mese) - 1,index);
                 const Filtro = Orari.filter((o:IModelOrario) => { 
                     try {
@@ -74,32 +73,41 @@ export const ComponentOreDipendente = (props:any)=>{
 
                 const {oo,ov,of,op,os,estero} = Somma(Filtro)
                 OreOrd = OreOrd + oo
+                console.log(Data,oo,OreOrd)
                 OreStra = OreStra + os
                 OreFest = OreFest + of
                 OrePre = OrePre + op
                 OreViaggio = OreViaggio + ov
                 Estero = Estero + estero
-                if (Filtro.length > 0){                    
-                    Filtro.map((o:IModelOrario)=>{                                 
+                if (Filtro.length > 0){       
+                    const NumRecord = Filtro.length                                 
+                    Filtro.map((o:IModelOrario,Indice:number)=>{                                 
+                        let Color = "black"
                         let Ore = []
                         Ore.push(o)
                         const {oo,ov,op,of,os} = Somma(Ore)
-                        
                         const Dat = format(o.Data,"dd-MM-yyyy");
-                        Color = "black";
+                        const d = new Date(o.Data)
+                        const GiornoTesto = d.GiornoTesto && d.GiornoTesto() || "" 
                         let Note = "";
                         if(o.Estero === "true") {Note = "Diaria estero"}
-                        if (o.Tipo === "Viaggio") {Color = "blue"} 
-                        if(o.Tipo !== "Lavoro" && o.Tipo !== "Viaggio")
-                            Color = "red"
-                        SezioneOrari.push("\\color{", Color , "}",Dat ," & ","\\color{" ,Color , "}",(oo+ov+op+of+os).toString(), " & " ,"\\color{" ,Color , "}", o.Tipo || "" , " & " , Note , " & \\\\" + "\n" )
-                    }                    
+                        if(o.Tipo === "Viaggio") {Color = "blue"} 
+                        if(o.Tipo !== "Lavoro" && o.Tipo !== "Viaggio"){Color = "red"}                      
+                        if(o.Data.isHoliday && o.Data.isHoliday() ||  Data.getDay() === 0 ||  Data.getDay() === 6){Color = "green"}
+                        SezioneOrari.push("\\color{", Color , "}",GiornoTesto, " & " , Dat ," & ","\\color{" ,Color , "}",(oo+ov+op+of+os).toString(), " & " ,"\\color{" ,Color , "}", o.Tipo || "" , " & " , Note , " & " + "\n" )
+                        if(Indice === NumRecord-1) {SezioneOrari.push("\\hline")}
+                        return false
+                        }         
                     )
                 }else if(!Data.isHoliday() && Data.getDay() !== 6 && Data.getDay() !== 0){
                     Color = "red";
                     const Dat = format(Data,"dd-MM-yyyy");
-                    SezioneOrari.push("\\color{", Color , "}",Dat ," & ","\\color{" ,Color , "}","0", " & " ,"\\color{" ,Color , "}", "Orario assente" || "" , " & " , "Orario assente" , " & \\\\" + "\n" )
+                    const d = new Date(Data)
+                    const GiornoTesto = d.GiornoTesto && d.GiornoTesto() || "" 
+                    SezioneOrari.push("\\color{", Color , "}",GiornoTesto, " & " , Dat ," & ","\\color{" ,Color , "}","0", " & " ,"\\color{" ,Color , "}", "Orario assente" || "" , " & " , "Orario assente" , " & " + "\n" )
+                    SezioneOrari.push("\\hline")
                 }
+                
             }
             SezioneFinale.push("\\end{longtable}")
             SezioneFinale.push("\\end{center}")

@@ -60,6 +60,7 @@ export const  ComponentCalcolaFattura = (props:any)=>{
                 const {oo,ov,op,of,os,estero,KM} = Somma(Filtro)
                 Totali.push({Cliente : Filtro[0].Cliente , Listino : c.Listino,oo:oo, ov:ov,os:os,op:op,of:of,estero:estero,km:KM })
             }
+            return false
         })
     }
 

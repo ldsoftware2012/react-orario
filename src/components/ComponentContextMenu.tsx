@@ -1,20 +1,19 @@
-import { Add, Cancel, ContentCopy, ContentPaste, Euro } from '@mui/icons-material';
-import { Box, Button, Divider, Icon, IconButton, Paper, Popover, Stack, Typography, styled } from '@mui/material';
+import { Add, ContentCopy, ContentPaste, Euro } from '@mui/icons-material';
+import { Button, Divider, Popover, Stack, Typography } from '@mui/material';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import { useContext, useEffect, useState } from 'react';
-import Popup from './Popup';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { url_DeleteDay } from '../data/config';
 import { OrarioDataContext } from '../App';
-import { Delete } from '../data/Datasource';
 import { Popup2 } from './Popup2';
-
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AirlineSeatIndividualSuiteIcon from '@mui/icons-material/AirlineSeatIndividualSuite';
+import EggIcon from '@mui/icons-material/Egg';
+import { Delete } from '../data/Datasource';
 
 export const ComponentContextMenu = (props:IComponentContextMenu)=>{
     const GlobalData = useContext(OrarioDataContext);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const [visible, setvisible] = useState(true)
-    const [buttonSelected, setbuttonSelected] = useState("")
+    const [visible, ] = useState(true)
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -26,15 +25,6 @@ export const ComponentContextMenu = (props:IComponentContextMenu)=>{
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    const Item = styled(Paper)(({ theme }) => ({
-        backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-        ...theme.typography.body2,
-        padding: theme.spacing(0),
-        textAlign: 'center',
-        color: theme.palette.text.primary,        
-    }));
-
-
 //Chiudi finestra dopo selezione orario
 useEffect(() => {
 }, [props.onClick])
@@ -42,7 +32,7 @@ useEffect(() => {
 async function EliminaRow(index: number) {
     try {
     const url = url_DeleteDay + "?id=" + index;
-    const del = await Delete(url);
+    await Delete(url);
     GlobalData?.setIsDataUpdated(true);
     } catch (error) {
     console.log(error);
@@ -96,20 +86,20 @@ async function EliminaRow(index: number) {
                         <Stack direction="row" spacing={1} className='mb-1'>
 
                             {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
-                                <Button endIcon={<BeachAccessIcon/>} title='Permesso' color='error' onClick={(event)=>props.onClick(event,"Permesso",props.id)}>Permesso</Button>
+                                <Button endIcon={<AccessTimeIcon/>} title='Permesso' color='error' onClick={(event)=>props.onClick(event,"Permesso",props.id)}>Permesso</Button>
                             }                                                        
-
 
                             {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
                                 <Button endIcon={<BeachAccessIcon/>} title='Ferie' color='error' onClick={(event)=>props.onClick(event,"Ferie",props.id)}>Ferie</Button>
                             }   
-
+                        </Stack>
+                        <Stack direction="row" spacing={1} className='mb-1'>
                             {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
-                                <Button endIcon={<BeachAccessIcon/>} title='Malattia' color='error' onClick={(event)=>props.onClick(event,"Malattia",props.id)}>Malattia</Button>
+                                <Button endIcon={<AirlineSeatIndividualSuiteIcon/>} title='Malattia' color='error' onClick={(event)=>props.onClick(event,"Malattia",props.id)}>Malattia</Button>
                             }          
                             
                             {!day.isHoliday() && !day.isWeekEnd() && ore>0 &&
-                                <Button endIcon={<BeachAccessIcon/>} title='Donazione ' color='error' onClick={(event)=>props.onClick(event,"Donazione",props.id)}>Donazione</Button>
+                                <Button endIcon={<EggIcon/>} title='Donazione ' color='error' onClick={(event)=>props.onClick(event,"Donazione",props.id)}>Donazione</Button>
                             }  
                         </Stack>
                     </Typography>

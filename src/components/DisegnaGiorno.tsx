@@ -33,24 +33,22 @@ export function DisegnaGiorno(props: any) {
     Colore : string
   }
 
-
-
   const navigate = useNavigate();
   const GlobalData = useContext(OrarioDataContext);
   const [orario, setOrario] = useState<IModelOrario[]>([])
 
   const [data,SetData] = useState<Date>()
-  const [Ore_Ord,SetOre_Ord] = useState<number>(0)
-  const [Ore_Stra,SetOre_Stra] = useState<number>(0)
+  const [,SetOre_Ord] = useState<number>(0)
+  const [,SetOre_Stra] = useState<number>(0)
   const [Ore_Viaggio,SetOre_Viaggio] = useState<number>(0)
   const [Ore_Pre,SetOre_Pre] = useState<number>(0)
   const [Ore_Fest,SetOre_Fest] = useState<number>(0)
   const [Pranzo,SetPranzo] = useState<number>(0)
   const [Cena,SetCena] = useState<number>(0)
   const [Estero,SetEstero] = useState<number>(0)
-  const [Km,SetKm] = useState<number>(0)
+  const [Km,] = useState<number>(0)
   const [Note,SetNote] = useState<string>("")
-  const [Pernotto,SetPernotto] = useState<number>(0)
+  const [,SetPernotto] = useState<number>(0)
   const [Festivo,SetFestivo] = useState<boolean>(false)
   const [TotaleOre,SetTotaleOre] = useState<number>(0)
   const [GiornoMancante,SetGiornoMancante] = useState<boolean>(false)
@@ -58,10 +56,10 @@ export function DisegnaGiorno(props: any) {
   const [dataLoaded,SetDataLoaded] = useState<boolean>(false)
   const [ore_Mancanti,setOreMancanti] = useState<OreMancanti>()
   const [tipo,setTipo] = useState<string>("")
-  const [tecnico,setTecnico] = useState<string>("")
+  const [,setTecnico] = useState<string>("")
   const Sabato =6
   const Domenica = 0
-  const [resultRemoteOperation, setResultRemoteOperation] = useState<{status : Number, description:string}>();
+  const [, setResultRemoteOperation] = useState<{status : Number, description:string}>();
 
   let ColoreGiorno : string = 'Black'
   let ListaComm:TListaCommesse[] = []
@@ -76,7 +74,8 @@ const CaricaListaCommesse = ()=>{
         (c:string)=>
           {
             ListaComm.push({Colore: ListaColori[IndiceColore] ,Commessa:c})
-            IndiceColore++
+            IndiceColore++     
+            return false       
           }
       )
       return ListaComm
@@ -89,12 +88,12 @@ try {
       try {
         const d = new Date(o.Data)
         return (DateCompare(d,Data) && o.Tecnico === GlobalData?.tecnico)
-      } catch (error) {}
+      } catch (error) {return false}
     })
     
     const acc = GlobalData?.acconti.filter((a)=>{
       var dd = new Date(a.Data)
-      return DateCompare(dd,Data) && a.Tecnico==GlobalData.tecnico })       
+      return DateCompare(dd,Data) && a.Tecnico === GlobalData.tecnico })       
       || [{Cliente:"",Data:new Date(),Entrata:0,ID:0,Tecnico:"",Uscita:0,Fattura:"",Note:""}]
       
       SetAcconti(acc)
@@ -171,12 +170,12 @@ function GetIcon():any  {
     return { ok, nok, viaggio}
 }
 function EditDate(ID: number) {
-    if(ID != undefined){
+    if(ID !== undefined){
       navigate("/updateDataDay?Method=Update&ID="+ ID);
     }
 }
 const DescrizioneCommessa = (Commessa : string)=>{
-    const desc = GlobalData?.commesse.find((c) => c.Commessa == Commessa)
+    const desc = GlobalData?.commesse.find((c) => c.Commessa === Commessa)
     return desc?.Descrizione
 }
 const HandleModificaAcconto = (ID:number) : any =>{
@@ -190,8 +189,8 @@ const VerificaAcconti = ():any =>{
       return (
         <>
         <div onClick={()=>HandleModificaAcconto(a.ID || -1)}>
-          {uscita != "" && <b><p className={a.Fattura != "" ? "testo_barrato text-danger" : "text-danger"}>{uscita}</p></b>}
-          {entrata != "" && <b><p className={a.Fattura != "" ? "testo_barrato text-success" : "text-success"}>{entrata}</p></b>}
+          {uscita !== "" && <b><p className={a.Fattura !== "" ? "testo_barrato text-danger" : "text-danger"}>{uscita}</p></b>}
+          {entrata !== "" && <b><p className={a.Fattura !== "" ? "testo_barrato text-success" : "text-success"}>{entrata}</p></b>}
         </div>
         </>        
       )
@@ -202,7 +201,7 @@ const GiornoIcons = ()=>{
     return(
       <>
       <Col className="d-flex font-weight-bold">
-        {(Note != "" && Note != undefined) &&
+        {(Note !== "" && Note !== undefined) &&
         <FontAwesomeIcon icon={faNoteSticky} title={Note} color="orange"/>
         }
       </Col>
@@ -225,7 +224,7 @@ const GiornoIcons = ()=>{
             <FontAwesomeIcon icon={faWineBottle} />
           </span>
         )}
-        {(Km != 0 && Km != undefined) &&
+        {(Km !== 0 && Km !== undefined) &&
         <FontAwesomeIcon icon={faAutomobile} title={Km.toString()} color="blue" className="px-2"/>
         }
       </Col>
@@ -241,7 +240,7 @@ const GiornoProgressBar = (props: any)=>{
     const  of = parseFloat(ore.Ore_Fest)
     const  op = parseFloat(ore.Ore_Pre)
     const Cliente = ore.Cliente
-    const color = Cliente == "LD Software" ? "danger" :"success"
+    const color = Cliente === "LD Software" ? "danger" :"success"
 
     return (
     <>
@@ -308,8 +307,9 @@ const GetStatusColor = ():string=>{
 }
 const NumeroGiorno = ()=>{
     let classOggi = DateCompare(new Date(),Data) ? "bg-primary border border-3 border-primary rounded-5 shadow-lg text-light" : ""
-    Festivo ? classOggi = classOggi + "Festivo text-danger " : classOggi = classOggi
-    
+    //Festivo ? classOggi = classOggi + "Festivo text-danger " : classOggi = classOggi
+    if(Festivo){classOggi = classOggi + "Festivo text-danger "}
+
     return(<>
         <h4 style={{margin:2,padding:0}} className={classOggi}>{Data.GiornoTesto()}</h4>
         <h4 style={{width:40,height:40,margin:"auto",padding:0}} className={`${GetStatusColor()}`}>{Data.Giorno() + 1}</h4>
@@ -317,7 +317,7 @@ const NumeroGiorno = ()=>{
 }
 const ClienteCommessa = (props:any) =>{
   const {Commessa,Cliente}=props.dati
-  const className = Cliente == "LD Software" ? "bg-danger":""
+  const className = Cliente === "LD Software" ? "bg-danger":""
     
 
   return(
@@ -420,8 +420,9 @@ function handleContextMenu(e:Event,value:string,id:number){
 }
   return (
     <React.Fragment>
-    {dataLoaded && (!Config.VisualizzaSoloGiorniNonCompleti || (Config.VisualizzaSoloGiorniNonCompleti && GiornoCompleto().nok)) && <div>        
-        <NumeroGiorno/>        
+    <div className="scaled">
+    {dataLoaded && (!Config.VisualizzaSoloGiorniNonCompleti || (Config.VisualizzaSoloGiorniNonCompleti && GiornoCompleto().nok)) && <div>                
+        <NumeroGiorno />        
         <div className="d-flex">
           <GiornoIcons/>
         </div>
@@ -439,11 +440,12 @@ function handleContextMenu(e:Event,value:string,id:number){
             <ComponentContextMenu data={data} ore={ore_Mancanti?.ore} id={o.id || -1} onClick={handleContextMenu}></ComponentContextMenu>
             </>
           )
-          })}
+        })}
         {GiornoMancante && <ComponentContextMenu data={data} ore={ore_Mancanti?.ore} id={-1} onClick={handleContextMenu}></ComponentContextMenu>}
         <VerificaAcconti/>
         </div>
         }
+        </div>  
     </React.Fragment>
   );
 }

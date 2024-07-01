@@ -16,8 +16,6 @@ export const ComponentListaOpzioni = (props:any) =>
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-
     return(
     <>
 

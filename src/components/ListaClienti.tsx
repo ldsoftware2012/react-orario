@@ -12,6 +12,9 @@ import { faSave } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select from "react-select"
 import React from "react";
+import { Alert } from "@mui/material";
+import CheckIcon from '@mui/icons-material/Check';
+import { Cancel } from "@mui/icons-material";
 
 export default function Clienti(){
 
@@ -61,11 +64,11 @@ export default function Clienti(){
             Provincia : provincia,
             Tel : tel
         }
-        if (newdata.Cliente == "") { return}
+        if (newdata.Cliente === "") { return}
 
         const result = await UpdateCliente(url_UpdateCliente,newdata)
         setResultRemoteOperation({status:result.status,description:result.description});
-        if (result.status == 1) {
+        if (result.status === 1) {
             const clienti = await GetRemoteData(url_Clienti)
             SetClienti(clienti)
         }
@@ -73,10 +76,10 @@ export default function Clienti(){
 
     const HandleDeleteData = async (ID:string)=>{
         try {
-            if (ID == "") { return}
+            if (ID === "") { return}
             const url = url_DeleteCliente + "?id=" + ID;
             const res = await Delete(url)
-            if (res.status == 1) {
+            if (res.status === 1) {
                 const clienti = await GetRemoteData(url_Clienti)
                 SetClienti(clienti)
                 SetCliente("")
@@ -102,16 +105,13 @@ export default function Clienti(){
 
         if (cliente.length > 0) {            
             cl = all.filter((c:ICliente) => 
-            c.Cliente.toUpperCase().substring(0,cliente.length) == cliente.toUpperCase())              
+            c.Cliente.toUpperCase().substring(0,cliente.length) === cliente.toUpperCase())              
         }  
         SetClienti(cl)       
     }
 
     useEffect(() => {
-        if (resultRemoteOperation?.status != 0) {
-        const timeoutId = setTimeout(() => {
-            setResultRemoteOperation({status:0,description:""})
-        }, 3000);
+        if (resultRemoteOperation?.status !== 0) {
         }
     }, [resultRemoteOperation])
 
@@ -243,7 +243,18 @@ export default function Clienti(){
                 value={{value: listino,label:listino}} 
                 onChange={(e) => SetListino(e?.value || "")}/>
             </div>
-                {resultRemoteOperation?.status != null && <div className={resultRemoteOperation?.status === 1 ? "bg-success text-white" : "bg-danger text-white"}>{resultRemoteOperation?.description}</div>}
+                {/* {resultRemoteOperation?.status != null && <div className={resultRemoteOperation?.status === 1 ? "bg-success text-white" : "bg-danger text-white"}>{resultRemoteOperation?.description}</div>} */}
+                {resultRemoteOperation?.status === 1 &&
+                    <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+                    {resultRemoteOperation?.description}
+                </Alert>
+                }
+
+                {(resultRemoteOperation?.status === -1 || resultRemoteOperation?.status === -2) &&
+                <Alert icon={<Cancel fontSize="inherit" />} severity="error">
+                    {resultRemoteOperation?.description}
+                </Alert>
+                }  
                 <Col className="col text-center m-3">
                     <Popup IconColor="green" Icon={faSave} Position="bottom" Label="Salva" MessageTitle="Salva" MessageDescription= "Vuoi salvare questo cliente?  " onConfirm={()=>HandleSaveData()}></Popup> 
                     <Popup IconColor="red" Icon={faTrash} Position="bottom" Label="Elimina" MessageTitle="Elimina" MessageDescription= "Vuoi eliminare il cliente?  " onConfirm={()=>HandleDeleteData(cliente)}></Popup>
@@ -262,7 +273,7 @@ export default function Clienti(){
         </Row>
         {
         clienti.map((c,index)=>{            
-            const color = index % 2 == 0 ? "pari" : "dispari"
+            const color = index % 2 === 0 ? "pari" : "dispari"
             return(         
             <React.Fragment key={index}>
                 <Row className="h-50" onClick={(e)=>LoadClientiData(e.currentTarget.id)} id={c.Cliente}>

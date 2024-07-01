@@ -9,12 +9,13 @@ import { IConfigDisegnaGiorno } from "../interface/interface";
 import { ComponentListaOpzioni } from "./ComponentConfigOptions";
 import { ComponentOreDipendente } from "./ComponentOreDipendente";
 import { ComponentCalcolaFattura } from "./ComponentCalcolFattura";
+import { getWeek } from "date-fns";
 
 export default function AnalisiMese(props: any) {
   const row = [1, 2, 3, 4, 5, 6];
   const col = [1, 2, 3, 4, 5, 6, 7];
-  const {Anno,Mese,Orari} = props
-  const Ore = Orari
+  const {Anno,Mese} = props
+
   const [configDisegnaGiorno, setconfigDisegnaGiorno] = useState<IConfigDisegnaGiorno>({VisualizzaColoriCommessa:false}) 
   let Indice = 0;
 
@@ -55,21 +56,28 @@ case 'VisualizzaCalcoloFattura':
         {row.map((row,index) => {
           return (     
             <>
+            <div className="scaled">
             <React.Fragment key={index}>
               <Row key={row} className="Row">
                 {col.map((col,indexCol) => {                  
-                  Indice = Indice + 1;
+                  Indice = Indice + 1;                   
+                  const Data:Date = new Date(Anno,Mese-1,Indice-primogiorno+1)
+                  const weekNumber = getWeek(Data)
                   return (    
-                    <React.Fragment key={indexCol}>
-                      <Col className="Col" id={Indice.toString()}>                    
+                    <React.Fragment key={indexCol}>                      
+                      <Col className="Col" id={Indice.toString()}> 
+                      <>                        
                         {Indice >= primogiorno && (Indice <= NumGiorni + primogiorno - 1) 
-                        && <DisegnaGiorno Config={configDisegnaGiorno} Data={new Date(Anno,Mese-1,Indice-primogiorno+1)} Orari={props.Orari}/>}
+                        && <DisegnaGiorno Config={configDisegnaGiorno} Data={Data} Orari={props.Orari}/>}                        
+                        {indexCol === 0 && (Indice <= NumGiorni + primogiorno - 1)  && <><u>Week {weekNumber}</u></>}
+                      </>
                       </Col>
                     </React.Fragment>             
                   );          
                 })}
               </Row>
             </React.Fragment>
+            </div>
             </>       
           );
         }

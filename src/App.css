@@ -48,6 +48,9 @@ float: right;
 
 }
 
+.scaled{
+  transform: scale(1);
+}
 
 
 /* .App {

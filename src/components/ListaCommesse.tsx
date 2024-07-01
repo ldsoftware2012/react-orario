@@ -11,6 +11,9 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faSave } from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import { OrarioDataContext } from "../App";
+import { Alert } from "@mui/material";
+import CheckIcon from '@mui/icons-material/Check';
+import { Cancel } from "@mui/icons-material";
 
 export default function ListaCommesse(){
     const [commessa, setCommessa] = useState("")
@@ -33,12 +36,12 @@ export default function ListaCommesse(){
             Descrizione : descrizione,
             DataInizio : new Date()
         }
-        if (newdata.Commessa == "") { return}
+        if (newdata.Commessa === "") { return}
 
         const result = await UpdateCommessa(url_UpdateCommessa, newdata);
         setResultRemoteOperation({status:result.status,description:result.description});
 
-        if (result.status==1) {
+        if (result.status===1) {
             const comm = await GetRemoteData(url_Commesse)
             setCommesse(comm)
             GlobalData?.setCommesse(comm)
@@ -47,12 +50,12 @@ export default function ListaCommesse(){
 
     const HandleDeleteData = async (ID:string)=>{
         try {
-            if (ID == "") { return}
+            if (ID === "") { return}
             const url = url_DeleteCommessa + "?id=" + ID;
             const result = await Delete(url)
 
             setResultRemoteOperation({status:result.status,description:result.description ||""});
-            if (result.status == 1) {
+            if (result.status === 1) {
                 const comm = await GetRemoteData(url_Commesse)
                 setCommesse(comm)
                 setCommessa("")
@@ -69,14 +72,14 @@ export default function ListaCommesse(){
 
         if (commessa.length > 0) {            
             comm = all.filter((c:ICommesse) => 
-            c.Commessa.toUpperCase().substring(0,commessa.length) == commessa.toUpperCase())              
+            c.Commessa.toUpperCase().substring(0,commessa.length) === commessa.toUpperCase())              
         }  
         setCommesse(comm)       
     }
 
     useEffect(() => {
-        if (resultRemoteOperation?.status != 0) {
-        const timeoutId = setTimeout(() => {
+        if (resultRemoteOperation?.status !== 0) {
+        setTimeout(() => {
             setResultRemoteOperation({status:0,description:""})
         }, 3000);
         }
@@ -117,11 +120,22 @@ export default function ListaCommesse(){
                 onChange={(e)=>setDescrizione(e.target.value)}
                 />        
             </div>
-            {resultRemoteOperation?.status != null && <div className={resultRemoteOperation?.status === 1 ? "bg-success text-white" : "bg-danger text-white"}>{resultRemoteOperation?.description}</div>}
             <div className="input-group-prepend text-center m-3">
                 <Popup IconColor="green"  Icon={faSave} Position="bottom" Label="Salva" MessageTitle="Salva" MessageDescription= "Vuoi salvare questa commessa?  " onConfirm={()=>HandleSaveData()}></Popup> 
                 {GlobalData?.isAdmin && <Popup IconColor="red"  Icon={faTrash} Position="bottom" Label="Elimina" MessageTitle="Elimina" MessageDescription= "Vuoi eliminare la commessa?  " onConfirm={()=>HandleDeleteData(commessa)}></Popup>}
             </div>
+
+            {resultRemoteOperation?.status === 1 &&
+            <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+                {resultRemoteOperation?.description}
+            </Alert>
+            }
+
+            {(resultRemoteOperation?.status === -1 || resultRemoteOperation?.status === -2) &&
+            <Alert icon={<Cancel fontSize="inherit" />} severity="error">
+                {resultRemoteOperation?.description}
+            </Alert>
+            }                    
 
             <legend className="text-center"><h2>Lista Commesse</h2></legend>
             
@@ -137,7 +151,7 @@ export default function ListaCommesse(){
         </div>
         {
         commesse.map((c,index)=>{            
-            const color = index % 2 == 0 ? "pari" : "dispari"
+            const color = index % 2 === 0 ? "pari" : "dispari"
             return(         
             <React.Fragment key={index}>                
                 <Row className="h-50" onClick={(e)=>LoadCommessaData(e.currentTarget.id)} id={c.Commessa}>

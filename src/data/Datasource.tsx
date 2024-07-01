@@ -243,7 +243,7 @@ export function Somma(data: IModelOrario[] = []) {
 
         data.map((d) => {
         if(d.Km!=""){ KM = KM + parseFloat(d.Km)};
-        oo = oo + parseFloat(d.Ore_Ord);
+        if(d.Tipo === "Lavoro"){oo = oo + parseFloat(d.Ore_Ord);}
         os = os + parseFloat(d.Ore_Stra);
         ov = ov + parseFloat(d.Ore_Viaggio);
         op = op + parseFloat(d.Ore_Pre);
