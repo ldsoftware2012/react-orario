@@ -230,6 +230,7 @@ export function DataLoading() {
 
 export function Somma(data: IModelOrario[] = []) {
         let oo = 0.0,
+        o_permesso = 0.0,
         os = 0.0,
         ov = 0.0,
         op = 0.0,
@@ -244,6 +245,14 @@ export function Somma(data: IModelOrario[] = []) {
         data.map((d) => {
         if(d.Km!=""){ KM = KM + parseFloat(d.Km)};
         if(d.Tipo === "Lavoro"){oo = oo + parseFloat(d.Ore_Ord);}
+        if(d.Tipo === "Permesso")
+            {o_permesso = o_permesso + parseFloat(d.Ore_Ord);}        
+        
+        if(d.Tipo === "Ferie" ||
+            d.Tipo === "Malattia" ||
+            d.Tipo === "Donazione"
+        ){o_permesso = 8;}  
+        
         os = os + parseFloat(d.Ore_Stra);
         ov = ov + parseFloat(d.Ore_Viaggio);
         op = op + parseFloat(d.Ore_Pre);
@@ -255,11 +264,11 @@ export function Somma(data: IModelOrario[] = []) {
         });
 
         const tot = oo+os+ov+op+of+pranzo+cena+pernotto+estero+KM
-        const tot_hours = oo+os+ov+op+of
+        const tot_hours = oo+os+ov+op+of+o_permesso
     
         total0 = tot==0 ? true : false
 
-        return { oo, os, ov, op, of, pranzo, cena, pernotto, estero, KM , total0,tot_hours};
+        return { oo, os, ov, op, of,o_permesso, pranzo, cena, pernotto, estero, KM , total0,tot_hours};
     }
 
 export const DownloadRI = (arr : string[],numero:string)=>{
@@ -549,7 +558,7 @@ export const Tecnici: IModelCostiOrariTecnico[] =
         Ore_Ord : 32,
         Ore_Stra : 32,
         Ore_Pref : 35,
-        Ore_Fest : 36,
+        Ore_Fest : 38,
         Ore_Viaggio : 30,
         Estero : 50,
         Km : 0.6,

@@ -101,12 +101,16 @@ useEffect(() => {
     }
 
     function ListaOrePrint(orario : IModelOrario[]){
-        const Desc = GlobalData?.commesse.filter((c) => c.Commessa == orario[0].Commessa) || [];
+        const Desc = GlobalData?.commesse.filter((c) => c.Commessa === orario[0].Commessa) || [];
         const arr = []
+        let Descrizione = ""
+        
+        Desc.length > 0 ? Descrizione = Desc[0].Descrizione : Descrizione = ""
+        
         arr.push("%Dettaglio commessa" + "\n")
         arr.push("\\begin{flushleft}" + "\n")
         arr.push("\\begin{table}[h!]" + "\n")
-        arr.push("\\center\\textbf{" + orario[0].Commessa + " (" +  Desc[0].Descrizione + ")} \\\\" + "\n")
+        arr.push("\\center\\textbf{" + orario[0].Commessa + " (" +  Descrizione + ")} \\\\" + "\n")
         arr.push("\\begin{tabular}{|c c c c c c c c|} " + "\n") 
         arr.push("\\rowcolor{Gray}" + "\n")
         arr.push("\\hline" + "\n")

@@ -62,7 +62,7 @@ export const ComponentOreDipendente = (props:any)=>{
             const NumGiorni = new Date(Anno, Mese, 0).getDate();
             
 
-            for (let index = 0; index < NumGiorni+1; index++) {
+            for (let index = 1; index < NumGiorni+1; index++) {
                 const Data = new Date(Anno, (Mese) - 1,index);
                 const Filtro = Orari.filter((o:IModelOrario) => { 
                     try {
@@ -85,7 +85,7 @@ export const ComponentOreDipendente = (props:any)=>{
                         let Color = "black"
                         let Ore = []
                         Ore.push(o)
-                        const {oo,ov,op,of,os} = Somma(Ore)
+                        const {oo,ov,op,of,os,o_permesso} = Somma(Ore)
                         const Dat = format(o.Data,"dd-MM-yyyy");
                         const d = new Date(o.Data)
                         const GiornoTesto = d.GiornoTesto && d.GiornoTesto() || "" 
@@ -93,8 +93,16 @@ export const ComponentOreDipendente = (props:any)=>{
                         if(o.Estero === "true") {Note = "Diaria estero"}
                         if(o.Tipo === "Viaggio") {Color = "blue"} 
                         if(o.Tipo !== "Lavoro" && o.Tipo !== "Viaggio"){Color = "red"}                      
-                        if(o.Data.isHoliday && o.Data.isHoliday() ||  Data.getDay() === 0 ||  Data.getDay() === 6){Color = "green"}
-                        SezioneOrari.push("\\color{", Color , "}",GiornoTesto, " & " , Dat ," & ","\\color{" ,Color , "}",(oo+ov+op+of+os).toString(), " & " ,"\\color{" ,Color , "}", o.Tipo || "" , " & " , Note , " & " + "\n" )
+                        if((o.Data.isHoliday && o.Data.isHoliday() ||  
+                            Data.getDay() === 0 ||  Data.getDay() === 6) && o.Tipo !== "Viaggio")
+                            {Color = "green"}
+                        
+                        if(o.Tipo === "Lavoro" || o.Tipo === "Viaggio"){
+                            SezioneOrari.push("\\color{", Color , "}",GiornoTesto, " & " , Dat ," & ","\\color{" ,Color , "}",(oo+ov+op+of+os).toString(), " & " ,"\\color{" ,Color , "}", o.Tipo || "" , " & " , Note , " & " + "\n" )
+                        }else{
+                            SezioneOrari.push("\\color{", Color , "}",GiornoTesto, " & " , Dat ," & ","\\color{" ,Color , "}",(o_permesso).toString(), " & " ,"\\color{" ,Color , "}", o.Tipo || "" , " & " , Note , " & " + "\n" )
+                        }
+
                         if(Indice === NumRecord-1) {SezioneOrari.push("\\hline")}
                         return false
                         }         
