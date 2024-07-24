@@ -197,35 +197,38 @@ const VerificaAcconti = ():any =>{
       })
     )
 }
-const GiornoIcons = ()=>{
+const GiornoIcons = (props : any)=>{
+  const {ore} = props
+  const KM = parseFloat(ore.Km) || 0.0
+  console.log("km =========" , ore.Km)
     return(
       <>
       <Col className="d-flex font-weight-bold">
-        {(Note !== "" && Note !== undefined) &&
-        <FontAwesomeIcon icon={faNoteSticky} title={Note} color="orange"/>
+        {(ore.Note !== "" && ore.Note !== undefined) &&
+        <FontAwesomeIcon icon={faNoteSticky} title={ore.Note} color="orange"/>
         }
       </Col>
       <Col className="d-flex flex-row-reverse">
-        {Ore_Viaggio > 0 && (
+        {ore.Ore_Viaggio > 0 && (
           <span className="px-1">
             {" "}
             <FontAwesomeIcon icon={faPlane} />
           </span>
         )}
-        {Estero > 0 && (
+        {ore.Estero > 0 && (
           <span className="px-1">
             {" "}
             <FontAwesomeIcon icon={faBed} />
           </span>
         )}
-        {(Pranzo > 0 || Cena > 0) && (
+        {(ore.Pranzo > 0 || Cena > 0) && (
           <span className="px-1">
             {" "}
             <FontAwesomeIcon icon={faWineBottle} />
           </span>
-        )}
-        {(Km !== 0 && Km !== undefined) &&
-        <FontAwesomeIcon icon={faAutomobile} title={Km.toString()} color="blue" className="px-2"/>
+        )}        
+        {(KM !== 0.0 && KM !== undefined) &&
+        <FontAwesomeIcon icon={faAutomobile} title={ore.Km.toString()} color="blue" className="px-2"/>
         }
       </Col>
       </>
@@ -423,15 +426,20 @@ function handleContextMenu(e:Event,value:string,id:number){
     <div className="scaled">
     {dataLoaded && (!Config.VisualizzaSoloGiorniNonCompleti || (Config.VisualizzaSoloGiorniNonCompleti && GiornoCompleto().nok)) && <div>                
         <NumeroGiorno />        
-        <div className="d-flex">
+        {/* <div className="d-flex">
           <GiornoIcons/>
-        </div>
+        </div> */}
         {orario.map((o:IModelOrario)=>{
           CaricaListaCommesse()
+          // setTipo(o.Tipo || "")
+          // SetNote(o.Note || "")
           ColoreGiorno = ListaComm.find((c)=>c.Commessa === o.Commessa)?.Colore || 'black'
           return(
             <>            
-            <div  onClick={() => EditDate(o.id || -1)}>
+            <div  onClick={() => EditDate(o.id || -1)}>            
+            <div className="d-flex">
+              <GiornoIcons ore = {o} />
+            </div>
               <ClienteCommessa dati={o} />
               <VisualizzaOrario ore={o}></VisualizzaOrario>
               <GiornoProgressBar ore={o} />
