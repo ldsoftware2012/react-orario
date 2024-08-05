@@ -12,7 +12,7 @@ import { faSave } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Select from "react-select"
 import React from "react";
-import { Alert } from "@mui/material";
+import { Alert, InputAdornment, TextField } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import { Cancel } from "@mui/icons-material";
 
@@ -127,117 +127,120 @@ export default function Clienti(){
         <>
         <Menu />
         <br></br>
-        <div id="EditCliente" className="bg-secondary-subtle mt-2">
+        <div id="EditCliente" className="mt-2">
             <legend className="text-center"><h2>Cliente</h2></legend>
             <div className="m-2">
 
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Cliente</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            <TextField
+                label="Cliente"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={cliente}
                 onChange={(e)=>SetCliente(e.target.value)}
-                />
-            </div>
+            />
 
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Indirizzo</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            <TextField
+                label="Indirzizzo"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={indirizzo}
                 onChange={(e)=>SetIndirizzo(e.target.value)}
-                />
-            </div>
+            />
 
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Localita</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            <TextField
+                label="Localita"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={localita}
                 onChange={(e)=>SetLocalita(e.target.value)}
-                />
-            </div>
+            />
 
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Provincia</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            <TextField
+                label="Provincia"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={provincia}
                 onChange={(e)=>SetProvincia(e.target.value)}
-                />
-            </div>
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Tel.</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            />
+
+            <TextField
+                label="Tel."
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={tel}
                 onChange={(e)=>SetTel(e.target.value)}
-                />
-            </div>
+            /> 
 
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Cellulare</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            <TextField
+                label="Cellulare"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={cell}
                 onChange={(e)=>SetCell(e.target.value)}
-                />
-            </div>    
+            />
 
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Fax</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            <TextField
+                label="Fax"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={fax}
                 onChange={(e)=>SetFax(e.target.value)}
-                />
-            </div>    
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Email</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            />
+                
+            <TextField
+                label="Email"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={email}
                 onChange={(e)=>SetEmail(e.target.value)}
-                />
-            </div>    
+            />  
                 
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">P.Iva</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            <TextField
+                label="P.Iva"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={piva}
                 onChange={(e)=>SetPiva(e.target.value)}
-                />
-            </div>        
-                
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">CAP</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            />
+
+            <TextField
+                label="CAP"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={cap}
                 onChange={(e)=>SetCap(e.target.value)}
-                />
-            </div> 
+            />
+
             <Select 
                 options={listinooptions} 
                 value={{value: listino,label:listino}} 

@@ -198,9 +198,8 @@ const VerificaAcconti = ():any =>{
     )
 }
 const GiornoIcons = (props : any)=>{
-  const {ore} = props
+  const {ore} = props  
   const KM = parseFloat(ore.Km) || 0.0
-  console.log("km =========" , ore.Km)
     return(
       <>
       <Col className="d-flex font-weight-bold">
@@ -215,13 +214,13 @@ const GiornoIcons = (props : any)=>{
             <FontAwesomeIcon icon={faPlane} />
           </span>
         )}
-        {ore.Estero > 0 && (
+        {(ore.Estero === "true" || ore.Pernotto === "true") && (
           <span className="px-1">
             {" "}
             <FontAwesomeIcon icon={faBed} />
           </span>
         )}
-        {(ore.Pranzo > 0 || Cena > 0) && (
+        {(ore.Pranzo === "true" || ore.Cena === "true") && (
           <span className="px-1">
             {" "}
             <FontAwesomeIcon icon={faWineBottle} />
@@ -431,8 +430,6 @@ function handleContextMenu(e:Event,value:string,id:number){
         </div> */}
         {orario.map((o:IModelOrario)=>{
           CaricaListaCommesse()
-          // setTipo(o.Tipo || "")
-          // SetNote(o.Note || "")
           ColoreGiorno = ListaComm.find((c)=>c.Commessa === o.Commessa)?.Colore || 'black'
           return(
             <>            

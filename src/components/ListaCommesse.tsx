@@ -11,7 +11,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { faSave } from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import { OrarioDataContext } from "../App";
-import { Alert } from "@mui/material";
+import { Alert, InputAdornment, TextField } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import { Cancel } from "@mui/icons-material";
 
@@ -96,30 +96,32 @@ export default function ListaCommesse(){
     return(
         <>
         <Menu />
-        <div id="EditCommessa" className="bg-secondary-subtle mt-2">
+        <div id="EditCommessa" className=" mt-2">
             <br></br>
             <legend className="text-center"><h2>Commessa</h2></legend>
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Commessa</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+
+            <TextField
+                label="Commessa"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '50%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={commessa}
                 onChange={(e)=>setCommessa(e.target.value)}
-                />
-            </div>
-            
-            <div className="input-group input-group-sm mb-3">
-                <div className="input-group-prepend">
-                    <span className="input-group-text" id="inputGroup-sizing-sm">Descrizione</span>
-                </div>
-                <input type="text" 
-                className="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            />
+
+            <TextField
+                label="Descrizione"
+                id="outlined-start-adornment"
+                sx={{ m: 1, width: '100%' }}
+                InputProps={{
+                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                }}
                 value={descrizione}
                 onChange={(e)=>setDescrizione(e.target.value)}
-                />        
-            </div>
+            />      
+
             <div className="input-group-prepend text-center m-3">
                 <Popup IconColor="green"  Icon={faSave} Position="bottom" Label="Salva" MessageTitle="Salva" MessageDescription= "Vuoi salvare questa commessa?  " onConfirm={()=>HandleSaveData()}></Popup> 
                 {GlobalData?.isAdmin && <Popup IconColor="red"  Icon={faTrash} Position="bottom" Label="Elimina" MessageTitle="Elimina" MessageDescription= "Vuoi eliminare la commessa?  " onConfirm={()=>HandleDeleteData(commessa)}></Popup>}
