@@ -34,7 +34,7 @@ const AccontoRow = (props:any)=>{
 const Total = ()=>{
     let entrate = 0.0
     let uscite = 0.0
-    GlobalData?.acconti.filter((a)=>a.Tecnico == GlobalData.tecnico && a.Fattura == "").map((a:IAcconto)=>{
+    GlobalData?.acconti.filter((a)=>a.Tecnico == GlobalData.tecnico).map((a:IAcconto)=>{
             entrate = entrate + a.Entrata
             uscite += a.Uscita
     })
