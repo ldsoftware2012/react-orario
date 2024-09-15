@@ -40,8 +40,8 @@ const Total = ()=>{
     })
 
     const diff = entrate-uscite
-    const sit_entrate = diff >= 0 ? "€" + diff : ""
-    const sit_uscite = diff < 0 ? "€" + diff : ""
+    const sit_entrate = diff >= 0 ? "€" + diff.toFixed(2) : ""
+    const sit_uscite = diff < 0 ? "€" + diff.toFixed(2) : ""
 
     return(
     <>
