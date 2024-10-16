@@ -51,8 +51,8 @@ const Total = ()=>{
             <th>Totale</th>
             <td></td>
             <td></td>
-            <td className="text-success"><b>€ {entrate}</b></td>
-            <td className="text-danger"><b>€ {uscite}</b></td>
+            <td className="text-success"><b>€ {entrate.toFixed(2)}</b></td>
+            <td className="text-danger"><b>€ {uscite.toFixed(2)}</b></td>
         </tr>
         <tr>
             <th>Situazione</th>

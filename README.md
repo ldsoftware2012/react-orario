@@ -16,3 +16,5 @@
 ### ver 1.2.1 : Aggiunta funzione copia / incolla nella pagina analisi
 ### ver 1.2.2 : Aggiunto check dividere le commesse in base al colore
 ### ver 1.2.3 : Ottimizzazione codice
+### ver 1.2.4 : Errore commessa vuota o campo descrizione > 32 caratteri nella pagina commesse
+

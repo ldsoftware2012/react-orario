@@ -13,7 +13,7 @@ import React from "react";
 import { OrarioDataContext } from "../App";
 import { Alert, InputAdornment, TextField } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
-import { Cancel } from "@mui/icons-material";
+import { Cancel, Label } from "@mui/icons-material";
 
 export default function ListaCommesse(){
     const [commessa, setCommessa] = useState("")
@@ -36,7 +36,15 @@ export default function ListaCommesse(){
             Descrizione : descrizione,
             DataInizio : new Date()
         }
-        if (newdata.Commessa === "") { return}
+        if (newdata.Commessa === "") { 
+            setResultRemoteOperation({status:-1, description:"Il campo commessa non può essere vuoto"});
+            return
+        }
+
+        if( newdata.Descrizione.length > 32){
+            setResultRemoteOperation({status:-1, description:"Troppi caratteri nel campo descrizione"});
+            return
+        }
 
         const result = await UpdateCommessa(url_UpdateCommessa, newdata);
         setResultRemoteOperation({status:result.status,description:result.description});
@@ -105,7 +113,7 @@ export default function ListaCommesse(){
                 id="outlined-start-adornment"
                 sx={{ m: 1, width: '50%' }}
                 InputProps={{
-                startAdornment: <InputAdornment position="start"></InputAdornment>,
+                startAdornment: <InputAdornment position="start"></InputAdornment>,                
                 }}
                 value={commessa}
                 onChange={(e)=>setCommessa(e.target.value)}
@@ -117,6 +125,7 @@ export default function ListaCommesse(){
                 sx={{ m: 1, width: '100%' }}
                 InputProps={{
                 startAdornment: <InputAdornment position="start"></InputAdornment>,
+                
                 }}
                 value={descrizione}
                 onChange={(e)=>setDescrizione(e.target.value)}
