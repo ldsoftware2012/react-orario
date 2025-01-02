@@ -9,7 +9,7 @@ export default function Info(){
             <p>Author : Lacanale Daniele</p>
             <p>ver {version}</p>
             <p>Server : {server}</p>
-            <p>Backend prot: {port} </p>
+            <p>Backend port: {port} </p>
         </div>        
     </>)
 }

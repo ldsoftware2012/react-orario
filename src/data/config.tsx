@@ -13,7 +13,7 @@ if(development){
 }
 
 
-export const version = "1.3.1"
+export const version = "1.3.2"
 
 export const url_Clienti = "http://" + server + ":" + port + "/Clienti/"
 export const url_Acconti = "http://" + server + ":" + port + "/Acconti/"

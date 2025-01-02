@@ -48,12 +48,30 @@ useEffect(() => {
                         anchorEl={anchorEl}
                         onClose={handleClose}
                         anchorOrigin={{
-                        vertical: 'bottom',
+                        vertical: 'top',
                         horizontal: 'left',
                         }}
                     >
 
                     <Typography sx={{ p: 2 }}>
+                    <Stack direction="row" spacing={1} className='mb-1'>
+                            <Item><Button onClick={(event)=>props.onClick(event,"00:00")}>00:00</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"00:30")}>00:30</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"01:00")}>01:00</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"01:30")}>01:30</Button></Item>
+                        </Stack>   
+                        <Stack direction="row" spacing={1} className='mb-1'>
+                            <Item><Button onClick={(event)=>props.onClick(event,"02:00")}>02:00</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"02:30")}>02:30</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"03:00")}>03:00</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"03:30")}>03:30</Button></Item>
+                        </Stack>  
+                        <Stack direction="row" spacing={1} className='mb-1'>
+                            <Item><Button onClick={(event)=>props.onClick(event,"04:00")}>04:00</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"04:30")}>04:30</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"05:00")}>05:00</Button></Item>
+                            <Item><Button onClick={(event)=>props.onClick(event,"05:30")}>05:30</Button></Item>
+                        </Stack>  
                         <Stack direction="row" spacing={1} className='mb-1'>
                             <Item><Button onClick={(event)=>props.onClick(event,"06:00")}>06:00</Button></Item>
                             <Item><Button onClick={(event)=>props.onClick(event,"06:30")}>06:30</Button></Item>
@@ -102,44 +120,12 @@ useEffect(() => {
                             <Item><Button onClick={(event)=>props.onClick(event,"21:00")}>21:00</Button></Item>
                             <Item><Button onClick={(event)=>props.onClick(event,"21:30")}>21:30</Button></Item>
                         </Stack>   
-
-                        <Accordion>
-        <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1-content"
-            id="panel1-header"
-        >
-        Altri...
-        </AccordionSummary>
-        <AccordionDetails>
-        <Stack direction="row" spacing={1} className='mb-1'>
+                        <Stack direction="row" spacing={1} className='mb-1'>
                             <Item><Button onClick={(event)=>props.onClick(event,"22:00")}>22:00</Button></Item>
                             <Item><Button onClick={(event)=>props.onClick(event,"22:30")}>22:30</Button></Item>
                             <Item><Button onClick={(event)=>props.onClick(event,"23:00")}>23:00</Button></Item>
                             <Item><Button onClick={(event)=>props.onClick(event,"23:30")}>23:30</Button></Item>
                         </Stack>   
-                        <Stack direction="row" spacing={1} className='mb-1'>
-                            <Item><Button onClick={(event)=>props.onClick(event,"00:00")}>00:00</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"00:30")}>00:30</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"01:00")}>01:00</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"01:30")}>01:30</Button></Item>
-                        </Stack>    
-                        <Stack direction="row" spacing={1} className='mb-1'>
-                            <Item><Button onClick={(event)=>props.onClick(event,"02:00")}>02:00</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"02:30")}>02:30</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"03:00")}>03:00</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"03:30")}>03:30</Button></Item>
-                        </Stack>  
-                        <Stack direction="row" spacing={1} className='mb-1'>
-                            <Item><Button onClick={(event)=>props.onClick(event,"04:00")}>04:00</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"04:30")}>04:30</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"05:00")}>05:00</Button></Item>
-                            <Item><Button onClick={(event)=>props.onClick(event,"05:30")}>05:30</Button></Item>
-                        </Stack>                                                                        
-        </AccordionDetails>
-        </Accordion>
-
-
                     </Typography>
                     </Popover>
     </>

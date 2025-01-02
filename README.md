@@ -19,4 +19,4 @@
 ### ver 1.2.4 : Errore commessa vuota o campo descrizione > 32 caratteri nella pagina commesse
 ### ver 1.3.0 : Sostituita la funzione DateCompare con DateCompareUTC che aggiunge 15 ore alla data in modo da non aver problemi con i fusi orari
 ### ver 1.3.1 : Corretta la selezione del mese sul modulo DANEA che ad Ottobre scaricava "010" invece di "10"
-
+### ver 1.3.2 : Corretta la lista delle ore per permettere la visualizzazione anche con basse risoluzioni
