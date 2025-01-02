@@ -1,4 +1,4 @@
-import { server,version } from "../data/config";
+import { port, server,version } from "../data/config";
 import { Menu } from "./Menu";
 
 export default function Info(){
@@ -9,6 +9,7 @@ export default function Info(){
             <p>Author : Lacanale Daniele</p>
             <p>ver {version}</p>
             <p>Server : {server}</p>
+            <p>Backend prot: {port} </p>
         </div>        
     </>)
 }

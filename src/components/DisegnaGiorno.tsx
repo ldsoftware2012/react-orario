@@ -9,12 +9,13 @@ import { Col, ProgressBar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { OrarioDataContext } from "../App";
 import { AddDay, Somma } from "../data/Datasource";
-import { DateCompare, IAcconto, IModelOrario, ListaCommesse } from "../interface/interface";
+import { DateCompare, DateCompareUTC, IAcconto, IModelOrario, ListaCommesse } from "../interface/interface";
 import { format } from "date-fns";
 import React from "react";
 import { ComponentContextMenu } from "./ComponentContextMenu";
 import { Box } from "@mui/material";
 import { url_AddDay } from "../data/config";
+import { parseISO } from "date-fns";
 
 export function DisegnaGiorno(props: any) {
   const {
@@ -84,16 +85,22 @@ const CaricaListaCommesse = ()=>{
 useEffect(() => {
 if (!dataLoaded) {
 try {
+
+    console.log("Questo è l'orario che ho ricevuto",Orari)
     const Filtro = Orari.filter((o:IModelOrario) => {      
       try {
-        const d = new Date(o.Data)
-        return (DateCompare(d,Data) && o.Tecnico === GlobalData?.tecnico)
+        let d = new Date(o.Data)
+        //console.log("La data originale è",d)        
+        //d = parseISO(d.toUTCString())
+        //console.log("La data convertita è",d.toUTCString())
+        return (DateCompareUTC(d,Data) && o.Tecnico === GlobalData?.tecnico)
       } catch (error) {return false}
     })
     
+    
     const acc = GlobalData?.acconti.filter((a)=>{
       var dd = new Date(a.Data)
-      return DateCompare(dd,Data) && a.Tecnico === GlobalData.tecnico })       
+      return DateCompareUTC(dd,Data) && a.Tecnico === GlobalData.tecnico })       
       || [{Cliente:"",Data:new Date(),Entrata:0,ID:0,Tecnico:"",Uscita:0,Fattura:"",Note:""}]
       
       SetAcconti(acc)

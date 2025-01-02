@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { DateCompare, IAcconto } from "../interface/interface"
+import { DateCompareUTC, IAcconto } from "../interface/interface"
 import { OrarioDataContext } from "../App"
 import DatePicker from "react-datepicker"
 import Popup from "./Popup"
@@ -46,7 +46,7 @@ useEffect(() => {
     const acc = GlobalData?.acconti.find((a)=>{
         var d = new Date(a.Data)
         var data_ = new Date(Data)
-        return DateCompare(d,data_)  && a.Tecnico==Tecnico
+        return DateCompareUTC(d,data_)  && a.Tecnico==Tecnico
     }) 
 
     SetTecnico(Tecnico)

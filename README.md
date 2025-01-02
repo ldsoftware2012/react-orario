@@ -17,4 +17,6 @@
 ### ver 1.2.2 : Aggiunto check dividere le commesse in base al colore
 ### ver 1.2.3 : Ottimizzazione codice
 ### ver 1.2.4 : Errore commessa vuota o campo descrizione > 32 caratteri nella pagina commesse
+### ver 1.3.0 : Sostituita la funzione DateCompare con DateCompareUTC che aggiunge 15 ore alla data in modo da non aver problemi con i fusi orari
+### ver 1.3.1 : Corretta la selezione del mese sul modulo DANEA che ad Ottobre scaricava "010" invece di "10"
 

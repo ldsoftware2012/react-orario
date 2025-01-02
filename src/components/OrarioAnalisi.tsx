@@ -52,9 +52,10 @@ export default function OrarioAnalisi() {
 
 
         let giornilavorati=[0]
-        orario.map((o:any)=>{
-          const d = new Date(o.Data)
-          giornilavorati.push(d.Giorno())
+        orario.map((o:any) => {
+          let d = new Date(o.Data)
+          giornilavorati.push(d.getUTCDate())  
+          //giornilavorati.push(d.Giorno())           
         })
         
 
@@ -66,7 +67,7 @@ export default function OrarioAnalisi() {
           }
         }        
 
-        orario.filter((o:any) => o.Ore_Ord != "Assente").map((o:any)=>o.Index = getDate(o.Data) )
+        orario.filter((o:any) => o.Ore_Ord !== "Assente").map((o:any)=>o.Index = getDate(o.Data) )
 
         setOrari(orario);
         setIsLoadData(true);

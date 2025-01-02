@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { DateCompare, IModelOrario, DataAdaptation } from "../interface/interface"
+import { DateCompareUTC, IModelOrario, DataAdaptation } from "../interface/interface"
 import { DownloadOreDipendente, Somma } from "../data/Datasource";
 import { OrarioDataContext } from "../App";
 import { Button } from "@mui/material";
@@ -67,13 +67,12 @@ export const ComponentOreDipendente = (props:any)=>{
                 const Filtro = Orari.filter((o:IModelOrario) => { 
                     try {
                         const d = new Date(o.Data)
-                        return (DateCompare(d,Data) && o.Tecnico === GlobalData?.tecnico)
+                        return (DateCompareUTC(d,Data) && o.Tecnico === GlobalData?.tecnico)
                     } catch (error) {}
                 })
 
                 const {oo,ov,of,op,os,estero} = Somma(Filtro)
                 OreOrd = OreOrd + oo
-                console.log(Data,oo,OreOrd)
                 OreStra = OreStra + os
                 OreFest = OreFest + of
                 OrePre = OrePre + op

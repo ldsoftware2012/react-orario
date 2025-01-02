@@ -1,6 +1,6 @@
 import { Col, Row, Table } from "react-bootstrap";
 import "../css/AnalisiMese.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../interface/interface";
 import { Footer } from "./Footer";
 import { DisegnaGiorno } from "./DisegnaGiorno";

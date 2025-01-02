@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { add, format, set } from "date-fns";
 import { Dispatch } from "react";
 import { differenzaOrari } from "../data/Datasource";
 
@@ -198,6 +198,7 @@ declare global{
     Mese():number;
     Anno():number;
     Giorno():number;
+    GiornoUTC():number;
     isHoliday():boolean;
     isWeekEnd():boolean;
     GiornoTesto():string;
@@ -243,15 +244,15 @@ Date.prototype.isWeekEnd = function():boolean{
   }
   Date.prototype.FormatoYY_MM_DD = function ():string{
     if (this===null) {return ""}
-    const giorno = this.getDate() > 10 ? this.getDate() : "0" + this.getDate()  
-    const mese = this.Mese() > 10 ? this.Mese() : "0" + this.Mese()
+    const giorno = this.getDate() >= 10 ? this.getDate() : "0" + this.getDate()  
+    const mese = this.Mese() >= 10 ? this.Mese() : "0" + this.Mese()
 
     return (this.Anno() + "-" + mese + "-" + giorno)
   }
   Date.prototype.FormatoYYMMDD = function ():string{
     if (this===null) {return ""}
-    const giorno = this.getDate() > 10 ? this.getDate() : "0" + this.getDate()  
-    const mese = this.Mese() > 10 ? this.Mese() : "0" + this.Mese()
+    const giorno = this.getDate() >= 10 ? this.getDate() : "0" + this.getDate()  
+    const mese = this.Mese() >= 10 ? this.Mese() : "0" + this.Mese()
 
     return (this.Anno() + mese.toString() + giorno)
   }
@@ -263,6 +264,9 @@ Date.prototype.isWeekEnd = function():boolean{
   }
   Date.prototype.Giorno = function ():number {
     return this.getDate()-1;
+  }
+  Date.prototype.GiornoUTC = function ():number {
+    return this.getDate();
   }
   Date.prototype.GiornoTesto = function ():string {
     const Giorni = ["Dom","Lun","Mar","Mer","Gio","Ven","Sab"]
@@ -295,10 +299,18 @@ Date.prototype.isWeekEnd = function():boolean{
   }
 
 export function DateCompare(data1:Date,data2:Date):boolean{
-  const d1 = format(data1,"dd-MM-yyyy");    
+    const d1 = format(data1,"dd-MM-yyyy");    
     const d2 = format(data2,"dd-MM-yyyy");
     return (d1===d2)
 }
+
+export function DateCompareUTC(data1:Date,data2:Date):boolean{
+  //Aggiungo 15 ore cosi non ho problemi con i fusi orari che stanno indietro
+  const d1 = format(add(data1, { hours: 15 }),"dd-MM-yyyy");
+  const d2 = format(add(data2, { hours: 15 }),"dd-MM-yyyy");
+  return (d1===d2)
+}
+
 
 export const CalcolaOre = (orario:IModelOrario,data:Date)=>{
 

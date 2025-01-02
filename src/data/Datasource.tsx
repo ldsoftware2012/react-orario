@@ -1,4 +1,4 @@
-import { DateCompare, IAcconto, ICliente, ICommesse, IDayMissing, IModelCostiOrariTecnico, IModelOrario, ITecnico } from "../interface/interface";
+import { DateCompareUTC, IAcconto, ICliente, ICommesse, IDayMissing, IModelCostiOrariTecnico, IModelOrario, ITecnico } from "../interface/interface";
 import { saveAs} from 'file-saver';
 import { useContext } from "react";
 import Select from "react-select"
@@ -9,7 +9,8 @@ import { start } from "repl";
 export async function GetRemoteData(url:string){
     const response = await fetch(url)
     const data = await response.json(); 
-    return data
+    console.log(data);
+    return data    
 }
 
 export async function UpdateCommessa(url:string,newdata:ICommesse) {
@@ -486,7 +487,7 @@ export const GetMissingData=
             const dat = new Date(data)
             const day = orario.filter((o)=>{
                 const d = new Date(o.Data)
-                return  DateCompare(d,dat) &&  o.Tecnico==tecnico
+                return  DateCompareUTC(d,dat) &&  o.Tecnico==tecnico
             })
             
             const {tot_hours} = Somma(day)
